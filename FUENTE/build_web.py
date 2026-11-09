@@ -277,7 +277,8 @@ WAJS = r'''// Refrigeración Team: WhatsApp, medición de clics y avisos
   document.querySelectorAll('#rail img, #equipo img').forEach(function(i){ i.loading='eager'; });
   function fix(i){
     var n=+(i.dataset.r||0);
-    if(n>=3) return;
+    var a=i.getAttribute('src');
+    if(n>=3 || !a || a.indexOf('/img/')!==0 && a.indexOf('/img/')<0) return;
     i.dataset.r=n+1;
     var u=i.currentSrc||i.src; u=u.split('?')[0];
     setTimeout(function(){ i.src=u+'?r='+Date.now(); }, 600*(n+1));
