@@ -1,0 +1,12 @@
+[
+ {"id":"intro","texto":"Hola. Te voy a enseñar, paso a paso, cómo pedir tu cotización en la página de Refrigeración Tim Cavas Cuarto. Es muy fácil, y no necesitas escribir nada difícil."},
+ {"id":"p1","texto":"Paso uno. Toca la primera casilla, donde dice: ¿qué necesitas? Elige si quieres fabricar una cava cuarto, comprar equipos, un freezer, u otra cosa."},
+ {"id":"p2","texto":"Paso dos. Elige para qué negocio es. Por ejemplo, una carnicería, una panadería o un abasto."},
+ {"id":"p3","texto":"Paso tres. Escoge la temperatura. Refrigeración, si es para conservar. Congelación, si es para guardar por más tiempo. Si no estás seguro, no te preocupes: elige la última opción y nosotros te orientamos."},
+ {"id":"p4","texto":"Paso cuatro. Si conoces las medidas de tu espacio, escribe el largo, el ancho y el alto, en metros. Si no las sabes, déjalas en blanco."},
+ {"id":"p5","texto":"Paso cinco. Escribe en qué ciudad o estado estás."},
+ {"id":"p6","texto":"Paso seis. Escribe tu nombre."},
+ {"id":"p7","texto":"Paso siete. Si quieres, marca esta casilla, para enviarnos una foto de tu espacio por WhatsApp."},
+ {"id":"p8","texto":"Y ahora, el último paso. Toca el botón verde que dice: enviar por WhatsApp. Se abrirá WhatsApp con tu mensaje ya escrito. Solo tienes que tocar enviar."},
+ {"id":"fin","texto":"¡Listo! Te responderemos lo más pronto posible. Y si prefieres hablar directo, llámanos al cero cuatro uno dos, uno ocho cinco, seis cuatro dos nueve."}
+]

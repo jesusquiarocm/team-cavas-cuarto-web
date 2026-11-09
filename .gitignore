@@ -1,0 +1,7 @@
+.DS_Store
+.netlify/
+__pycache__/
+TUTORIAL/audio/
+TUTORIAL/*.mp4
+TUTORIAL/*.log
+TUTORIAL/chk*.png
