@@ -8,8 +8,8 @@ import html, json, re, datetime
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
-INDEXAR = False                       # False = noindex + robots Disallow (prototipo)
-BASE = "https://REEMPLAZAR-DOMINIO.com"   # sin barra final
+INDEXAR=True
+BASE="https://cavascuartoteam.com"
 WHATSAPP = "584121856429"
 HOY = datetime.date.today().isoformat()
 GA_ID = ""      # ej. "G-XXXXXXXXXX" (Google Analytics 4); vacío = sin analítica

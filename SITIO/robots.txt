@@ -1,3 +1,3 @@
 User-agent: *
-Disallow: /
-Sitemap: https://REEMPLAZAR-DOMINIO.com/sitemap.xml
+Allow: /
+Sitemap: https://cavascuartoteam.com/sitemap.xml
