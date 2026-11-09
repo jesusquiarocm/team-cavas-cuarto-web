@@ -1,0 +1,10 @@
+wrangler.jsonc
+.assetsignore
+.wrangler
+netlify.toml
+.netlify
+.git
+node_modules
+.DS_Store
+.dev.vars*
+.env*

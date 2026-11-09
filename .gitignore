@@ -5,3 +5,4 @@ TUTORIAL/audio/
 TUTORIAL/*.mp4
 TUTORIAL/*.log
 TUTORIAL/chk*.png
+.wrangler/
