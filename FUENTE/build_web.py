@@ -272,6 +272,21 @@ def analytics():
     return o
 
 WAJS = r'''// Refrigeración Team: WhatsApp, medición de clics y avisos
+// Imágenes: sin carga diferida en el carrusel y reintento si alguna falla
+(function(){
+  document.querySelectorAll('#rail img, #equipo img').forEach(function(i){ i.loading='eager'; });
+  function fix(i){
+    var n=+(i.dataset.r||0);
+    if(n>=3) return;
+    i.dataset.r=n+1;
+    var u=i.currentSrc||i.src; u=u.split('?')[0];
+    setTimeout(function(){ i.src=u+'?r='+Date.now(); }, 600*(n+1));
+  }
+  document.addEventListener('error', function(e){ if(e.target && e.target.tagName==='IMG') fix(e.target); }, true);
+  window.addEventListener('load', function(){
+    document.querySelectorAll('img').forEach(function(i){ if(i.complete && i.naturalWidth===0) fix(i); });
+  });
+})();
 const WHATSAPP = "%s";   // país + número, sin + ni espacios
 const wa = t => "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(t + "\n\n(web: " + location.pathname + ")");
 function track(lugar){
