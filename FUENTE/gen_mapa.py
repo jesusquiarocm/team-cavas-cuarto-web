@@ -32,9 +32,14 @@ for n, f in enumerate(d['features']):
             if len(pts) < 4: continue
             dd += "M" + "L".join(f"{x:.0f},{y:.0f}" for x, y in pts) + "Z"
     paths.append(f'<path d="{dd}" fill="{(tonos if nom in SERVIDOS else claros)[n % 4]}" style="--i:{len(paths)}"><title>{nom}</title></path>')
-CIU = [  # obras publicadas y sede; nombre, lon, lat, (dx, dy, lado): s=etiqueta a la derecha, e=a la izquierda, m=centrada
- ("Caracas y La Guaira", -66.90, 10.52, (-14, -52, "e")), ("Tocuyito", -68.10, 10.10, (0, 12, "m")),
+CIU = [  # obras publicadas, sede y un pin por cada estado de SERVIDOS (en su ciudad principal)
+ # nombre, lon, lat, (dx, dy, lado): s=etiqueta a la derecha, e=a la izquierda, m=centrada
+ ("Caracas, Miranda y La Guaira", -66.90, 10.52, (0, -74, "m")), ("Tocuyito", -68.10, 10.10, (-6, 12, "e")),
  ("Barcelona · sede", -64.70, 10.13, (0, 12, "m")), ("Cumaná", -64.18, 10.45, (8, -52, "s")),
+ ("Zulia", -71.64, 10.65, (-14, -40, "e")), ("Lara", -69.32, 10.07, (-14, -40, "e")),
+ ("Trujillo", -70.60, 9.32, (-14, -40, "e")), ("Mérida", -71.15, 8.59, (-14, 12, "e")),
+ ("Aragua", -67.60, 10.25, (0, 12, "m")), ("Nueva Esparta", -63.90, 11.00, (8, -70, "s")),
+ ("Monagas", -63.18, 9.75, (12, -14, "s")), ("Bolívar", -62.65, 8.30, (12, -14, "s")),
 ]
 pins = ""
 CAVA = ('<rect x="0" y="0" width="26" height="20" rx="3" fill="#fff" stroke="#06224d" stroke-width="1.6"/><rect x="15" y="4" width="8" height="16" rx="1.5" fill="#29A9E8"/>'
