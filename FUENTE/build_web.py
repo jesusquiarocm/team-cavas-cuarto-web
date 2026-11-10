@@ -376,7 +376,8 @@ def menu_items():
             ("Mantenimiento", "/mantenimiento-cavas-cuarto/")]),
         ("Para tu negocio", "/sectores/", [("Todos los negocios", "/sectores/")] + [(BYSLUG[s]["nombre"], f"/{s}/") for s in SECTORES]),
         ("Equipos", EQUIPOS, [("Equipos y materiales", EQUIPOS), ("Freezers comerciales", "/freezers-comerciales/")]),
-        ("Proyectos", "/proyectos/", [("Obras por estado", "/proyectos/"), ("Galería de fotos", "/galeria/")]),
+        ("Proyectos", "/proyectos/", None),
+        ("Galería", "/galeria/", None),
         ("Nosotros", "/nosotros/", [("Quiénes somos", "/nosotros/"), ("Cobertura", "/cobertura/"),
             ("Preguntas frecuentes", "/preguntas-frecuentes/"), ("Contacto", "/contacto/")]),
     ]
