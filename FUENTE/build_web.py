@@ -252,7 +252,7 @@ ANCHOS = (480, 800)   # versiones reducidas de cada foto: nombre-480.jpg, nombre
 
 def hacer_variantes():
     for jp in (SITIO / "img").glob("*.jpg"):
-        if re.search(r"-(\d+)$", jp.stem) or jp.stem == "og": continue
+        if re.search(r"-(\d+)$", jp.stem) or jp.stem.startswith("og"): continue
         im = Image.open(jp)
         for a in ANCHOS:
             v = jp.with_name(f"{jp.stem}-{a}.jpg")
@@ -414,32 +414,63 @@ def foot_cols():
     return "\n      ".join('<div><p class="fh">%s</p><ul>%s</ul></div>' % (esc(h), lis(items)) for h, items in cols)
 
 # ------------------------------------------------------------ imagen social
-def make_og():
+# fotos de las páginas que no traen una propia (para su imagen al compartir)
+OG_FOTO = {"/": "real-exterior", "/sectores/": "destacada07", "/proyectos/": "destacada03", "/galeria/": "destacada01",
+           "/cobertura/": "destacada05", "/cotizar/": "destacada11", "/preguntas-frecuentes/": "destacada09",
+           "/contacto/": "destacada13", "/precio-cava-cuarto/": "destacada08", "/404.html": "real-exterior"}
+
+
+def og_nombre(path):
+    slug = path.strip("/").replace("/", "-").replace(".html", "") or "inicio"
+    return f"og-{slug}.jpg"
+
+
+def make_og(path="/", titulo="Cavas cuarto a tu medida", foto="real-exterior", salida="og.jpg"):
+    """Imagen para compartir (1200x630): foto real de la página a la derecha, logo, título y botón de WhatsApp."""
     W, H = 1200, 630
     im = Image.new("RGB", (W, H), "#06224d")
-    ph = Image.open(SITIO / "img/real-exterior.jpg").convert("RGB")
-    r = H / ph.height; ph = ph.resize((int(ph.width * r), H))
-    im.paste(ph, (W - ph.width, 0))
+    src = SITIO / f"img/{foto}.jpg"
+    if not src.exists():
+        src = SITIO / "img/real-exterior.jpg"
+    ph = Image.open(src).convert("RGB")
+    r = max(780 / ph.width, H / ph.height); ph = ph.resize((int(ph.width * r), int(ph.height * r)), Image.LANCZOS)
+    ph = ph.crop(((ph.width - 780) // 2, (ph.height - H) // 2, (ph.width - 780) // 2 + 780, (ph.height - H) // 2 + H))
+    im.paste(ph, (W - 780, 0))
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(ov)
-    for x in range(0, 760):
-        d.line([(x, 0), (x, H)], fill=(6, 34, 77, int(255 * max(0, 1 - max(0, x - 520) / 240))))
+    for x in range(0, 780):
+        d.line([(x, 0), (x, H)], fill=(6, 34, 77, int(255 * max(0, 1 - max(0, x - 520) / 260))))
     im = Image.alpha_composite(im.convert("RGBA"), ov).convert("RGB")
     d = ImageDraw.Draw(im)
-    def font(sz, bold=True):
-        for f in ("/System/Library/Fonts/Supplemental/Arial Bold.ttf", "/System/Library/Fonts/Helvetica.ttc"):
+    def font(sz, peso="ExtraBold"):
+        for f in (str(Path.home() / f"Library/Fonts/Poppins-{peso}.ttf"), "/System/Library/Fonts/Supplemental/Arial Bold.ttf"):
             try: return ImageFont.truetype(f, sz)
             except Exception: pass
         return ImageFont.load_default()
-    logo = Image.open(AQUI / "logo_original.png").convert("RGBA"); logo.thumbnail((170, 170))
-    chip = Image.new("RGBA", (logo.width + 24, logo.height + 24), (255, 255, 255, 255)); chip.paste(logo, (12, 12), logo)
-    im.paste(chip, (60, 60), chip)
-    y = 270
-    for ln in ("Cavas cuarto", "a tu medida"):
-        d.text((60, y), ln, font=font(58), fill="white"); y += 70
-    d.text((60, y + 10), "Fabricación e instalación en toda Venezuela", font=font(30), fill="#00E3FF")
-    d.rounded_rectangle((60, 540, 470, 596), 28, fill="#25D366")
-    d.text((90, 553), "Cotiza por WhatsApp", font=font(30), fill="#04361a")
-    im.save(SITIO / "img/og.jpg", quality=85, optimize=True)
+    logo = Image.open(AQUI / "logo_original.png").convert("RGBA"); logo.thumbnail((150, 150))
+    chip = Image.new("RGBA", (logo.width + 24, logo.height + 24), (0, 0, 0, 0))
+    ImageDraw.Draw(chip).rounded_rectangle([0, 0, chip.width - 1, chip.height - 1], radius=18, fill="white")
+    chip.paste(logo, (12, 12), logo)
+    im.paste(chip, (60, 50), chip)
+    # título en 1-3 líneas que quepan en 600 px
+    palabras, lineas, actual = titulo.split(), [], ""
+    tam = 56
+    while True:
+        lineas, actual = [], ""
+        for w in palabras:
+            prueba = (actual + " " + w).strip()
+            if font(tam).getlength(prueba) <= 600: actual = prueba
+            else: lineas.append(actual); actual = w
+        lineas.append(actual)
+        if len(lineas) <= 3 or tam <= 40: break
+        tam -= 4
+    y = 250 if len(lineas) < 3 else 236
+    for ln in lineas:
+        d.text((60, y), ln, font=font(tam), fill="white"); y += int(tam * 1.18)
+    d.text((60, y + 22), "Fabricación e instalación en toda Venezuela", font=font(26, "SemiBold"), fill="#00E3FF")
+    d.rounded_rectangle((60, 540, 440, 596), 28, fill="#25D366")
+    d.text((250, 568), "Cotiza por WhatsApp", font=font(26, "Bold"), fill="#04361a", anchor="mm")
+    im.save(SITIO / "img" / salida, quality=86, optimize=True, progressive=True)
+
 
 # ---------------------------------------------------------- plantilla común
 home = (AQUI / "home.src.html").read_text(encoding="utf-8")
@@ -529,6 +560,12 @@ EXTRA_CSS = re.sub(r"\bInter,", "Inter,'Inter Fallback',", re.sub(r"\bSora,", "S
 
 def head(title, desc, path, img, schema, canonical=True):
     url = f"{BASE}{path}"
+    # imagen para compartir propia de cada página: su foto real + el título corto (antes de " | ")
+    corto = title.split(" | ")[0].replace(":", "")
+    og = og_nombre(path)
+    make_og(path, corto, img or OG_FOTO.get(path, "real-exterior"), og)
+    og_url = f"{BASE}/img/{og}?v={hashlib.sha1((SITIO / 'img' / og).read_bytes()).hexdigest()[:8]}"
+    og_alt = f"{corto} · Refrigeración Team"
     return f"""<!doctype html>
 <html lang="es">
 <head>
@@ -542,9 +579,10 @@ def head(title, desc, path, img, schema, canonical=True):
 <meta property="og:type" content="website"><meta property="og:locale" content="es_VE">
 <meta property="og:site_name" content="Refrigeración Team">
 <meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
-<meta property="og:url" content="{url}"><meta property="og:image" content="{BASE}/img/og.jpg">
-<meta property="og:image:alt" content="Refrigeración Team: cavas cuarto a tu medida en toda Venezuela">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:url" content="{url}"><meta property="og:image" content="{og_url}">
+<meta property="og:image:type" content="image/jpeg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{esc(og_alt)}">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{og_url}">
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" href="/img/icon-96.png"><link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 {analytics()}{FONTS}
 {f'<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>' if schema else ""}
@@ -1050,6 +1088,8 @@ SCRIPT = SCRIPT.replace("/js/wa.js", f"/js/wa.js?v={VER}").replace("/js/sitio.js
 home = home.replace('<script src="/js/wa.js"></script>\n<script src="/js/sitio.js"></script>', SCRIPT.replace("\n</body>\n</html>\n", ""))
 # WebP de cada foto (el worker la sirve a los navegadores que la aceptan)
 for jp in (SITIO / "img").glob("*.jpg"):
+    if jp.stem.startswith("og"):   # las imágenes para compartir van siempre en JPG
+        continue
     wp = jp.with_suffix(".webp")
     if not wp.exists() or wp.stat().st_mtime < jp.stat().st_mtime:
         Image.open(jp).convert("RGB").save(wp, "WEBP", quality=74, method=6)

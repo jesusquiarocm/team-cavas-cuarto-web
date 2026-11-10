@@ -14,7 +14,8 @@ export default {
     }
 
     // fotos: WebP (más livianas) para los navegadores que lo aceptan
-    if (/^\/img\/(gal\/)?[^/]+\.jpg$/.test(url.pathname) &&(req.headers.get("Accept") || "").includes("image/webp")) {
+    // las imágenes para compartir (og*.jpg) van siempre en JPG: algunos lectores de enlaces no aceptan WebP
+    if (/^\/img\/(gal\/)?(?!og)[^/]+\.jpg$/.test(url.pathname) &&(req.headers.get("Accept") || "").includes("image/webp")) {
       const w = await env.ASSETS.fetch(new Request(url.origin + url.pathname.replace(/\.jpg$/, ".webp"), req));
       if (w.ok) {
         const r = new Response(w.body, w);
@@ -39,7 +40,7 @@ export default {
     res = new Response(res.body, { status, statusText: res.statusText, headers: res.headers });
     const h = res.headers;
 
-    if (/^\/img\/(gal\/)?[^/]+\.jpg$/.test(p)) h.set("Vary", "Accept");
+    if (/^\/img\/(gal\/)?(?!og)[^/]+\.jpg$/.test(p)) h.set("Vary", "Accept");
     if (/^\/(img|video|tutorial)\//.test(p) || p === "/favicon.ico") {
       h.set("Cache-Control", "public, max-age=2592000, stale-while-revalidate=86400");
     } else if (p.startsWith("/fonts/")) {
