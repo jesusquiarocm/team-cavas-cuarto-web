@@ -12,4 +12,9 @@ Publicado en https://cavascuartoteam.com (dominio, DNS y alojamiento en Cloudfla
 3. Generar: `python3 FUENTE/build_web.py` (también crea el sitemap, robots.txt y una imagen para compartir por página: `SITIO/img/og-<página>.jpg`)
 4. Publicar: `cd SITIO && npx wrangler deploy`
 
-Supabase todavía no se usa: el cotizador arma el mensaje y abre WhatsApp, sin guardar datos.
+## Solicitudes y clics (D1 de Cloudflare)
+- El cotizador y los botones de WhatsApp/llamada guardan sus datos en la base **D1 `tcc-leads`** (misma cuenta de Cloudflare, plan gratuito, sin pausas). WhatsApp se abre igual aunque el guardado falle.
+- API en `SITIO/worker.js`: `POST /api/lead` y `POST /api/clic` (solo desde cavascuartoteam.com; campo trampa, tiempo mínimo, validación y límite de 5 solicitudes / 60 clics cada 10 min por visitante). No se guarda la IP: solo un hash que cambia cada día.
+- Esquema en `FUENTE/schema.sql` (aplicar con `cd SITIO && npx wrangler d1 execute tcc-leads --remote --file ../FUENTE/schema.sql`).
+- Ver lo guardado: `python3 FUENTE/ver_leads.py [días]` o el panel de Cloudflare → Workers & Pages → D1 → tcc-leads.
+- Supabase no hace falta (su plan gratuito permite 2 proyectos activos y ya están ocupados).

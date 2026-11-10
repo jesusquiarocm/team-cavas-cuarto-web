@@ -1,6 +1,55 @@
-// Refrigeración Team: redirecciones 301, página 404 real y cabeceras de caché/seguridad.
+// Refrigeración Team: redirecciones 301, página 404 real, cabeceras de caché/seguridad
+// y la API que guarda solicitudes del cotizador y clics de contacto en D1 (binding DB, base "tcc-leads").
 // Cloudflare ejecuta esto antes de servir los archivos del sitio (run_worker_first).
 const APEX = "cavascuartoteam.com";
+
+// ------------------------------------------------------------------ API: /api/lead y /api/clic
+const API_H = { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" };
+const resp = (status, ok = false) => new Response(JSON.stringify({ ok }), { status, headers: API_H });
+const limpio = (v, n) => String(v ?? "").replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim().slice(0, n);
+
+// huella: hash corto de IP + fecha (no se guarda la IP; sirve solo para frenar spam y cambia cada día)
+async function huella(req) {
+  const ip = req.headers.get("CF-Connecting-IP") || "";
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(ip + "|" + new Date().toISOString().slice(0, 10)));
+  return [...new Uint8Array(buf).slice(0, 8)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function api(req, env, url) {
+  if (req.method !== "POST") return resp(405);
+  if (req.headers.get("Origin") !== "https://" + APEX) return resp(403);          // solo desde la propia web
+  const crudo = await req.text();
+  if (crudo.length > 4000) return resp(413);
+  let d;
+  try { d = JSON.parse(crudo); } catch { return resp(400); }
+  if (!d || typeof d !== "object") return resp(400);
+  if (!env.DB) return resp(503);
+  const h = await huella(req);
+  const pais = limpio(req.cf && req.cf.country, 2);
+  const pagina = /^\/[a-z0-9\-\/]*$/.test(d.pagina || "") ? String(d.pagina).slice(0, 80) : "/";
+  try {
+    if (url.pathname === "/api/clic") {
+      const tipo = ["whatsapp", "llamada", "cotizador"].includes(d.tipo) ? d.tipo : "whatsapp";
+      const { n } = await env.DB.prepare("SELECT COUNT(*) AS n FROM clics WHERE huella = ? AND creado > datetime('now','-10 minutes')").bind(h).first();
+      if (n >= 60) return resp(429);
+      await env.DB.prepare("INSERT INTO clics (tipo, lugar, pagina, pais, huella) VALUES (?,?,?,?,?)").bind(tipo, limpio(d.lugar, 40), pagina, pais, h).run();
+      return resp(200, true);
+    }
+    // /api/lead: campo trampa "web" (los bots lo llenan) y mínimo de tiempo desde que se cargó la página
+    if (limpio(d.web, 50) || (Number(d.ms) || 0) < 1500) return resp(200, true);      // se descarta en silencio
+    const campos = { nombre: 60, necesito: 80, negocio: 60, temperatura: 40, largo: 10, ancho: 10, alto: 10, ciudad: 80 };
+    const v = {};
+    for (const [k, max] of Object.entries(campos)) v[k] = limpio(d[k], max);
+    if (!Object.values(v).some(Boolean)) return resp(200, true);                       // formulario vacío: nada que guardar
+    const { n } = await env.DB.prepare("SELECT COUNT(*) AS n FROM leads WHERE huella = ? AND creado > datetime('now','-10 minutes')").bind(h).first();
+    if (n >= 5) return resp(429);
+    await env.DB.prepare("INSERT INTO leads (nombre, necesito, negocio, temperatura, largo, ancho, alto, ciudad, con_foto, pagina, pais, huella) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
+      .bind(v.nombre, v.necesito, v.negocio, v.temperatura, v.largo, v.ancho, v.alto, v.ciudad, d.foto ? 1 : 0, pagina, pais, h).run();
+    return resp(200, true);
+  } catch (e) {
+    return resp(500);
+  }
+}
 
 export default {
   async fetch(req, env) {
@@ -12,6 +61,8 @@ export default {
       url.protocol = "https:";
       return Response.redirect(url.toString(), 301);
     }
+
+    if (url.pathname === "/api/lead" || url.pathname === "/api/clic") return api(req, env, url);
 
     // fotos: WebP (más livianas) para los navegadores que lo aceptan
     // las imágenes para compartir (og*.jpg) van siempre en JPG: algunos lectores de enlaces no aceptan WebP

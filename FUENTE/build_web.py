@@ -315,19 +315,24 @@ WAJS = r'''// Refrigeración Team: WhatsApp, medición de clics y avisos
 })();
 const WHATSAPP = "%s";   // país + número, sin + ni espacios
 const wa = t => "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(t + "\n\n(web: " + location.pathname + ")");
-function track(lugar){
+// envía datos a nuestra API (D1 de Cloudflare); keepalive para que salga aunque se abra WhatsApp en otra pestaña
+function beacon(url, datos){
+  try{ fetch(url, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(datos), keepalive:true}).catch(function(){}); }catch(e){}
+}
+function track(lugar, tipo){
   try{
     window.dataLayer = window.dataLayer || [];
     dataLayer.push({event:"whatsapp_click", lugar});
     if (window.gtag) gtag("event","whatsapp_click",{lugar});
     if (window.fbq) fbq("track","Contact",{lugar});
+    beacon("/api/clic", {tipo: tipo || "whatsapp", lugar: lugar, pagina: location.pathname});
   }catch(e){}
 }
 document.querySelectorAll("[data-wa]").forEach(a => {
   a.href = wa(a.dataset.wa); a.target = "_blank"; a.rel = "noopener";
   a.addEventListener("click", () => track(a.dataset.lugar || (a.className.split(" ").pop() || "enlace")));
 });
-document.querySelectorAll('a[href^="tel:"]').forEach(a => a.addEventListener("click", () => track((a.dataset.lugar || "llamada"))));
+document.querySelectorAll('a[href^="tel:"]').forEach(a => a.addEventListener("click", () => track((a.dataset.lugar || "llamada"), "llamada")));
 
 // aviso flotante tras unos segundos (una vez por visita)
 try{

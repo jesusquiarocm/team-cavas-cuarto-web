@@ -9,6 +9,9 @@
     "html_handling": "auto-trailing-slash",
     "run_worker_first": true
   },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "tcc-leads", "database_id": "e938f35b-678e-4769-857e-004c21569cbe" }
+  ],
   "workers_dev": false,
   "routes": [
     { "pattern": "cavascuartoteam.com", "custom_domain": true },

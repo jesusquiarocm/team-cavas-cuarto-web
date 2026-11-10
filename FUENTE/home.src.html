@@ -719,11 +719,12 @@ footer a:hover{color:var(--cyan)}
       <input id="ciu" placeholder="Ej: Barcelona, Anzoátegui">
       <label for="nom">Tu nombre</label>
       <input id="nom" placeholder="¿Cómo te llamas?">
+      <div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"><label for="web">No llenar este campo</label><input id="web" tabindex="-1" autocomplete="off"></div>
       <label style="display:flex;gap:10px;align-items:center;font-weight:500;margin-top:14px"><input type="checkbox" id="foto" style="width:18px;height:18px;flex:none"> Te enviaré una foto del espacio por WhatsApp</label>
       <button type="submit" class="btn btn-wa">
         <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use href="#i-wa"/></svg>Enviar por WhatsApp
       </button>
-      <p class="note">Se abrirá tu WhatsApp con el mensaje. Tú decides si lo envías.</p>
+      <p class="note">Se abrirá tu WhatsApp con el mensaje y guardamos tu solicitud para atenderte mejor. Tú decides si lo envías.</p>
     </form>
   </div>
 </section>

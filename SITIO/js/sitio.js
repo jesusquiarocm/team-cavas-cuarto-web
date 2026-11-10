@@ -30,7 +30,10 @@ if (fq) fq.addEventListener("submit", e => {
   else l.push("Medidas: aún no las sé, necesito orientación.");
   if (v("ciu"))  l.push("Ubicación: " + v("ciu"));
   if (document.getElementById("foto").checked) l.push("Te enviaré una foto del espacio por aquí.");
-  track("cotizador");
+  track("cotizador", "cotizador");
+  // guardamos la solicitud (sin esperar la respuesta: WhatsApp se abre igual aunque falle)
+  beacon("/api/lead", {nombre: v("nom"), necesito: v("que"), negocio: v("tipo"), temperatura: v("temp"), largo: v("l"), ancho: v("a"), alto: v("h"),
+    ciudad: v("ciu"), foto: document.getElementById("foto").checked, web: v("web"), ms: Math.round(performance.now()), pagina: location.pathname});
   window.open(wa(l.join("\n")), "_blank", "noopener");
 });
 
