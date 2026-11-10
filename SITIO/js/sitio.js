@@ -73,6 +73,47 @@ document.querySelectorAll("[data-tutorial]").forEach(function(b){b.addEventListe
 tv.addEventListener("click",function(e){if(e.target===tv||e.target.tagName==="BUTTON")cierra()});
 document.addEventListener("keydown",function(e){if(e.key==="Escape")cierra()})})();
 
+// temperaturas: al aparecer, el fondo pasa de azul claro a oscuro, los grados cuentan y luego suben copos de nieve
+(function(){
+  const s = document.getElementById("temperaturas");
+  if (!s || !("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+  const nums = [...s.querySelectorAll(".temp .big")].map(el => {
+    const m = el.textContent.match(/^(.*?)([−-]?)(\d+)(\s*°C)$/);
+    return m && {el, pre: m[1], neg: m[2], fin: +m[3], suf: m[4]};
+  }).filter(Boolean);
+  const pinta = (n, v) => { n.el.textContent = n.pre + (v ? n.neg : "") + v + n.suf; };
+  s.classList.add("t-anim"); nums.forEach(n => pinta(n, 0));
+  const DUR = 1800;
+  const nieva = () => {
+    const c = document.createElement("div"); c.className = "copos"; c.setAttribute("aria-hidden", "true");
+    const h = s.offsetHeight + 40, cant = innerWidth < 700 ? 16 : 30;
+    for (let k = 0; k < cant; k++) {
+      const f = document.createElement("span"); f.className = "copo";
+      const t = 6 + Math.random() * 10;   // tamaño en px
+      f.style.cssText = `left:${Math.random() * 100}%;--s:${t}px;--o:${(.35 + t / 30).toFixed(2)};--h:${h}px;` +
+        `--x:${Math.round(Math.random() * 80 - 40)}px;--d:${(9 + Math.random() * 9).toFixed(1)}s;--w:${(-Math.random() * 4).toFixed(1)}s`;
+      c.appendChild(f);
+    }
+    s.prepend(c);
+  };
+  const empieza = () => {
+    s.classList.add("frio");
+    const t0 = performance.now();
+    const paso = t => {
+      const p = Math.min(1, (t - t0) / DUR), e = 1 - Math.pow(1 - p, 3);
+      nums.forEach(n => pinta(n, Math.round(n.fin * e)));
+      if (p < 1) requestAnimationFrame(paso);
+    };
+    requestAnimationFrame(paso);
+    setTimeout(nieva, DUR * .8);
+  };
+  let hecho = false;
+  new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting && !hecho && e.intersectionRatio >= .3) { hecho = true; empieza(); }
+    s.classList.toggle("quieto", !e.isIntersecting);   // los copos se pausan fuera de pantalla
+  }), {threshold: [0, .3]}).observe(s);
+})();
+
 (function(){var m=document.getElementById("cobertura");if(!m)return;
 if(!("IntersectionObserver"in window)){m.classList.add("go");return}
 new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting){m.classList.add("go");o.disconnect()}})},{threshold:.3}).observe(m)})();
