@@ -1,7 +1,6 @@
 // Refrigeración Team: WhatsApp, medición de clics y avisos
-// Imágenes: sin carga diferida en el carrusel y reintento si alguna falla
+// Imágenes: reintento si alguna falla al cargar
 (function(){
-  document.querySelectorAll('#rail img, #equipo img').forEach(function(i){ i.loading='eager'; });
   function fix(i){
     var n=+(i.dataset.r||0);
     var a=i.getAttribute('src');
@@ -43,6 +42,15 @@ try{
     setTimeout(cerrar, 14000);
   }, 8000);
 }catch(e){}
+
+// menú en el celular
+const hd = document.querySelector("header"), mb = document.querySelector(".menu-btn");
+if (hd && mb) {
+  const set = on => { hd.classList.toggle("open", on); mb.setAttribute("aria-expanded", on); mb.setAttribute("aria-label", on ? "Cerrar menú" : "Abrir menú"); };
+  mb.addEventListener("click", () => set(!hd.classList.contains("open")));
+  hd.querySelectorAll("nav a").forEach(a => a.addEventListener("click", () => set(false)));
+  document.addEventListener("keydown", e => { if (e.key === "Escape") set(false); });
+}
 
 const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } }), {threshold:.12});
 document.querySelectorAll(".rv").forEach(el => io.observe(el));

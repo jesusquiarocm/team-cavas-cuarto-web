@@ -4,23 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cavas Cuarto a tu Medida en Venezuela | Refrigeración Team</title>
-<meta name="description" content="Fabricamos e instalamos cavas cuarto a tu medida y vendemos equipos y materiales: unidades condensadoras, compresores, difusores y freezers. Toda Venezuela. Cotiza por WhatsApp.">
+<meta name="description" content="Fabricamos e instalamos cavas cuarto a tu medida en toda Venezuela y vendemos condensadoras, compresores, difusores y freezers. Cotiza por WhatsApp.">
 {{ROBOTS}}
 <link rel="canonical" href="{{BASE}}/">
 <meta name="theme-color" content="#0040A0">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_VE">
-<meta property="og:title" content="Cavas cuarto a tu medida | Refrigeración Team">
+<meta property="og:title" content="Cavas Cuarto a tu Medida en Venezuela | Refrigeración Team">
 <meta property="og:description" content="Diseño, fabricación e instalación de cavas cuarto en toda Venezuela. Cotiza directo por WhatsApp.">
 <meta property="og:url" content="{{BASE}}/">
 <meta property="og:site_name" content="Refrigeración Team">
 <meta property="og:image" content="{{BASE}}/img/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Refrigeración Team: cavas cuarto a tu medida en toda Venezuela">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" as="image" href="/img/c11.jpg" fetchpriority="high">
-<link rel="icon" type="image/png" href="/img/icon.png">
-<link rel="apple-touch-icon" href="/img/icon.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/img/icon-96.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 {{ANALYTICS}}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,12 +32,16 @@
 {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
+  "@id": "{{BASE}}/#empresa",
   "name": "Refrigeración Team Cavas Cuarto",
+  "alternateName": "Refrigeración Team",
+  "logo": "{{BASE}}/img/logo.png",
   "description": "Diseño, fabricación e instalación de cavas cuarto y venta de equipos, materiales y freezers en toda Venezuela.",
   "telephone": "+584121856429",
-  "image": "{{BASE}}/img/og.jpg",
+  "image": ["{{BASE}}/img/og.jpg", "{{BASE}}/img/equipo-grupo.jpg", "{{BASE}}/img/equipo-instalacion.jpg"],
   "url": "{{BASE}}/",
   "areaServed": { "@type": "Country", "name": "Venezuela" },
+  "contactPoint": { "@type": "ContactPoint", "telephone": "+584121856429", "contactType": "sales", "availableLanguage": "es", "areaServed": "VE" },
   "sameAs": ["https://www.instagram.com/cavascuartoteam/"],
   "makesOffer": [
     { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Fabricación de cavas cuarto a medida" } },
@@ -129,7 +135,20 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdro
 nav ul{display:flex;gap:26px;list-style:none}
 nav a{text-decoration:none;font-weight:600;font-size:.94rem;color:var(--muted)}
 nav a:hover{color:var(--navy)}
-@media(max-width:860px){nav ul{display:none}.brand span{display:none}}
+.menu-btn{display:none}
+@media(max-width:860px){
+  .brand span{display:none}
+  .menu-btn{display:flex;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;order:3;flex:0 0 auto}
+  .menu-btn span{display:block;height:2px;width:20px;margin:0 auto;background:var(--navy);border-radius:2px;transition:.2s}
+  header.open .menu-btn span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  header.open .menu-btn span:nth-child(2){opacity:0}
+  header.open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .nav .btn-sm{margin-left:auto}
+  nav ul{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:0;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 18px 30px rgba(6,34,77,.12);padding:6px 16px 14px}
+  header.open nav ul{display:flex}
+  nav ul a{display:block;padding:13px 4px;font-size:1rem;color:var(--navy);border-bottom:1px solid var(--line)}
+  nav ul li:last-child a{border-bottom:0}
+}
 
 /* hero */
 .hero{background:radial-gradient(1200px 500px at 85% -10%,rgba(41,169,232,.45),transparent 60%),linear-gradient(160deg,var(--navy-dk),#0a3a8a 70%,var(--navy));color:#fff;position:relative;overflow:hidden;padding:56px 0 72px}
@@ -338,6 +357,8 @@ details p{color:var(--muted);padding-bottom:18px}
 footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
 .foot{display:flex;flex-wrap:wrap;gap:32px;justify-content:space-between;align-items:center}
 .foot .logo{background:#fff;border-radius:16px;padding:10px 16px}
+.foot ul.fl{display:block;columns:2;column-gap:32px;flex:1 1 380px;max-width:520px}.foot ul.fl li{break-inside:avoid;margin-bottom:6px}
+@media(max-width:600px){.foot ul.fl{columns:1}}
 .foot .logo img{height:84px;width:auto}
 .foot a{color:#fff;text-decoration:none;font-weight:600}
 .foot a:hover{color:var(--cyan)}
@@ -362,11 +383,11 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
 <header>
   <div class="wrap nav">
     <a class="brand" href="#inicio" aria-label="Refrigeración Team, inicio">
-      <img src="/img/logo.png" alt="Logo Refrigeración Team Cavas Cuarto" width="48" height="48">
+      <img src="/img/logo.png" alt="Logo Refrigeración Team Cavas Cuarto" width="63" height="54">
       <span>Refrigeración Team<small>Cavas cuarto</small></span>
     </a>
     <nav aria-label="Principal">
-      <ul>
+      <ul id="menu">
         <li><a href="#servicios">Servicios</a></li>
         <li><a href="#equipos">Equipos</a></li>
         <li><a href="#temperaturas">Temperaturas</a></li>
@@ -376,6 +397,7 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
         <li><a href="#faq">Preguntas</a></li>
       </ul>
     </nav>
+    <button class="menu-btn" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
     <a class="btn btn-wa btn-sm" data-wa="Hola, quiero cotizar una cava cuarto." href="#">
       <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use href="#i-wa"/></svg>WhatsApp
     </a>
@@ -568,19 +590,19 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
   </div>
   <div class="rail-wrap">
     <div class="rail" id="rail">
-      <figure><div class="im"><img src="/img/real-exterior.jpg" alt="Cava cuarto con cortina de aire y paneles de control" loading="eager" decoding="async"></div><figcaption>Cava con cortina de aire</figcaption></figure>
-      <figure><div class="im"><img src="/img/c86.jpg" alt="Cava industrial de gran tamaño" loading="eager" decoding="async"></div><figcaption>Cava industrial</figcaption></figure>
-      <figure><div class="im"><img src="/img/c25.jpg" alt="Cava con puerta corrediza en galpón" loading="eager" decoding="async"></div><figcaption>Puerta corrediza</figcaption></figure>
-      <figure><div class="im"><img src="/img/real-interior1.jpg" alt="Interior de cava con evaporadores" loading="eager" decoding="async"></div><figcaption>Evaporadores por dentro</figcaption></figure>
-      <figure><div class="im"><img src="/img/c20.jpg" alt="Dos cavas con panel de control" loading="eager" decoding="async"></div><figcaption>Cavas con control de temperatura</figcaption></figure>
-      <figure><div class="im"><img src="/img/c83.jpg" alt="Cava doble con dos puertas" loading="eager" decoding="async"></div><figcaption>Cava de dos puertas</figcaption></figure>
-      <figure><div class="im"><img src="/img/c36.jpg" alt="Cámaras exteriores con doble puerta" loading="eager" decoding="async"></div><figcaption>Cámaras exteriores</figcaption></figure>
-      <figure><div class="im"><img src="/img/c40.jpg" alt="Cava instalada en galpón" loading="eager" decoding="async"></div><figcaption>Cava en galpón</figcaption></figure>
-      <figure><div class="im"><img src="/img/real-interior2.jpg" alt="Interior amplio de cava cuarto" loading="eager" decoding="async"></div><figcaption>Interior amplio</figcaption></figure>
-      <figure><div class="im"><img src="/img/c43.jpg" alt="Cava dentro de un local" loading="eager" decoding="async"></div><figcaption>Cava dentro de local</figcaption></figure>
-      <figure><div class="im"><img src="/img/c78.jpg" alt="Cava con puerta lateral" loading="eager" decoding="async"></div><figcaption>Cava con puerta lateral</figcaption></figure>
-      <figure><div class="im"><img src="/img/c64.jpg" alt="Cava con cortina de aire y piso azul" loading="eager" decoding="async"></div><figcaption>Cava con cortina de aire</figcaption></figure>
-      <figure><div class="im"><img src="/img/c72.jpg" alt="Puerta de cava con herrajes" loading="eager" decoding="async"></div><figcaption>Puerta con herrajes</figcaption></figure>
+      <figure><div class="im"><img src="/img/real-exterior.jpg" alt="Cava cuarto con cortina de aire y paneles de control" loading="eager" decoding="async" fetchpriority="low"></div><figcaption>Cava con cortina de aire</figcaption></figure>
+      <figure><div class="im"><img src="/img/c86.jpg" alt="Cava industrial de gran tamaño" loading="eager" decoding="async" fetchpriority="low"></div><figcaption>Cava industrial</figcaption></figure>
+      <figure><div class="im"><img src="/img/c25.jpg" alt="Cava con puerta corrediza en galpón" loading="eager" decoding="async" fetchpriority="low"></div><figcaption>Puerta corrediza</figcaption></figure>
+      <figure><div class="im"><img src="/img/real-interior1.jpg" alt="Interior de cava con evaporadores" loading="eager" decoding="async" fetchpriority="low"></div><figcaption>Evaporadores por dentro</figcaption></figure>
+      <figure><div class="im"><img src="/img/c20.jpg" alt="Dos cavas con panel de control" loading="eager" decoding="async" fetchpriority="low"></div><figcaption>Cavas con control de temperatura</figcaption></figure>
+      <figure><div class="im"><img src="/img/c83.jpg" alt="Cava doble con dos puertas" loading="eager" decoding="async" fetchpriority="low"></div><figcaption>Cava de dos puertas</figcaption></figure>
+      <figure><div class="im"><img src="/img/c36.jpg" alt="Cámaras exteriores con doble puerta" loading="eager" decoding="async" fetchpriority="low"></div><figcaption>Cámaras exteriores</figcaption></figure>
+      <figure><div class="im"><img src="/img/c40.jpg" alt="Cava instalada en galpón" loading="eager" decoding="async" fetchpriority="low"></div><figcaption>Cava en galpón</figcaption></figure>
+      <figure><div class="im"><img src="/img/real-interior2.jpg" alt="Interior amplio de cava cuarto" loading="eager" decoding="async" fetchpriority="low"></div><figcaption>Interior amplio</figcaption></figure>
+      <figure><div class="im"><img src="/img/c43.jpg" alt="Cava dentro de un local" loading="eager" decoding="async" fetchpriority="low"></div><figcaption>Cava dentro de local</figcaption></figure>
+      <figure><div class="im"><img src="/img/c78.jpg" alt="Cava con puerta lateral" loading="eager" decoding="async" fetchpriority="low"></div><figcaption>Cava con puerta lateral</figcaption></figure>
+      <figure><div class="im"><img src="/img/c64.jpg" alt="Cava con cortina de aire y piso azul" loading="eager" decoding="async" fetchpriority="low"></div><figcaption>Cava con cortina de aire</figcaption></figure>
+      <figure><div class="im"><img src="/img/c72.jpg" alt="Puerta de cava con herrajes" loading="eager" decoding="async" fetchpriority="low"></div><figcaption>Puerta con herrajes</figcaption></figure>
     </div>
   </div>
 </section>
@@ -673,12 +695,12 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
 <footer>
   <div class="wrap">
     <div class="foot">
-      <div class="logo"><img src="/img/logo.png" alt="Refrigeración Team Cavas Cuarto" width="84" height="84"></div>
+      <div class="logo"><img src="/img/logo.png" alt="Refrigeración Team Cavas Cuarto" width="98" height="84" loading="lazy"></div>
       <ul>
         <li>Diseño · Fabricación · Instalación de cavas cuarto</li>
         <li>Atendemos en toda Venezuela</li>
       </ul>
-      <ul>{{FOOTLINKS}}</ul>
+      <ul class="fl">{{FOOTLINKS}}</ul>
       <ul>
         <li><a href="tel:+584121856429">0412 1856429</a></li>
         <li><a data-wa="Hola, quiero información sobre cavas cuarto." href="#">WhatsApp</a></li>

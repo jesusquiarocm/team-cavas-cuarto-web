@@ -4,7 +4,7 @@
 Uso:  python3 build_web.py
 Al publicar con dominio real: INDEXAR = True y BASE = "https://tudominio.com", correr de nuevo.
 """
-import html, json, re, datetime
+import html, json, re, datetime, hashlib
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
@@ -272,9 +272,8 @@ def analytics():
     return o
 
 WAJS = r'''// Refrigeración Team: WhatsApp, medición de clics y avisos
-// Imágenes: sin carga diferida en el carrusel y reintento si alguna falla
+// Imágenes: reintento si alguna falla al cargar
 (function(){
-  document.querySelectorAll('#rail img, #equipo img').forEach(function(i){ i.loading='eager'; });
   function fix(i){
     var n=+(i.dataset.r||0);
     var a=i.getAttribute('src');
@@ -317,15 +316,25 @@ try{
   }, 8000);
 }catch(e){}
 
+// menú en el celular
+const hd = document.querySelector("header"), mb = document.querySelector(".menu-btn");
+if (hd && mb) {
+  const set = on => { hd.classList.toggle("open", on); mb.setAttribute("aria-expanded", on); mb.setAttribute("aria-label", on ? "Cerrar menú" : "Abrir menú"); };
+  mb.addEventListener("click", () => set(!hd.classList.contains("open")));
+  hd.querySelectorAll("nav a").forEach(a => a.addEventListener("click", () => set(false)));
+  document.addEventListener("keydown", e => { if (e.key === "Escape") set(false); });
+}
+
 const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } }), {threshold:.12});
 document.querySelectorAll(".rv").forEach(el => io.observe(el));
 const yr = document.getElementById("yr"); if (yr) yr.textContent = new Date().getFullYear();
 ''' % WHATSAPP
 
 def foot_links():
-    items = [("/equipos-y-materiales-para-cavas-cuarto/", "Equipos y materiales"), ("/freezers-comerciales/", "Freezers"), ("/cuarto-de-refrigeracion/", "Cuarto de refrigeración"), ("/cuarto-de-congelacion/", "Cuarto de congelación"),
-             ("/cavas-cuarto-carniceria/", "Para carnicerías"), ("/cuartos-frios-pescaderia/", "Para pescaderías"),
-             ("/cava-cuarto-restaurante/", "Para restaurantes"), ("/como-elegir-una-cava-cuarto/", "Cómo elegir tu cava")]
+    items = [("/cuarto-de-refrigeracion/", "Cuarto de refrigeración"), ("/cuarto-de-congelacion/", "Cuarto de congelación"),
+             ("/equipos-y-materiales-para-cavas-cuarto/", "Equipos y materiales"), ("/freezers-comerciales/", "Freezers"),
+             ("/como-elegir-una-cava-cuarto/", "Cómo elegir tu cava")] + \
+            [(f"/{p['slug']}/", "Para " + p["nombre"].lower()) for p in PAGES[:8]]
     return "".join(f'<li><a href="{u}">{t}</a></li>' for u, t in items)
 
 # ------------------------------------------------------------ imagen social
@@ -345,7 +354,7 @@ def make_og():
             try: return ImageFont.truetype(f, sz)
             except Exception: pass
         return ImageFont.load_default()
-    logo = Image.open(SITIO / "img/logo.png").convert("RGBA"); logo.thumbnail((170, 170))
+    logo = Image.open(AQUI / "logo_original.png").convert("RGBA"); logo.thumbnail((170, 170))
     chip = Image.new("RGBA", (logo.width + 24, logo.height + 24), (255, 255, 255, 255)); chip.paste(logo, (12, 12), logo)
     im.paste(chip, (60, 60), chip)
     y = 270
@@ -390,7 +399,18 @@ EXTRA_CSS = """
 .rel a:hover{border-color:var(--sky);transform:translateY(-2px)}.rel a small{display:block;color:var(--muted);font-weight:500;margin-top:4px}
 """
 
-def head(title, desc, path, img, schema):
+def wa_hrefs(s):
+    """Pone el enlace real de WhatsApp en el HTML (wa.js luego le añade la página de origen)."""
+    def f(m):
+        tag = m.group(0)
+        t = re.search(r'data-wa="([^"]*)"', tag)
+        if not t or 'href="#"' not in tag: return tag
+        return tag.replace('href="#"', f'href="{esc(wa_url(html.unescape(t.group(1))))}" target="_blank" rel="nofollow noopener"', 1)
+    return re.sub(r"<a [^>]*data-wa=[^>]*>", f, s)
+
+EMPRESA = {"@type": "LocalBusiness", "@id": f"{BASE}/#empresa", "name": "Refrigeración Team Cavas Cuarto", "telephone": "+584121856429", "url": f"{BASE}/"}
+
+def head(title, desc, path, img, schema, canonical=True):
     url = f"{BASE}{path}"
     return f"""<!doctype html>
 <html lang="es">
@@ -400,16 +420,17 @@ def head(title, desc, path, img, schema):
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
 {robots_meta()}
-<link rel="canonical" href="{url}">
+{f'<link rel="canonical" href="{url}">' if canonical else ""}
 <meta name="theme-color" content="#0040A0">
 <meta property="og:type" content="website"><meta property="og:locale" content="es_VE">
 <meta property="og:site_name" content="Refrigeración Team">
 <meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
 <meta property="og:url" content="{url}"><meta property="og:image" content="{BASE}/img/og.jpg">
+<meta property="og:image:alt" content="Refrigeración Team: cavas cuarto a tu medida en toda Venezuela">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/png" href="/img/icon.png"><link rel="apple-touch-icon" href="/img/icon.png">
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" href="/img/icon-96.png"><link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 {analytics()}{FONTS}
-<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
+{f'<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>' if schema else ""}
 <style>{CSS}{EXTRA_CSS}</style>
 </head>
 <body>
@@ -421,7 +442,7 @@ WA_ICON = '<svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use 
 
 def build_page(p):
     path = f"/{p['slug']}/"
-    business = {"@type": "LocalBusiness", "name": "Refrigeración Team Cavas Cuarto", "telephone": "+584121856429", "url": f"{BASE}/"}
+    business = EMPRESA
     schema = {"@context": "https://schema.org", "@graph": [
         {"@type": "Service", "name": p["h1"], "description": p["desc"], "serviceType": "Fabricación e instalación de cavas cuarto",
          "provider": business, "areaServed": {"@type": "Country", "name": "Venezuela"}, "url": f"{BASE}{path}"},
@@ -452,43 +473,28 @@ def build_page(p):
 </main>
 """ + FOOTER + "\n" + FAB + "\n" + MBAR + "\n" + SYMBOL + "\n" + SCRIPT
     d = SITIO / p["slug"]; d.mkdir(exist_ok=True)
-    (d / "index.html").write_text(add_dims(o), encoding="utf-8")
+    (d / "index.html").write_text(wa_hrefs(add_dims(o)), encoding="utf-8")
 
 # ------------------------------------------------------------------- build
 make_og()
 (SITIO / "js").mkdir(exist_ok=True)
 (SITIO / "js" / "wa.js").write_text(WAJS, encoding="utf-8")
 h = (home.replace("{{ICON_COMPRESOR}}", ICON_COMPRESOR).replace("{{ICON_FREEZER}}", ICON_FREEZER).replace("{{ICON_LUCES}}", ICON_LUCES).replace("{{MAPA_VZLA}}", (AQUI / "mapa_vzla.svg.html").read_text(encoding="utf-8")).replace("{{TOPBAR}}", TOPBAR).replace("{{ANALYTICS}}", analytics()).replace("{{ROBOTS}}", robots_meta()).replace("{{BASE}}", BASE).replace("{{FOOTLINKS}}", foot_links()))
-(SITIO / "index.html").write_text(add_dims(h), encoding="utf-8")
+(SITIO / "index.html").write_text(wa_hrefs(add_dims(h)), encoding="utf-8")
 for p in PAGES: build_page(p)
 
 urls = ["/"] + [f"/{p['slug']}/" for p in PAGES]
+# lastmod solo cambia cuando cambia el contenido de esa página (registro en lastmod.json)
+REG = AQUI / "lastmod.json"
+reg = json.loads(REG.read_text()) if REG.exists() else {}
+for u in urls:
+    hsh = hashlib.sha1((SITIO / u.strip("/") / "index.html").read_bytes()).hexdigest()
+    if reg.get(u, {}).get("hash") != hsh: reg[u] = {"hash": hsh, "fecha": HOY}
+REG.write_text(json.dumps(reg, indent=1, ensure_ascii=False))
 (SITIO / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-    "".join(f"<url><loc>{BASE}{u}</loc><lastmod>{HOY}</lastmod><priority>{'1.0' if u=='/' else '0.8'}</priority></url>\n" for u in urls) + "</urlset>\n", encoding="utf-8")
+    "".join(f"<url><loc>{BASE}{u}</loc><lastmod>{reg[u]['fecha']}</lastmod></url>\n" for u in urls) + "</urlset>\n", encoding="utf-8")
 (SITIO / "robots.txt").write_text(("User-agent: *\nAllow: /\n" if INDEXAR else "User-agent: *\nDisallow: /\n") + f"Sitemap: {BASE}/sitemap.xml\n")
-(SITIO / "404.html").write_text(head("Página no encontrada | Refrigeración Team", "Esta página no existe.", "/404.html", "", {"@context": "https://schema.org"}).replace(robots_meta(), '<meta name="robots" content="noindex">') +
-    HEADER + '<main><section><div class="wrap" style="text-align:center;padding:60px 0"><h1>Esta página no existe</h1><p class="lead" style="margin:12px auto 24px">Pero tu cava cuarto sí podemos hacerla.</p><a class="btn btn-wa" href="/">Ir al inicio</a></div></section></main>' +
-    FOOTER + FAB + SYMBOL + SCRIPT, encoding="utf-8")
-(SITIO / "netlify.toml").write_text("""[[headers]]
-  for = "/img/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-[[headers]]
-  for = "/js/*"
-  [headers.values]
-    Cache-Control = "public, max-age=3600"
-[[headers]]
-  for = "/video/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-[[redirects]]
-  from = "/*"
-  to = "/404.html"
-  status = 404
-""")
+(SITIO / "404.html").write_text(head("Página no encontrada | Refrigeración Team", "Esta página no existe.", "/404.html", "", None, canonical=False).replace(robots_meta(), '<meta name="robots" content="noindex">') +
+    wa_hrefs(HEADER) + '<main><section><div class="wrap" style="text-align:center;padding:60px 0"><h1>Esta página no existe</h1><p class="lead" style="margin:12px auto 24px">Pero tu cava cuarto sí podemos hacerla.</p><a class="btn btn-wa" href="/">Ir al inicio</a></div></section></main>' +
+    wa_hrefs(FOOTER + FAB + SYMBOL) + SCRIPT, encoding="utf-8")
 print("OK:", len(PAGES) + 1, "páginas | INDEXAR =", INDEXAR, "| BASE =", BASE)
