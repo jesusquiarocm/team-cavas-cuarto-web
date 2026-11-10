@@ -34,16 +34,35 @@ if (fq) fq.addEventListener("submit", e => {
   window.open(wa(l.join("\n")), "_blank", "noopener");
 });
 
-// galería ampliada
+// galería ampliada: data-full trae la foto grande; con flechas se pasa a la siguiente
 const lb = document.getElementById("lb");
 if (lb) {
-  const lbi = lb.querySelector("img");
-  ["rail","equipo","galeria"].forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener("click", e => {
+  const lbi = lb.querySelector("img"), cap = lb.querySelector(".lb-c");
+  let fotos = [], i = 0;
+  const muestra = n => {
+    i = (n + fotos.length) % fotos.length; const im = fotos[i];
+    lbi.src = im.dataset.full || im.currentSrc || im.src; lbi.alt = im.alt;
+    if (cap) cap.textContent = (i + 1) + " / " + fotos.length;
+    const sig = fotos[(i + 1) % fotos.length]; if (sig.dataset.full) new Image().src = sig.dataset.full;
+  };
+  ["rail","equipo","galeria","fotos"].forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener("click", e => {
     const im = e.target.closest("img"); if (!im) return;
-    lbi.src = im.src; lbi.alt = im.alt; lb.classList.add("on");
+    fotos = [...el.querySelectorAll("img")]; lb.classList.toggle("solo", fotos.length < 2);
+    muestra(fotos.indexOf(im)); lb.classList.add("on");
   }); });
-  lb.addEventListener("click", () => lb.classList.remove("on"));
-  document.addEventListener("keydown", e => { if (e.key === "Escape") lb.classList.remove("on"); });
+  const cierra = () => { lb.classList.remove("on"); lbi.removeAttribute("src"); };
+  lb.addEventListener("click", e => {
+    if (e.target.closest(".lb-p")) muestra(i - 1); else if (e.target.closest(".lb-n")) muestra(i + 1);
+    else if (e.target !== lbi || window.innerWidth < 700) cierra();
+  });
+  document.addEventListener("keydown", e => {
+    if (!lb.classList.contains("on")) return;
+    if (e.key === "Escape") cierra(); else if (e.key === "ArrowLeft") muestra(i - 1); else if (e.key === "ArrowRight") muestra(i + 1);
+  });
+  let x0 = null;   // deslizar con el dedo
+  lb.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, {passive: true});
+  lb.addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 50) { e.preventDefault(); muestra(dx < 0 ? i + 1 : i - 1); } });
 }
 
 

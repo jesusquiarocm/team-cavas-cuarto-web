@@ -1,0 +1,728 @@
+[
+{
+"n": "cava-001",
+"w": 810,
+"h": 1080,
+"vertical": true
+},
+{
+"n": "cava-002",
+"w": 464,
+"h": 1024,
+"vertical": true
+},
+{
+"n": "cava-003",
+"w": 810,
+"h": 1080,
+"vertical": true
+},
+{
+"n": "cava-004",
+"w": 1080,
+"h": 810,
+"vertical": false
+},
+{
+"n": "cava-005",
+"w": 1080,
+"h": 810,
+"vertical": false
+},
+{
+"n": "cava-006",
+"w": 810,
+"h": 1080,
+"vertical": true
+},
+{
+"n": "cava-007",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-008",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-009",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-010",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-011",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-012",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-013",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-014",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-015",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-016",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-017",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-018",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-019",
+"w": 1000,
+"h": 750,
+"vertical": false
+},
+{
+"n": "cava-020",
+"w": 750,
+"h": 1000,
+"vertical": true
+},
+{
+"n": "cava-021",
+"w": 750,
+"h": 1000,
+"vertical": true
+},
+{
+"n": "cava-022",
+"w": 750,
+"h": 1000,
+"vertical": true
+},
+{
+"n": "cava-023",
+"w": 750,
+"h": 1000,
+"vertical": true
+},
+{
+"n": "cava-024",
+"w": 1000,
+"h": 750,
+"vertical": false
+},
+{
+"n": "cava-025",
+"w": 1080,
+"h": 810,
+"vertical": false
+},
+{
+"n": "cava-026",
+"w": 1080,
+"h": 810,
+"vertical": false
+},
+{
+"n": "cava-027",
+"w": 810,
+"h": 1080,
+"vertical": true
+},
+{
+"n": "cava-028",
+"w": 810,
+"h": 1080,
+"vertical": true
+},
+{
+"n": "cava-029",
+"w": 810,
+"h": 1080,
+"vertical": true
+},
+{
+"n": "cava-030",
+"w": 810,
+"h": 1080,
+"vertical": true
+},
+{
+"n": "cava-031",
+"w": 810,
+"h": 1080,
+"vertical": true
+},
+{
+"n": "cava-032",
+"w": 810,
+"h": 1080,
+"vertical": true
+},
+{
+"n": "cava-033",
+"w": 810,
+"h": 1080,
+"vertical": true
+},
+{
+"n": "cava-034",
+"w": 810,
+"h": 1080,
+"vertical": true
+},
+{
+"n": "cava-035",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-036",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-037",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-038",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-039",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-040",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-041",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-042",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-043",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-044",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-045",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-046",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-047",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-048",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-049",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-050",
+"w": 464,
+"h": 1024,
+"vertical": true
+},
+{
+"n": "cava-051",
+"w": 464,
+"h": 1024,
+"vertical": true
+},
+{
+"n": "cava-052",
+"w": 464,
+"h": 1024,
+"vertical": true
+},
+{
+"n": "cava-053",
+"w": 464,
+"h": 1024,
+"vertical": true
+},
+{
+"n": "cava-054",
+"w": 810,
+"h": 1080,
+"vertical": true
+},
+{
+"n": "cava-055",
+"w": 810,
+"h": 1080,
+"vertical": true
+},
+{
+"n": "cava-056",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-057",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-058",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-059",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-060",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-061",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-062",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-063",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-064",
+"w": 726,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-065",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-066",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-067",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-068",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-069",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-070",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-071",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-072",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-073",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-074",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-075",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-076",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-077",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-078",
+"w": 720,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-079",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-080",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-081",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-082",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-083",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-084",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-085",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-086",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-087",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-088",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-089",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-090",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-091",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-092",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-093",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-094",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-095",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-096",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-097",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-098",
+"w": 750,
+"h": 1000,
+"vertical": true
+},
+{
+"n": "cava-099",
+"w": 1000,
+"h": 750,
+"vertical": false
+},
+{
+"n": "cava-100",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-101",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-102",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-103",
+"w": 1000,
+"h": 750,
+"vertical": false
+},
+{
+"n": "cava-104",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-105",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-106",
+"w": 1280,
+"h": 960,
+"vertical": false
+},
+{
+"n": "cava-107",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-108",
+"w": 1232,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-109",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-110",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-111",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-112",
+"w": 810,
+"h": 810,
+"vertical": false
+},
+{
+"n": "cava-113",
+"w": 1152,
+"h": 1152,
+"vertical": false
+},
+{
+"n": "cava-114",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-115",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-116",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-117",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-118",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-119",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-120",
+"w": 960,
+"h": 1280,
+"vertical": true
+},
+{
+"n": "cava-121",
+"w": 960,
+"h": 1280,
+"vertical": true
+}
+]

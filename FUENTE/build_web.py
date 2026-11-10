@@ -376,7 +376,7 @@ def menu_items():
             ("Mantenimiento", "/mantenimiento-cavas-cuarto/")]),
         ("Para tu negocio", "/sectores/", [("Todos los negocios", "/sectores/")] + [(BYSLUG[s]["nombre"], f"/{s}/") for s in SECTORES]),
         ("Equipos", EQUIPOS, [("Equipos y materiales", EQUIPOS), ("Freezers comerciales", "/freezers-comerciales/")]),
-        ("Proyectos", "/proyectos/", None),
+        ("Proyectos", "/proyectos/", [("Obras por estado", "/proyectos/"), ("Galería de fotos", "/galeria/")]),
         ("Nosotros", "/nosotros/", [("Quiénes somos", "/nosotros/"), ("Cobertura", "/cobertura/"),
             ("Preguntas frecuentes", "/preguntas-frecuentes/"), ("Contacto", "/contacto/")]),
     ]
@@ -401,7 +401,7 @@ def foot_cols():
                 ("Precio de una cava cuarto", "/precio-cava-cuarto/"), ("Mantenimiento", "/mantenimiento-cavas-cuarto/"),
                 ("Equipos y materiales", EQUIPOS), ("Freezers", "/freezers-comerciales/")]),
             ("Para tu negocio", [(BYSLUG[s]["nombre"], f"/{s}/") for s in SECTORES]),
-            ("Empresa", [("Proyectos", "/proyectos/"), ("Nosotros", "/nosotros/"), ("Cobertura", "/cobertura/"),
+            ("Empresa", [("Proyectos", "/proyectos/"), ("Galería de fotos", "/galeria/"), ("Nosotros", "/nosotros/"), ("Cobertura", "/cobertura/"),
                 ("Preguntas frecuentes", "/preguntas-frecuentes/"), ("Contacto", "/contacto/"), ("Cotizar", "/cotizar/")])]
     lis = lambda items: "".join('<li><a href="%s">%s</a></li>' % (u, esc(t)) for t, u in items)
     return "\n      ".join('<div><p class="fh">%s</p><ul>%s</ul></div>' % (esc(h), lis(items)) for h, items in cols)
@@ -440,7 +440,7 @@ CSS = re.search(r"<style>(.*?)</style>", home, re.S).group(1)
 HEADER_T = re.search(r"<header>.*?</header>", home, re.S).group(0)
 def header(path): return HEADER_T.replace("{{NAV}}", nav_html(path))
 FOOTER = re.search(r"<footer>.*?</footer>", home, re.S).group(0).replace("{{FOOTCOLS}}", foot_cols())
-LB = '<div id="lb" role="dialog" aria-modal="true" aria-label="Foto ampliada"><button aria-label="Cerrar">×</button><img alt=""></div>'
+LB = re.search(r'<div id="lb".*?</p></div>', home).group(0)
 
 FAB = re.search(r'<a class="fab".*?</a>', home, re.S).group(0)
 SYMBOL = re.search(r'<svg width="0".*?</svg>', home, re.S).group(0)
@@ -476,6 +476,10 @@ EXTRA_CSS = """
 .pgrid figure{cursor:zoom-in}.pgrid .im{aspect-ratio:3/4;border-radius:16px;overflow:hidden;background:#cfe0f0}
 .pgrid img{width:100%;height:100%;object-fit:cover;transition:transform .4s}.pgrid figure:hover img{transform:scale(1.05)}
 .pgrid figcaption{font-size:.86rem;color:var(--muted);margin-top:8px;font-weight:500}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-top:30px}
+.ggrid button{display:block;padding:0;border:0;aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:#cfe0f0;cursor:zoom-in}
+.ggrid img{width:100%;height:100%;object-fit:cover;transition:transform .4s}.ggrid button:hover img{transform:scale(1.05)}
+@media(max-width:520px){.ggrid{grid-template-columns:1fr 1fr;gap:8px}}
 @media(max-width:520px){.pgrid{grid-template-columns:1fr 1fr;gap:10px}}
 .tiles + .more,.faq + .more{margin-top:24px}
 .toc{margin:0 0 34px;gap:8px}.toc a{background:var(--ice);border:1px solid var(--line);border-radius:99px;padding:7px 14px;font-size:.9rem}
@@ -693,7 +697,7 @@ def build_extra_pages(h):
     body = f'''<section class="gal"><div class="wrap"><span class="eyebrow">Galería</span><h2>Cavas reales, instaladas por nosotros</h2>
 <p class="lead">Algunas de las cavas cuarto y cuartos fríos que hemos entregado. Toca una foto para verla en grande.</p>
 <div class="pgrid" id="galeria">{grid}</div>
-<p class="more"><a href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener">Ver más trabajos en Instagram →</a></p></div></section>
+<p class="more"><a href="/galeria/">Ver la galería completa →</a> · <a href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener">Ver más trabajos en Instagram →</a></p></div></section>
 <section><div class="wrap"><span class="eyebrow">Obras por estado</span><h2>Algunas obras y dónde las hicimos</h2>
 <p class="lead">Proyectos publicados en nuestro Instagram, con el lugar y el tipo de cava.</p>
 <div class="ogrid">{"".join(obra_card(o) for o in PROYECTOS)}</div>
@@ -806,7 +810,7 @@ def build_extra_pages(h):
           body, [{"@type": "ContactPage", "name": "Contacto", "url": f"{BASE}/contacto/", "about": emp}],
           "Hola, quiero información sobre cavas cuarto.")
 
-EXTRA_URLS = ["/precio-cava-cuarto/", "/mantenimiento-cavas-cuarto/", "/cavas-cuarto/", "/sectores/", "/proyectos/", "/nosotros/", "/cobertura/", "/cotizar/", "/preguntas-frecuentes/", "/contacto/"]
+EXTRA_URLS = ["/precio-cava-cuarto/", "/mantenimiento-cavas-cuarto/", "/cavas-cuarto/", "/sectores/", "/proyectos/", "/galeria/", "/nosotros/", "/cobertura/", "/cotizar/", "/preguntas-frecuentes/", "/contacto/"]
 
 # ------------------------------------------------------- obras publicadas (Instagram del cliente)
 IG = "https://www.instagram.com/"
@@ -943,6 +947,26 @@ MANT_FAQ = [
  ("¿Venden los repuestos?", "Sí. Vendemos unidades condensadoras, compresores, difusores, controles e insumos para cavas cuarto."),
 ]
 
+def build_galeria():
+    # fotos comprimidas por hacer_galeria.py; la miniatura carga al bajar, la grande solo al tocarla
+    fotos = json.loads((AQUI / "galeria.json").read_text())
+    alt = lambda n: "Cava cuarto instalada por Refrigeración Team, foto %d" % n
+    grid = "".join('<button type="button" aria-label="Ampliar foto %d"><img src="/img/gal/%s-mini.jpg" data-full="/img/gal/%s.jpg" alt="%s" loading="%s" decoding="async"></button>'
+                   % (k, f["n"], f["n"], alt(k), "eager" if k <= 8 else "lazy") for k, f in enumerate(fotos, 1))
+    body = f'''<section class="gal"><div class="wrap"><span class="eyebrow">Galería</span><h2>{len(fotos)} fotos de cavas cuarto reales</h2>
+<p class="lead">Cavas de refrigeración, cuartos de congelación, cavas dobles y cuartos fríos industriales que hemos instalado. Toca una foto para verla en grande y usa las flechas para pasar a la siguiente.</p>
+<div class="ggrid" id="fotos">{grid}</div>
+<p class="more"><a href="/proyectos/">Ver obras por estado →</a> · <a href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener">Ver videos en Instagram →</a></p></div></section>
+{band("Hola, vi la galería de fotos y quiero una cava como esas.", "¿Te gustó alguna de estas cavas?", "Envíanos la foto por WhatsApp con las medidas de tu espacio y te cotizamos una parecida. Todas nuestras cavas tienen garantía.")}'''
+    shell("/galeria/", "Galería de Fotos de Cavas Cuarto | Refrigeración Team",
+          "Fotos reales de cavas cuarto, cuartos de refrigeración y congelación que hemos fabricado e instalado en Venezuela. Mira la galería completa.",
+          [("Proyectos", "/proyectos/"), ("Galería de fotos", "/galeria/")], "Galería de fotos de nuestras cavas cuarto",
+          "Fotos reales de cavas cuarto que hemos fabricado e instalado en negocios, galpones y plantas de toda Venezuela.",
+          body, [{"@type": "ImageGallery", "name": "Galería de cavas cuarto", "url": f"{BASE}/galeria/", "about": {"@id": f"{BASE}/#empresa"},
+                  "image": [{"@type": "ImageObject", "contentUrl": f'{BASE}/img/gal/{f["n"]}.jpg', "width": f["w"], "height": f["h"], "caption": alt(k)}
+                            for k, f in enumerate(fotos, 1)]}],
+          "Hola, vi la galería de fotos y quiero una cava como esas.")
+
 def build_fase2_pages(h):
     emp = {"@id": f"{BASE}/#empresa"}
     # /precio-cava-cuarto/
@@ -1031,6 +1055,7 @@ BYSLUG["equipos-y-materiales-para-cavas-cuarto"]["extra"] = eqsec.replace('<sect
 for p in PAGES: build_page(p)
 build_extra_pages(h)
 build_fase2_pages(h)
+build_galeria()
 
 urls = ["/"] + EXTRA_URLS + [f"/{p['slug']}/" for p in PAGES]
 # lastmod solo cambia cuando cambia el contenido de esa página (registro en lastmod.json)

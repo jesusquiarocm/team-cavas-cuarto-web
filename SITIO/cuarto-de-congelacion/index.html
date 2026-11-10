@@ -297,6 +297,10 @@ nav a:hover,nav a[aria-current="page"]{color:var(--navy)}
 #lb.on{display:flex}
 #lb img{max-height:90vh;max-width:92vw;border-radius:14px}
 #lb button{position:absolute;top:16px;right:20px;background:#fff;border:0;width:42px;height:42px;border-radius:50%;font-size:1.4rem;cursor:pointer}
+#lb .lb-p,#lb .lb-n{top:50%;right:auto;left:14px;transform:translateY(-50%);width:48px;height:48px;font-size:1.8rem;line-height:1;background:rgba(255,255,255,.88)}
+#lb .lb-n{left:auto;right:14px}
+#lb .lb-c{position:absolute;bottom:14px;left:0;right:0;text-align:center;color:#cfe0f0;font-size:.85rem}
+#lb.solo .lb-p,#lb.solo .lb-n,#lb.solo .lb-c{display:none}
 
 /* cotizador */
 .quote{background:linear-gradient(160deg,var(--navy-dk),var(--navy));color:#fff}
@@ -382,6 +386,10 @@ footer a:hover{color:var(--cyan)}
 .pgrid figure{cursor:zoom-in}.pgrid .im{aspect-ratio:3/4;border-radius:16px;overflow:hidden;background:#cfe0f0}
 .pgrid img{width:100%;height:100%;object-fit:cover;transition:transform .4s}.pgrid figure:hover img{transform:scale(1.05)}
 .pgrid figcaption{font-size:.86rem;color:var(--muted);margin-top:8px;font-weight:500}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-top:30px}
+.ggrid button{display:block;padding:0;border:0;aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:#cfe0f0;cursor:zoom-in}
+.ggrid img{width:100%;height:100%;object-fit:cover;transition:transform .4s}.ggrid button:hover img{transform:scale(1.05)}
+@media(max-width:520px){.ggrid{grid-template-columns:1fr 1fr;gap:8px}}
 @media(max-width:520px){.pgrid{grid-template-columns:1fr 1fr;gap:10px}}
 .tiles + .more,.faq + .more{margin-top:24px}
 .toc{margin:0 0 34px;gap:8px}.toc a{background:var(--ice);border:1px solid var(--line);border-radius:99px;padding:7px 14px;font-size:.9rem}
@@ -422,7 +430,7 @@ footer a:hover{color:var(--cyan)}
         <li class="dd"><a href="/cavas-cuarto/">Cavas cuarto</a><button class="dd-t" type="button" aria-expanded="false" aria-label="Ver opciones de Cavas cuarto"></button><ul class="submenu"><li><a href="/cavas-cuarto/">Fabricación e instalación</a></li><li><a href="/cuarto-de-refrigeracion/">Cuarto de refrigeración (0 a 5 °C)</a></li><li><a href="/cuarto-de-congelacion/" aria-current="page">Cuarto de congelación (−18 °C)</a></li><li><a href="/como-elegir-una-cava-cuarto/">Cómo elegir tu cava</a></li><li><a href="/precio-cava-cuarto/">Precios de referencia</a></li><li><a href="/mantenimiento-cavas-cuarto/">Mantenimiento</a></li></ul></li>
         <li class="dd"><a href="/sectores/">Para tu negocio</a><button class="dd-t" type="button" aria-expanded="false" aria-label="Ver opciones de Para tu negocio"></button><ul class="submenu"><li><a href="/sectores/">Todos los negocios</a></li><li><a href="/cavas-cuarto-carniceria/">Carnicerías</a></li><li><a href="/cuartos-frios-pescaderia/">Pescaderías</a></li><li><a href="/cava-cuarto-polleria/">Pollerías</a></li><li><a href="/cava-cuarto-restaurante/">Restaurantes</a></li><li><a href="/cava-cuarto-heladeria/">Heladerías</a></li><li><a href="/cava-cuarto-panaderia/">Panaderías</a></li><li><a href="/cava-cuarto-abasto-bodega/">Abastos y bodegas</a></li><li><a href="/cuartos-frios-galpones-distribuidores/">Galpones y distribuidores</a></li></ul></li>
         <li class="dd"><a href="/equipos-y-materiales-para-cavas-cuarto/">Equipos</a><button class="dd-t" type="button" aria-expanded="false" aria-label="Ver opciones de Equipos"></button><ul class="submenu"><li><a href="/equipos-y-materiales-para-cavas-cuarto/">Equipos y materiales</a></li><li><a href="/freezers-comerciales/">Freezers comerciales</a></li></ul></li>
-        <li><a href="/proyectos/">Proyectos</a></li>
+        <li class="dd"><a href="/proyectos/">Proyectos</a><button class="dd-t" type="button" aria-expanded="false" aria-label="Ver opciones de Proyectos"></button><ul class="submenu"><li><a href="/proyectos/">Obras por estado</a></li><li><a href="/galeria/">Galería de fotos</a></li></ul></li>
         <li class="dd"><a href="/nosotros/">Nosotros</a><button class="dd-t" type="button" aria-expanded="false" aria-label="Ver opciones de Nosotros"></button><ul class="submenu"><li><a href="/nosotros/">Quiénes somos</a></li><li><a href="/cobertura/">Cobertura</a></li><li><a href="/preguntas-frecuentes/">Preguntas frecuentes</a></li><li><a href="/contacto/">Contacto</a></li></ul></li>
         <li><a class="nav-cta" href="/cotizar/">Cotizar</a></li>
       </ul>
@@ -473,7 +481,7 @@ footer a:hover{color:var(--cyan)}
       </div>
       <div><p class="fh">Cavas cuarto</p><ul><li><a href="/cavas-cuarto/">Fabricación e instalación</a></li><li><a href="/cuarto-de-refrigeracion/">Cuarto de refrigeración</a></li><li><a href="/cuarto-de-congelacion/">Cuarto de congelación</a></li><li><a href="/como-elegir-una-cava-cuarto/">Cómo elegir tu cava</a></li><li><a href="/precio-cava-cuarto/">Precio de una cava cuarto</a></li><li><a href="/mantenimiento-cavas-cuarto/">Mantenimiento</a></li><li><a href="/equipos-y-materiales-para-cavas-cuarto/">Equipos y materiales</a></li><li><a href="/freezers-comerciales/">Freezers</a></li></ul></div>
       <div><p class="fh">Para tu negocio</p><ul><li><a href="/cavas-cuarto-carniceria/">Carnicerías</a></li><li><a href="/cuartos-frios-pescaderia/">Pescaderías</a></li><li><a href="/cava-cuarto-polleria/">Pollerías</a></li><li><a href="/cava-cuarto-restaurante/">Restaurantes</a></li><li><a href="/cava-cuarto-heladeria/">Heladerías</a></li><li><a href="/cava-cuarto-panaderia/">Panaderías</a></li><li><a href="/cava-cuarto-abasto-bodega/">Abastos y bodegas</a></li><li><a href="/cuartos-frios-galpones-distribuidores/">Galpones y distribuidores</a></li></ul></div>
-      <div><p class="fh">Empresa</p><ul><li><a href="/proyectos/">Proyectos</a></li><li><a href="/nosotros/">Nosotros</a></li><li><a href="/cobertura/">Cobertura</a></li><li><a href="/preguntas-frecuentes/">Preguntas frecuentes</a></li><li><a href="/contacto/">Contacto</a></li><li><a href="/cotizar/">Cotizar</a></li></ul></div>
+      <div><p class="fh">Empresa</p><ul><li><a href="/proyectos/">Proyectos</a></li><li><a href="/galeria/">Galería de fotos</a></li><li><a href="/nosotros/">Nosotros</a></li><li><a href="/cobertura/">Cobertura</a></li><li><a href="/preguntas-frecuentes/">Preguntas frecuentes</a></li><li><a href="/contacto/">Contacto</a></li><li><a href="/cotizar/">Cotizar</a></li></ul></div>
     </div>
     <p class="copy">© <span id="yr"></span> Refrigeración Team Cavas Cuarto. Todos los derechos reservados.</p>
     <p class="copy" style="font-size:.72rem;opacity:.7">Foto de compresor: <a href="https://commons.wikimedia.org/wiki/File:Compressor_Bitzer_4NES-14Y-40P.jpg" rel="noopener" style="color:inherit">Wikimedia Commons</a>, CC BY-SA 4.0. Las marcas pertenecen a sus propietarios. Mapa: geoBoundaries, CC BY 4.0. Foto de unidad condensadora (recorte): <a href="https://commons.wikimedia.org/wiki/File:Cold_Room_Products_-_Mix_-_Door_-_Refrigeration_-_Evaporator_-_Panel.jpg" rel="noopener" style="color:inherit">Wikimedia Commons</a>, CC BY 4.0. Imágenes referenciales.</p>
@@ -483,11 +491,11 @@ footer a:hover{color:var(--cyan)}
   <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use href="#i-wa"/></svg><span>Cotiza por WhatsApp</span>
 </a>
 <div class="mbar"><a class="btn btn-call" href="tel:+584121856429" data-lugar="movil-llamar">Llamar</a><a class="btn btn-wa" data-lugar="movil-barra" data-wa="Hola, quiero cotizar una cava cuarto." href="https://wa.me/584121856429?text=Hola%2C%20quiero%20cotizar%20una%20cava%20cuarto." target="_blank" rel="nofollow noopener"><svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use href="#i-wa"/></svg>Cotizar por WhatsApp</a></div>
-<div id="lb" role="dialog" aria-modal="true" aria-label="Foto ampliada"><button aria-label="Cerrar">×</button><img alt=""></div>
+<div id="lb" role="dialog" aria-modal="true" aria-label="Foto ampliada"><button aria-label="Cerrar">×</button><button class="lb-p" aria-label="Foto anterior">‹</button><img alt=""><button class="lb-n" aria-label="Foto siguiente">›</button><p class="lb-c"></p></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-wa" viewBox="0 0 32 32"><path d="M16.04 3C9.4 3 4 8.4 4 15.03c0 2.12.55 4.19 1.6 6.01L4 28l7.1-1.86a12.03 12.03 0 0 0 4.94 1.06h.01C22.7 27.2 28 21.8 28 15.18 28 8.5 22.7 3 16.04 3zm0 22.1a10 10 0 0 1-5.1-1.4l-.37-.22-4.2 1.1 1.12-4.1-.24-.38A9.96 9.96 0 0 1 6.03 15C6.03 9.5 10.5 5.03 16.04 5.03c5.5 0 9.95 4.47 9.95 9.97 0 5.5-4.46 10.1-9.95 10.1zm5.5-7.4c-.3-.15-1.78-.88-2.06-.98-.27-.1-.47-.15-.67.15-.2.3-.77.98-.94 1.18-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.5-.9-.8-1.5-1.78-1.67-2.08-.17-.3-.02-.46.13-.6.14-.13.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.68-1.63-.93-2.24-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.48.7.3 1.26.48 1.69.62.7.22 1.35.2 1.86.12.57-.08 1.78-.73 2.03-1.43.25-.7.25-1.3.17-1.43-.07-.12-.27-.2-.57-.35z"/></symbol>
 </svg>
-<script src="/js/wa.js?v=258ba5f7" defer></script>
-<script src="/js/sitio.js?v=258ba5f7" defer></script>
+<script src="/js/wa.js?v=9b1e015f" defer></script>
+<script src="/js/sitio.js?v=9b1e015f" defer></script>
 </body>
 </html>
