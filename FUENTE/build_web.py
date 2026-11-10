@@ -324,18 +324,65 @@ if (hd && mb) {
   hd.querySelectorAll("nav a").forEach(a => a.addEventListener("click", () => set(false)));
   document.addEventListener("keydown", e => { if (e.key === "Escape") set(false); });
 }
+// submenús: se abren al pasar el mouse (escritorio) o con la flecha (celular y teclado)
+const cierraSub = (salvo) => document.querySelectorAll(".dd.open").forEach(d => { if (d !== salvo) { d.classList.remove("open"); d.querySelector(".dd-t").setAttribute("aria-expanded", false); } });
+document.querySelectorAll(".dd-t").forEach(b => b.addEventListener("click", e => {
+  e.stopPropagation();
+  const li = b.parentElement, on = !li.classList.contains("open");
+  cierraSub(li); li.classList.toggle("open", on); b.setAttribute("aria-expanded", on);
+}));
+document.addEventListener("click", e => { if (!e.target.closest(".dd")) cierraSub(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") cierraSub(); });
 
 const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } }), {threshold:.12});
 document.querySelectorAll(".rv").forEach(el => io.observe(el));
 const yr = document.getElementById("yr"); if (yr) yr.textContent = new Date().getFullYear();
 ''' % WHATSAPP
 
-def foot_links():
-    items = [("/cuarto-de-refrigeracion/", "Cuarto de refrigeración"), ("/cuarto-de-congelacion/", "Cuarto de congelación"),
-             ("/equipos-y-materiales-para-cavas-cuarto/", "Equipos y materiales"), ("/freezers-comerciales/", "Freezers"),
-             ("/como-elegir-una-cava-cuarto/", "Cómo elegir tu cava")] + \
-            [(f"/{p['slug']}/", "Para " + p["nombre"].lower()) for p in PAGES[:8]]
-    return "".join(f'<li><a href="{u}">{t}</a></li>' for u, t in items)
+SECTORES = ["cavas-cuarto-carniceria", "cuartos-frios-pescaderia", "cava-cuarto-polleria", "cava-cuarto-restaurante",
+            "cava-cuarto-heladeria", "cava-cuarto-panaderia", "cava-cuarto-abasto-bodega", "cuartos-frios-galpones-distribuidores"]
+TILE_SUB = {"cavas-cuarto-carniceria": "Cortes frescos y almacenaje", "cuartos-frios-pescaderia": "Frío constante todo el día",
+            "cava-cuarto-polleria": "Más capacidad de almacenaje", "cava-cuarto-restaurante": "Ingredientes frescos y ordenados",
+            "cava-cuarto-heladeria": "Congelación estable", "cava-cuarto-panaderia": "Lácteos, cremas y rellenos",
+            "cava-cuarto-abasto-bodega": "Bebidas y charcutería frías", "cuartos-frios-galpones-distribuidores": "Cavas de gran tamaño"}
+EQUIPOS = "/equipos-y-materiales-para-cavas-cuarto/"
+
+# menú principal: (texto, url, submenú)
+def menu_items():
+    return [
+        ("Cavas cuarto", "/cavas-cuarto/", [("Fabricación e instalación", "/cavas-cuarto/"),
+            ("Cuarto de refrigeración (0 a 5 °C)", "/cuarto-de-refrigeracion/"), ("Cuarto de congelación (−18 °C)", "/cuarto-de-congelacion/"),
+            ("Cómo elegir tu cava", "/como-elegir-una-cava-cuarto/")]),
+        ("Para tu negocio", "/sectores/", [("Todos los negocios", "/sectores/")] + [(BYSLUG[s]["nombre"], f"/{s}/") for s in SECTORES]),
+        ("Equipos", EQUIPOS, [("Equipos y materiales", EQUIPOS), ("Freezers comerciales", "/freezers-comerciales/")]),
+        ("Proyectos", "/proyectos/", None),
+        ("Nosotros", "/nosotros/", [("Quiénes somos", "/nosotros/"), ("Cobertura", "/cobertura/"),
+            ("Preguntas frecuentes", "/preguntas-frecuentes/"), ("Contacto", "/contacto/")]),
+    ]
+
+def nav_html(path):
+    cur = lambda u: ' aria-current="page"' if u == path else ""
+    o = ['      <ul id="menu">']
+    for t, u, sub in menu_items():
+        if sub:
+            subs = "".join('<li><a href="%s"%s>%s</a></li>' % (su, cur(su), esc(st)) for st, su in sub)
+            o.append(f'        <li class="dd"><a href="{u}"{cur(u)}>{esc(t)}</a><button class="dd-t" type="button" aria-expanded="false" aria-label="Ver opciones de {esc(t)}"></button>'
+                     f'<ul class="submenu">{subs}</ul></li>')
+        else:
+            o.append(f'        <li><a href="{u}"{cur(u)}>{esc(t)}</a></li>')
+    o.append(f'        <li><a class="nav-cta" href="/cotizar/"{cur("/cotizar/")}>Cotizar</a></li>')
+    o.append('      </ul>')
+    return "\n".join(o)
+
+def foot_cols():
+    cols = [("Cavas cuarto", [("Fabricación e instalación", "/cavas-cuarto/"), ("Cuarto de refrigeración", "/cuarto-de-refrigeracion/"),
+                ("Cuarto de congelación", "/cuarto-de-congelacion/"), ("Cómo elegir tu cava", "/como-elegir-una-cava-cuarto/"),
+                ("Equipos y materiales", EQUIPOS), ("Freezers", "/freezers-comerciales/")]),
+            ("Para tu negocio", [(BYSLUG[s]["nombre"], f"/{s}/") for s in SECTORES]),
+            ("Empresa", [("Proyectos", "/proyectos/"), ("Nosotros", "/nosotros/"), ("Cobertura", "/cobertura/"),
+                ("Preguntas frecuentes", "/preguntas-frecuentes/"), ("Contacto", "/contacto/"), ("Cotizar", "/cotizar/")])]
+    lis = lambda items: "".join('<li><a href="%s">%s</a></li>' % (u, esc(t)) for t, u in items)
+    return "\n      ".join('<div><p class="fh">%s</p><ul>%s</ul></div>' % (esc(h), lis(items)) for h, items in cols)
 
 # ------------------------------------------------------------ imagen social
 def make_og():
@@ -368,9 +415,11 @@ def make_og():
 # ---------------------------------------------------------- plantilla común
 home = (AQUI / "home.src.html").read_text(encoding="utf-8")
 CSS = re.search(r"<style>(.*?)</style>", home, re.S).group(1)
-HEADER = re.search(r"<header>.*?</header>", home, re.S).group(0).replace('href="#inicio"', 'href="/"')
-HEADER = re.sub(r'href="#(servicios|equipos|temperaturas|negocios|trabajos|cotizar|faq)"', r'href="/#\1"', HEADER)
-FOOTER = re.search(r"<footer>.*?</footer>", home, re.S).group(0).replace("{{FOOTLINKS}}", foot_links())
+HEADER_T = re.search(r"<header>.*?</header>", home, re.S).group(0)
+def header(path): return HEADER_T.replace("{{NAV}}", nav_html(path))
+FOOTER = re.search(r"<footer>.*?</footer>", home, re.S).group(0).replace("{{FOOTCOLS}}", foot_cols())
+LB = '<div id="lb" role="dialog" aria-modal="true" aria-label="Foto ampliada"><button aria-label="Cerrar">×</button><img alt=""></div>'
+
 FAB = re.search(r'<a class="fab".*?</a>', home, re.S).group(0)
 SYMBOL = re.search(r'<svg width="0".*?</svg>', home, re.S).group(0)
 MBAR = re.search(r'<div class="mbar">.*?</div>', home, re.S).group(0)
@@ -397,6 +446,24 @@ EXTRA_CSS = """
 .phero .ph.eqph{display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#29A9E8,#0040A0 75%)}.phero .ph.eqph svg{width:46%;height:auto}
 .rel a{display:block;border:1px solid var(--line);border-radius:14px;padding:18px;text-decoration:none;font-weight:700;color:var(--navy);transition:.15s}
 .rel a:hover{border-color:var(--sky);transform:translateY(-2px)}.rel a small{display:block;color:var(--muted);font-weight:500;margin-top:4px}
+.crumbs span{color:#fff}
+.phero.slim{padding:40px 0 52px}.phero.slim .grid{grid-template-columns:1fr}.phero.slim p.sub{max-width:720px}
+.prose{max-width:820px}.prose p{color:var(--muted);font-size:1.04rem;margin-top:14px}.prose a{color:var(--navy);font-weight:600}.prose strong{color:var(--ink)}
+.ben a{color:var(--navy);font-weight:700;text-decoration:none;white-space:nowrap}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:30px}
+.pgrid figure{cursor:zoom-in}.pgrid .im{aspect-ratio:3/4;border-radius:16px;overflow:hidden;background:#cfe0f0}
+.pgrid img{width:100%;height:100%;object-fit:cover;transition:transform .4s}.pgrid figure:hover img{transform:scale(1.05)}
+.pgrid figcaption{font-size:.86rem;color:var(--muted);margin-top:8px;font-weight:500}
+@media(max-width:520px){.pgrid{grid-template-columns:1fr 1fr;gap:10px}}
+.tiles + .more,.faq + .more{margin-top:24px}
+.toc{margin:0 0 34px;gap:8px}.toc a{background:var(--ice);border:1px solid var(--line);border-radius:99px;padding:7px 14px;font-size:.9rem}
+.fgroup{margin-bottom:46px;scroll-margin-top:90px}.fgroup h2{font-size:clamp(1.35rem,3vw,1.8rem)}.fgroup .faq{margin-top:16px}
+.ccards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.ccard{display:flex;flex-direction:column;gap:6px;border:1px solid var(--line);border-radius:var(--r);padding:28px;text-decoration:none;color:var(--ink);background:#fff;transition:.2s}
+.ccard:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.ccard svg{width:34px;height:34px;color:var(--navy);margin-bottom:6px}.ccard.wa svg{color:var(--wa-dk)}
+.ccard b{font:800 1.25rem/1.2 Sora,sans-serif}.ccard span{font-weight:700;color:var(--navy)}.ccard small{color:var(--muted)}
+@media(max-width:760px){.ccards{grid-template-columns:1fr}}
 """
 
 def wa_hrefs(s):
@@ -436,23 +503,22 @@ def head(title, desc, path, img, schema, canonical=True):
 <body>
 """
 
-SCRIPT = '<script src="/js/wa.js"></script>\n</body>\n</html>\n'
+SCRIPT = '<script src="/js/wa.js"></script>\n<script src="/js/sitio.js"></script>\n</body>\n</html>\n'
 
 WA_ICON = '<svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use href="#i-wa"/></svg>'
 
 def build_page(p):
     path = f"/{p['slug']}/"
     business = EMPRESA
+    crumbs = ([PARENT[p["slug"]]] if p["slug"] in PARENT else []) + [(p["nombre"], path)]
     schema = {"@context": "https://schema.org", "@graph": [
         {"@type": "Service", "name": p["h1"], "description": p["desc"], "serviceType": "Fabricación e instalación de cavas cuarto",
          "provider": business, "areaServed": {"@type": "Country", "name": "Venezuela"}, "url": f"{BASE}{path}"},
-        {"@type": "BreadcrumbList", "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Inicio", "item": f"{BASE}/"},
-            {"@type": "ListItem", "position": 2, "name": p["nombre"], "item": f"{BASE}{path}"}]},
+        crumbs_schema(crumbs),
         {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in p["faq"]]}]}
-    o = head(p["title"], p["desc"], path, p["img"], schema) + TOPBAR + "\n" + HEADER + "\n<main>\n"
+    o = head(p["title"], p["desc"], path, p["img"], schema) + TOPBAR + "\n" + header(path) + "\n<main>\n"
     o += f"""<section class="phero on-dark"><div class="wrap grid"><div>
-<nav class="crumbs" aria-label="Ruta"><a href="/">Inicio</a> › {esc(p['nombre'])}</nav>
+{crumbs_html(crumbs)}
 <h1>{esc(p['h1'])}</h1>
 <p class="sub">{esc(p['intro'])}</p>
 <div style="display:flex;flex-wrap:wrap;gap:12px"><a class="btn btn-wa" data-lugar="hero" data-wa="{esc(p['wa'])}" href="#">{WA_ICON}Cotizar por WhatsApp</a><a class="btn btn-ghost" href="tel:+584121856429" data-lugar="hero-llamar">Llamar ahora</a></div>
@@ -460,6 +526,7 @@ def build_page(p):
 <section><div class="wrap"><span class="eyebrow">{p.get('ben_eyebrow') or ('Pasos a seguir' if p.get('guia') else 'Por qué una cava cuarto')}</span>
 <h2>{p.get('ben_h2') or ('Qué tener claro antes de cotizar' if p.get('guia') else 'Lo que ganas con tu cava cuarto')}</h2>
 <div class="bens">{''.join(f'<div class="ben rv"><h3>{esc(h)}</h3><p>{esc(t)}</p></div>' for h, t in p['ben'])}</div></div></section>
+{p.get('extra', '')}
 <section style="padding-top:0"><div class="wrap"><div class="tempbox rv"><h2 style="font-size:1.5rem">{esc(p['temp'][0])}</h2>
 <p class="lead" style="margin-top:6px">{esc(p['temp'][1])}</p>
 <ul>{''.join(f'<li>{esc(i)}</li>' for i in p['items'])}</ul></div></div></section>
@@ -467,23 +534,237 @@ def build_page(p):
 <div class="faq">{''.join(f'<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in p['faq'])}</div></div></section>
 <section><div class="wrap"><div class="band on-dark"><h2>Cuéntanos qué necesitas y te cotizamos</h2>
 <p>Escríbenos por WhatsApp con tus medidas aproximadas y lo que vas a guardar. Si no las sabes, te ayudamos.</p>
-<a class="btn btn-wa" data-lugar="cierre" data-wa="{esc(p['wa'])}" href="#">{WA_ICON}Escribir por WhatsApp</a></div>
+<div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center"><a class="btn btn-wa" data-lugar="cierre" data-wa="{esc(p['wa'])}" href="#">{WA_ICON}Escribir por WhatsApp</a><a class="btn btn-ghost" href="/cotizar/">Llenar el cotizador</a></div></div>
 <h2 style="font-size:1.4rem;margin-top:44px">También te puede interesar</h2>
 <div class="rel">{''.join(f'<a href="/{r}/">{esc(BYSLUG[r]["h1"])}<small>Ver más →</small></a>' for r in p['rel'])}</div></div></section>
 </main>
-""" + FOOTER + "\n" + FAB + "\n" + MBAR + "\n" + SYMBOL + "\n" + SCRIPT
+""" + FOOTER + "\n" + FAB + "\n" + MBAR + "\n" + LB + "\n" + SYMBOL + "\n" + SCRIPT
     d = SITIO / p["slug"]; d.mkdir(exist_ok=True)
     (d / "index.html").write_text(wa_hrefs(add_dims(o)), encoding="utf-8")
+
+# ------------------------------------------------------- rutas (breadcrumbs)
+PARENT = {s: ("Para tu negocio", "/sectores/") for s in SECTORES}
+PARENT.update({"cuarto-de-refrigeracion": ("Cavas cuarto", "/cavas-cuarto/"), "cuarto-de-congelacion": ("Cavas cuarto", "/cavas-cuarto/"),
+               "como-elegir-una-cava-cuarto": ("Cavas cuarto", "/cavas-cuarto/"), "freezers-comerciales": ("Equipos y materiales", EQUIPOS)})
+
+def crumbs_html(crumbs):
+    partes = ['<a href="/">Inicio</a>'] + [f'<a href="{u}">{esc(n)}</a>' for n, u in crumbs[:-1]] + [f'<span aria-current="page">{esc(crumbs[-1][0])}</span>']
+    return '<nav class="crumbs" aria-label="Ruta">' + " › ".join(partes) + "</nav>"
+
+def crumbs_schema(crumbs):
+    todos = [("Inicio", "/")] + crumbs
+    return {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "item": f"{BASE}{u}"} for i, (n, u) in enumerate(todos)]}
+
+def tiles(slugs):
+    return '<div class="tiles">' + "".join(
+        f'<a class="tile rv" href="/{s}/"><img src="/img/{BYSLUG[s]["img"]}.jpg" alt="{esc(BYSLUG[s]["imgalt"])}" loading="lazy"><h3>{esc(BYSLUG[s]["nombre"])}<small>{esc(TILE_SUB[s])}</small></h3></a>'
+        for s in slugs) + "</div>"
+
+def faq_html(items):
+    return '<div class="faq">' + "".join(f"<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>" for q, a in items) + "</div>"
+
+def faq_schema(items):
+    return {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in items]}
+
+def band(wa, titulo="Cuéntanos qué necesitas y te cotizamos", texto="Escríbenos por WhatsApp con tus medidas aproximadas y lo que vas a guardar. Si no las sabes, te ayudamos."):
+    return (f'<section><div class="wrap"><div class="band on-dark"><h2>{esc(titulo)}</h2><p>{esc(texto)}</p>'
+            f'<div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center"><a class="btn btn-wa" data-lugar="cierre" data-wa="{esc(wa)}" href="#">{WA_ICON}Escribir por WhatsApp</a>'
+            f'<a class="btn btn-ghost" href="/cotizar/">Llenar el cotizador</a></div></div></div></section>')
+
+def shell(path, title, desc, crumbs, h1, intro, body, nodes, wa, img=None, imgalt="", extra=""):
+    schema = {"@context": "https://schema.org", "@graph": nodes + [crumbs_schema(crumbs)]}
+    foto = f'<div class="ph"><img src="/img/{img}.jpg" alt="{esc(imgalt)}" fetchpriority="high"></div>' if img else ""
+    o = head(title, desc, path, img or "", schema) + TOPBAR + "\n" + header(path) + "\n<main>\n"
+    o += (f'<section class="phero on-dark{"" if img else " slim"}"><div class="wrap grid"><div>{crumbs_html(crumbs)}'
+          f'<h1>{esc(h1)}</h1><p class="sub">{esc(intro)}</p>'
+          f'<div style="display:flex;flex-wrap:wrap;gap:12px"><a class="btn btn-wa" data-lugar="hero" data-wa="{esc(wa)}" href="#">{WA_ICON}Cotizar por WhatsApp</a>'
+          f'<a class="btn btn-ghost" href="tel:+584121856429" data-lugar="hero-llamar">Llamar ahora</a></div></div>{foto}</div></section>\n')
+    o += body + "\n</main>\n" + FOOTER + "\n" + FAB + "\n" + MBAR + "\n" + LB + "\n" + extra + SYMBOL + "\n" + SCRIPT
+    d = SITIO / path.strip("/"); d.mkdir(exist_ok=True)
+    (d / "index.html").write_text(wa_hrefs(add_dims(o)), encoding="utf-8")
+
+def seccion(h, sid, quitar=None):
+    """Toma una sección de la home ya armada; quita el enlace 'ver más' que apunta a la página actual."""
+    s = re.search(r'<section[^>]*id="%s".*?</section>' % sid, h, re.S).group(0)
+    if quitar:
+        s = re.sub(r'\s*<p class="more">(?:(?!</p>).)*href="%s"(?:(?!</p>).)*</p>' % re.escape(quitar), "", s, flags=re.S)
+    return s
+
+def build_extra_pages(h):
+    home_faq = [(html.unescape(q), html.unescape(a)) for q, a in re.findall(r"<details><summary>(.*?)</summary><p>(.*?)</p></details>", seccion(h, "faq"))]
+    emp = {"@id": f"{BASE}/#empresa"}
+
+    # /cavas-cuarto/
+    q = [x for x in home_faq if not x[0].startswith("¿Venden")]
+    body = f'''<section><div class="wrap prose"><span class="eyebrow">Qué es una cava cuarto</span>
+<h2>Un cuarto frío hecho para tu espacio</h2>
+<p>Una cava cuarto es un cuarto frío que se arma con paneles aislantes en paredes y techo, una puerta que sella bien y un equipo de refrigeración. A diferencia de una nevera, puedes entrar a ordenar el producto, guardar mucho más volumen y mantener una temperatura estable todo el día.</p>
+<p>El sistema tiene cinco partes: los <strong>paneles aislantes</strong>, que mantienen el frío adentro; la <strong>puerta</strong>, con su sellado y cerradura; el <strong>evaporador</strong> o difusor, que reparte el frío dentro de la cava; la <strong>unidad condensadora</strong>, que trabaja afuera y expulsa el calor; y el <strong>control de temperatura</strong>, para vigilarla y ajustarla.</p>
+<p>Cada cava se diseña según tres cosas: el espacio que tienes, lo que vas a guardar y la temperatura que necesita tu producto. Si aún no lo tienes claro, revisa la guía <a href="/como-elegir-una-cava-cuarto/">cómo elegir tu cava cuarto</a> o escríbenos y te orientamos.</p>
+</div></section>
+{seccion(h, "servicios", "/cavas-cuarto/")}
+{seccion(h, "temperaturas")}
+<section><div class="wrap"><span class="eyebrow">Para tu negocio</span><h2>Cavas cuarto según tu negocio</h2>
+<p class="lead">Cada negocio guarda productos distintos. Mira lo que hacemos para el tuyo.</p>{tiles(SECTORES)}
+<p class="more"><a href="/sectores/">Ver todos los negocios →</a></p></div></section>
+{seccion(h, "proceso")}
+<section style="background:var(--ice)"><div class="wrap"><span class="eyebrow">Preguntas frecuentes</span><h2>Dudas sobre cavas cuarto</h2>{faq_html(q)}
+<p class="more"><a href="/preguntas-frecuentes/">Ver todas las preguntas →</a></p></div></section>
+{band("Hola, quiero cotizar una cava cuarto.")}'''
+    shell("/cavas-cuarto/", "Cavas Cuarto: Fabricación e Instalación | Refrigeración Team",
+          "Fabricamos e instalamos cavas cuarto a la medida de tu espacio, con paneles, puerta, evaporador, condensadora y control de temperatura. Toda Venezuela.",
+          [("Cavas cuarto", "/cavas-cuarto/")], "Cavas cuarto a la medida de tu negocio",
+          "Diseñamos, armamos e instalamos tu cava cuarto con todo el sistema de frío incluido, del tamaño exacto de tu espacio y a la temperatura que necesita tu producto.",
+          body, [{"@type": "Service", "name": "Fabricación e instalación de cavas cuarto", "serviceType": "Cava cuarto / cuarto frío a medida",
+                  "provider": emp, "areaServed": {"@type": "Country", "name": "Venezuela"}, "url": f"{BASE}/cavas-cuarto/"}, faq_schema(q)],
+          "Hola, quiero cotizar una cava cuarto.", img="c50", imgalt="Cava cuarto armada dentro de un galpón")
+
+    # /sectores/
+    body = f'''<section><div class="wrap"><span class="eyebrow">Para tu negocio</span><h2>Elige tu tipo de negocio</h2>
+<p class="lead">Del local pequeño al galpón industrial. Toca tu negocio para ver qué temperatura necesitas, qué puedes guardar y las dudas más comunes.</p>{tiles(SECTORES)}</div></section>
+<section style="background:var(--ice)"><div class="wrap prose"><span class="eyebrow">¿No ves tu negocio?</span><h2>También hacemos cavas para otros rubros</h2>
+<p>Si guardas alimentos, bebidas, flores, medicinas u otro producto que necesite frío, también podemos hacer tu cava cuarto. Lo importante es saber qué vas a guardar, cuánto espacio tienes y a qué temperatura debe estar.</p>
+<p>Para producto fresco se usa un <a href="/cuarto-de-refrigeracion/">cuarto de refrigeración de 0 a 5 °C</a>. Para almacenar por más tiempo, un <a href="/cuarto-de-congelacion/">cuarto de congelación de −18 °C</a>. Si manejas ambos, se hacen dos cavas o una combinada.</p>
+</div></section>
+{band("Hola, quiero cotizar una cava cuarto para mi negocio.")}'''
+    shell("/sectores/", "Cavas Cuarto para Negocios y Comercios | Refrigeración Team",
+          "Cavas cuarto para carnicerías, pescaderías, pollerías, restaurantes, heladerías, panaderías, abastos y galpones en Venezuela. Cotiza por WhatsApp.",
+          [("Para tu negocio", "/sectores/")], "Cavas cuarto para cada tipo de negocio",
+          "Hacemos la cava cuarto que tu negocio necesita: el tamaño, la temperatura y la distribución dependen de lo que vendes y de cómo trabajas.",
+          body, [{"@type": "CollectionPage", "name": "Cavas cuarto para negocios", "url": f"{BASE}/sectores/",
+                  "mainEntity": {"@type": "ItemList", "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": f"{BASE}/{s}/", "name": BYSLUG[s]["h1"]} for i, s in enumerate(SECTORES)]}}],
+          "Hola, quiero cotizar una cava cuarto para mi negocio.")
+
+    # /proyectos/
+    figs = re.findall(r'<figure><div class="im">(<img [^>]*>)</div><figcaption>(.*?)</figcaption></figure>', seccion(h, "trabajos"))
+    limpia = lambda im: re.sub(r' (loading|fetchpriority|decoding)="[^"]*"', "", im).replace("<img ", '<img loading="lazy" ')
+    grid = "".join('<figure><div class="im">%s</div><figcaption>%s</figcaption></figure>' % (limpia(im), c) for im, c in figs)
+    body = f'''<section class="gal"><div class="wrap"><span class="eyebrow">Galería</span><h2>Cavas reales, instaladas por nosotros</h2>
+<p class="lead">Algunas de las cavas cuarto y cuartos fríos que hemos entregado. Toca una foto para verla en grande.</p>
+<div class="pgrid" id="galeria">{grid}</div>
+<p class="more"><a href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener">Ver más trabajos en Instagram →</a></p></div></section>
+<section><div class="wrap prose"><span class="eyebrow">Cada cava es distinta</span><h2>Hechas a la medida de cada cliente</h2>
+<p>Ninguna de estas cavas es igual a otra: cada una se diseñó para el espacio, el producto y la temperatura de su dueño. Hay cavas de refrigeración para producto fresco, cuartos de congelación, cavas dobles y cuartos fríos industriales dentro de galpones.</p>
+<p>Si te gusta alguna, envíanos la foto por WhatsApp con las medidas de tu espacio y te cotizamos una parecida.</p></div></section>
+{band("Hola, vi sus proyectos y quiero una cava como esas.", "¿Quieres una cava como estas?")}'''
+    shell("/proyectos/", "Proyectos: Cavas Cuarto Instaladas | Refrigeración Team",
+          "Fotos de cavas cuarto y cuartos fríos que hemos fabricado e instalado en Venezuela: refrigeración, congelación, cavas dobles e industriales.",
+          [("Proyectos", "/proyectos/")], "Cavas cuarto que hemos instalado",
+          "Mira algunos de nuestros trabajos: cavas de refrigeración, cuartos de congelación y cuartos fríos industriales hechos a la medida.",
+          body, [{"@type": "CollectionPage", "name": "Proyectos de cavas cuarto", "url": f"{BASE}/proyectos/", "about": emp}],
+          "Hola, vi sus proyectos y quiero una cava como esas.")
+
+    # /nosotros/
+    body = f'''{seccion(h, "equipo", "/nosotros/")}
+<section style="background:var(--ice)"><div class="wrap"><span class="eyebrow">Qué hacemos</span><h2>Todo lo que necesitas para el frío de tu negocio</h2>
+<div class="bens">
+<div class="ben rv"><h3>Cavas cuarto a medida</h3><p>Diseñamos, armamos e instalamos cavas de refrigeración y de congelación. <a href="/cavas-cuarto/">Ver cavas cuarto →</a></p></div>
+<div class="ben rv"><h3>Equipos y materiales</h3><p>Unidades condensadoras, compresores, difusores, controles e insumos de marcas reconocidas. <a href="{EQUIPOS}">Ver equipos →</a></p></div>
+<div class="ben rv"><h3>Freezers para negocios</h3><p>Freezers y neveras para el punto de venta, como complemento de tu cava. <a href="/freezers-comerciales/">Ver freezers →</a></p></div>
+</div></div></section>
+{seccion(h, "proceso")}
+<section><div class="wrap prose"><span class="eyebrow">Dónde estamos</span><h2>Trabajamos en toda Venezuela</h2>
+<p>Llevamos el material y el equipo hasta tu local, estés donde estés. Mira las zonas donde hemos trabajado en la página de <a href="/cobertura/">cobertura</a>, o escríbenos tu ciudad por WhatsApp.</p>
+<p>Síguenos en Instagram, <a href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener">@cavascuartoteam</a>, donde publicamos nuestros trabajos.</p></div></section>
+{band("Hola, quiero información sobre sus servicios.")}'''
+    shell("/nosotros/", "Quiénes Somos | Refrigeración Team Cavas Cuarto",
+          "Conoce al equipo de Refrigeración Team: diseñamos, fabricamos e instalamos cavas cuarto y vendemos equipos de refrigeración en toda Venezuela.",
+          [("Nosotros", "/nosotros/")], "Somos Refrigeración Team",
+          "Un equipo propio dedicado a las cavas cuarto y la refrigeración comercial: diseñamos tu cava, la armamos, la instalamos y te vendemos los equipos para ella.",
+          body, [{"@type": "AboutPage", "name": "Quiénes somos", "url": f"{BASE}/nosotros/", "about": emp}],
+          "Hola, quiero información sobre sus servicios.", img="equipo-grupo", imgalt="Equipo de Refrigeración Team junto al camión de trabajo")
+
+    # /cobertura/
+    body = f'''{seccion(h, "cobertura", "/cobertura/")}
+<section><div class="wrap prose"><span class="eyebrow">Fuera de tu ciudad</span><h2>Cómo trabajamos en tu zona</h2>
+<p>Escríbenos tu ciudad o estado, las medidas aproximadas del espacio y lo que vas a guardar. Con eso te enviamos la cotización y coordinamos el traslado del material y del equipo hasta tu local.</p>
+<p>Si no sabes las medidas, una foto del espacio ayuda mucho. También puedes usar el <a href="/cotizar/">cotizador</a>: en menos de un minuto nos llega todo por WhatsApp.</p></div></section>
+{band("Hola, quiero cotizar una cava cuarto en mi ciudad.")}'''
+    shell("/cobertura/", "Cobertura en Toda Venezuela | Refrigeración Team",
+          "Fabricamos e instalamos cavas cuarto en toda Venezuela: occidente, los Andes, centro, oriente, Guayana y los llanos. Cotiza en tu ciudad por WhatsApp.",
+          [("Nosotros", "/nosotros/"), ("Cobertura", "/cobertura/")], "Instalamos cavas cuarto en toda Venezuela",
+          "Llevamos tu cava cuarto hasta tu local, en cualquier estado del país.",
+          body, [{"@type": "WebPage", "name": "Cobertura", "url": f"{BASE}/cobertura/", "about": emp}],
+          "Hola, quiero cotizar una cava cuarto en mi ciudad.")
+
+    # /cotizar/
+    q = [x for x in home_faq if x[0].startswith(("¿Cuánto", "¿Y si no"))]
+    tv = re.search(r'<div id="tv".*?</div>', h, re.S).group(0)
+    body = f'''{seccion(h, "cotizar")}
+{seccion(h, "proceso")}
+<section style="background:var(--ice)"><div class="wrap"><span class="eyebrow">Antes de cotizar</span><h2>Dudas comunes</h2>{faq_html(q)}
+<p class="more"><a href="/como-elegir-una-cava-cuarto/">Guía: cómo elegir tu cava cuarto →</a><a href="/preguntas-frecuentes/">Más preguntas →</a></p></div></section>'''
+    shell("/cotizar/", "Cotiza tu Cava Cuarto por WhatsApp | Refrigeración Team",
+          "Pide la cotización de tu cava cuarto en menos de un minuto: cuéntanos tu negocio, la temperatura y las medidas, y te respondemos por WhatsApp.",
+          [("Cotizar", "/cotizar/")], "Cotiza tu cava cuarto",
+          "Llena el cotizador con lo que sepas y se abrirá tu WhatsApp con el mensaje listo. Si prefieres, escríbenos o llámanos directo.",
+          body, [{"@type": "WebPage", "name": "Cotizar cava cuarto", "url": f"{BASE}/cotizar/", "about": emp}, faq_schema(q)],
+          "Hola, quiero cotizar una cava cuarto.", extra=tv + "\n")
+
+    # /preguntas-frecuentes/
+    vistos, grupos = set(), []
+    def grupo(titulo, items, enlace=None):
+        out = []
+        for qq, aa in items:
+            k = re.sub(r"\W+", " ", qq.lower()).strip()
+            if k not in vistos: vistos.add(k); out.append((qq, aa))
+        if out: grupos.append((titulo, out, enlace))
+    grupo("Generales", home_faq)
+    grupo("Antes de cotizar", BYSLUG["como-elegir-una-cava-cuarto"]["faq"], ("Guía: cómo elegir tu cava cuarto", "/como-elegir-una-cava-cuarto/"))
+    grupo("Refrigeración", BYSLUG["cuarto-de-refrigeracion"]["faq"], ("Cuarto de refrigeración", "/cuarto-de-refrigeracion/"))
+    grupo("Congelación", BYSLUG["cuarto-de-congelacion"]["faq"], ("Cuarto de congelación", "/cuarto-de-congelacion/"))
+    for s in SECTORES:
+        grupo(BYSLUG[s]["nombre"], BYSLUG[s]["faq"], (BYSLUG[s]["h1"], f"/{s}/"))
+    grupo("Equipos y materiales", BYSLUG["equipos-y-materiales-para-cavas-cuarto"]["faq"], ("Equipos y materiales", EQUIPOS))
+    grupo("Freezers", BYSLUG["freezers-comerciales"]["faq"], ("Freezers comerciales", "/freezers-comerciales/"))
+    todas = [x for _, it, _ in grupos for x in it]
+    indice = '<p class="more toc">' + "".join(f'<a href="#g{i}">{esc(t)}</a>' for i, (t, _, _) in enumerate(grupos)) + "</p>"
+    body = '<section><div class="wrap">' + indice + "".join(
+        f'<div class="fgroup" id="g{i}"><h2>{esc(t)}</h2>{faq_html(it)}' + (f'<p class="more"><a href="{e[1]}">{esc(e[0])} →</a></p>' if e else "") + "</div>"
+        for i, (t, it, e) in enumerate(grupos)) + "</div></section>\n" + band("Hola, tengo una pregunta sobre las cavas cuarto.", "¿No encontraste tu respuesta?", "Escríbenos por WhatsApp y te respondemos.")
+    shell("/preguntas-frecuentes/", "Preguntas Frecuentes sobre Cavas Cuarto | Refrigeración Team",
+          "Respuestas sobre cavas cuarto: precio, medidas, temperaturas, instalación, equipos, freezers y cobertura en Venezuela.",
+          [("Nosotros", "/nosotros/"), ("Preguntas frecuentes", "/preguntas-frecuentes/")], "Preguntas frecuentes sobre cavas cuarto",
+          f"Reunimos las {len(todas)} preguntas que más nos hacen sobre cavas cuarto, cuartos fríos, equipos y freezers.",
+          body, [faq_schema(todas)], "Hola, tengo una pregunta sobre las cavas cuarto.")
+
+    # /contacto/
+    body = f'''<section><div class="wrap"><div class="ccards">
+<a class="ccard wa" data-lugar="contacto" data-wa="Hola, quiero información sobre cavas cuarto." href="#">{WA_ICON}<b>WhatsApp</b><span>0412 1856429</span><small>La forma más rápida de cotizar</small></a>
+<a class="ccard" href="tel:+584121856429" data-lugar="contacto-llamar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg><b>Llamar</b><span>0412 1856429</span><small>Habla directo con nosotros</small></a>
+<a class="ccard" href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg><b>Instagram</b><span>@cavascuartoteam</span><small>Mira nuestros trabajos</small></a>
+</div></div></section>
+<section style="background:var(--ice)"><div class="wrap prose"><span class="eyebrow">Cotización</span><h2>¿Quieres una cotización?</h2>
+<p>Usa el <a href="/cotizar/">cotizador</a> o escríbenos por WhatsApp con lo que vas a guardar, la temperatura y las medidas aproximadas del espacio. Atendemos en <a href="/cobertura/">toda Venezuela</a>.</p></div></section>'''
+    shell("/contacto/", "Contacto | Refrigeración Team Cavas Cuarto",
+          "Escríbenos por WhatsApp o llámanos al 0412 1856429. Cotizamos cavas cuarto, equipos y freezers en toda Venezuela.",
+          [("Nosotros", "/nosotros/"), ("Contacto", "/contacto/")], "Contacto",
+          "Escríbenos por WhatsApp, llámanos o síguenos en Instagram. Te respondemos con gusto.",
+          body, [{"@type": "ContactPage", "name": "Contacto", "url": f"{BASE}/contacto/", "about": emp}],
+          "Hola, quiero información sobre cavas cuarto.")
+
+EXTRA_URLS = ["/cavas-cuarto/", "/sectores/", "/proyectos/", "/nosotros/", "/cobertura/", "/cotizar/", "/preguntas-frecuentes/", "/contacto/"]
 
 # ------------------------------------------------------------------- build
 make_og()
 (SITIO / "js").mkdir(exist_ok=True)
 (SITIO / "js" / "wa.js").write_text(WAJS, encoding="utf-8")
-h = (home.replace("{{ICON_COMPRESOR}}", ICON_COMPRESOR).replace("{{ICON_FREEZER}}", ICON_FREEZER).replace("{{ICON_LUCES}}", ICON_LUCES).replace("{{MAPA_VZLA}}", (AQUI / "mapa_vzla.svg.html").read_text(encoding="utf-8")).replace("{{TOPBAR}}", TOPBAR).replace("{{ANALYTICS}}", analytics()).replace("{{ROBOTS}}", robots_meta()).replace("{{BASE}}", BASE).replace("{{FOOTLINKS}}", foot_links()))
+(SITIO / "js" / "sitio.js").write_text((AQUI / "sitio.js").read_text(encoding="utf-8"), encoding="utf-8")
+# WebP de cada foto (el worker la sirve a los navegadores que la aceptan)
+for jp in (SITIO / "img").glob("*.jpg"):
+    wp = jp.with_suffix(".webp")
+    if not wp.exists() or wp.stat().st_mtime < jp.stat().st_mtime:
+        Image.open(jp).convert("RGB").save(wp, "WEBP", quality=74, method=6)
+h = (home.replace("{{ICON_COMPRESOR}}", ICON_COMPRESOR).replace("{{ICON_FREEZER}}", ICON_FREEZER).replace("{{ICON_LUCES}}", ICON_LUCES).replace("{{MAPA_VZLA}}", (AQUI / "mapa_vzla.svg.html").read_text(encoding="utf-8")).replace("{{TOPBAR}}", TOPBAR).replace("{{ANALYTICS}}", analytics()).replace("{{ROBOTS}}", robots_meta()).replace("{{BASE}}", BASE).replace("{{FOOTCOLS}}", foot_cols()).replace("{{NAV}}", nav_html("/")))
 (SITIO / "index.html").write_text(wa_hrefs(add_dims(h)), encoding="utf-8")
+# la página de equipos muestra las tarjetas con fotos y las marcas de la home
+eqsec = re.sub(r'\s*<div class="eqs-foot">.*?</div>', "", re.search(r'<section id="equipos".*?</section>', h, re.S).group(0), flags=re.S)
+BYSLUG["equipos-y-materiales-para-cavas-cuarto"]["extra"] = eqsec.replace('<section id="equipos" style="background:var(--ice)">', '<section id="equipos" style="background:var(--ice)">').replace('<span class="eyebrow">También vendemos</span>', '<span class="eyebrow">Catálogo</span>').replace('<h2>Todo el material para tu cava cuarto</h2>', '<h2>Equipos y marcas disponibles</h2>') + \
+    re.search(r'<section class="marcas" id="marcas">.*?</section>', h, re.S).group(0)
 for p in PAGES: build_page(p)
+build_extra_pages(h)
 
-urls = ["/"] + [f"/{p['slug']}/" for p in PAGES]
+urls = ["/"] + EXTRA_URLS + [f"/{p['slug']}/" for p in PAGES]
 # lastmod solo cambia cuando cambia el contenido de esa página (registro en lastmod.json)
 REG = AQUI / "lastmod.json"
 reg = json.loads(REG.read_text()) if REG.exists() else {}
@@ -495,6 +776,6 @@ REG.write_text(json.dumps(reg, indent=1, ensure_ascii=False))
     "".join(f"<url><loc>{BASE}{u}</loc><lastmod>{reg[u]['fecha']}</lastmod></url>\n" for u in urls) + "</urlset>\n", encoding="utf-8")
 (SITIO / "robots.txt").write_text(("User-agent: *\nAllow: /\n" if INDEXAR else "User-agent: *\nDisallow: /\n") + f"Sitemap: {BASE}/sitemap.xml\n")
 (SITIO / "404.html").write_text(head("Página no encontrada | Refrigeración Team", "Esta página no existe.", "/404.html", "", None, canonical=False).replace(robots_meta(), '<meta name="robots" content="noindex">') +
-    wa_hrefs(HEADER) + '<main><section><div class="wrap" style="text-align:center;padding:60px 0"><h1>Esta página no existe</h1><p class="lead" style="margin:12px auto 24px">Pero tu cava cuarto sí podemos hacerla.</p><a class="btn btn-wa" href="/">Ir al inicio</a></div></section></main>' +
-    wa_hrefs(FOOTER + FAB + SYMBOL) + SCRIPT, encoding="utf-8")
-print("OK:", len(PAGES) + 1, "páginas | INDEXAR =", INDEXAR, "| BASE =", BASE)
+    TOPBAR + wa_hrefs(header("/404")) + '<main><section><div class="wrap" style="text-align:center;padding:60px 0"><h1>Esta página no existe</h1><p class="lead" style="margin:12px auto 24px">Pero tu cava cuarto sí podemos hacerla.</p><a class="btn btn-wa" href="/">Ir al inicio</a></div></section></main>' +
+    wa_hrefs(FOOTER + FAB + MBAR + SYMBOL) + SCRIPT, encoding="utf-8")
+print("OK:", len(urls), "páginas | INDEXAR =", INDEXAR, "| BASE =", BASE)

@@ -13,6 +13,19 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
 
+    // fotos: WebP (más livianas) para los navegadores que lo aceptan
+    if (/^\/img\/[^/]+\.jpg$/.test(url.pathname) && (req.headers.get("Accept") || "").includes("image/webp")) {
+      const w = await env.ASSETS.fetch(new Request(url.origin + url.pathname.replace(/\.jpg$/, ".webp"), req));
+      if (w.ok) {
+        const r = new Response(w.body, w);
+        r.headers.set("Content-Type", "image/webp");
+        r.headers.set("Vary", "Accept");
+        r.headers.set("Cache-Control", "public, max-age=2592000, stale-while-revalidate=86400");
+        r.headers.set("X-Content-Type-Options", "nosniff");
+        return r;
+      }
+    }
+
     let res = await env.ASSETS.fetch(req);
 
     // las redirecciones automáticas (/index.html, barra final) pasan a ser permanentes
@@ -26,6 +39,7 @@ export default {
     res = new Response(res.body, { status, statusText: res.statusText, headers: res.headers });
     const h = res.headers;
 
+    if (/^\/img\/[^/]+\.jpg$/.test(p)) h.set("Vary", "Accept");
     if (/^\/(img|video|tutorial)\//.test(p) || p === "/favicon.ico") {
       h.set("Cache-Control", "public, max-age=2592000, stale-while-revalidate=86400");
     } else if (p.startsWith("/js/")) {

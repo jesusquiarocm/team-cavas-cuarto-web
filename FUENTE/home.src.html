@@ -132,22 +132,38 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdro
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:800 1rem/1.05 Sora,sans-serif;color:var(--navy)}
 .brand img{height:54px;width:auto}
 .brand span small{display:block;font:600 .68rem/1.2 Inter,sans-serif;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
-nav ul{display:flex;gap:26px;list-style:none}
+#menu{display:flex;gap:22px;list-style:none;align-items:center}
+#menu>li{position:relative;display:flex;align-items:center;height:68px}
 nav a{text-decoration:none;font-weight:600;font-size:.94rem;color:var(--muted)}
-nav a:hover{color:var(--navy)}
+nav a:hover,nav a[aria-current="page"]{color:var(--navy)}
+.dd-t{border:0;background:none;width:22px;height:30px;cursor:pointer;color:var(--muted);display:grid;place-items:center;padding:0}
+.dd-t::before{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg)}
+.submenu{position:absolute;top:100%;left:-14px;min-width:260px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:8px;list-style:none;display:none;flex-direction:column;z-index:5}
+.dd:hover>.submenu,.dd:focus-within>.submenu,.dd.open>.submenu{display:flex}
+.dd.open>.dd-t::before{transform:translateY(2px) rotate(-135deg)}
+.submenu a{display:block;padding:9px 12px;border-radius:9px;font-size:.92rem;color:var(--ink);white-space:nowrap}
+.submenu a:hover,.submenu a[aria-current="page"]{background:var(--ice);color:var(--navy)}
+.nav-cta{color:var(--navy)!important;border:1.5px solid var(--navy);border-radius:99px;padding:8px 16px}
+.nav-cta:hover{background:var(--navy);color:#fff!important}
 .menu-btn{display:none}
-@media(max-width:860px){
-  .brand span{display:none}
+@media(max-width:1180px){.brand span{display:none}}
+@media(max-width:1020px){
   .menu-btn{display:flex;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;order:3;flex:0 0 auto}
   .menu-btn span{display:block;height:2px;width:20px;margin:0 auto;background:var(--navy);border-radius:2px;transition:.2s}
   header.open .menu-btn span:nth-child(1){transform:translateY(7px) rotate(45deg)}
   header.open .menu-btn span:nth-child(2){opacity:0}
   header.open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
   .nav .btn-sm{margin-left:auto}
-  nav ul{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:0;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 18px 30px rgba(6,34,77,.12);padding:6px 16px 14px}
-  header.open nav ul{display:flex}
-  nav ul a{display:block;padding:13px 4px;font-size:1rem;color:var(--navy);border-bottom:1px solid var(--line)}
-  nav ul li:last-child a{border-bottom:0}
+  #menu{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:0;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 18px 30px rgba(6,34,77,.12);padding:6px 16px 14px;max-height:calc(100vh - 110px);overflow:auto}
+  header.open #menu{display:flex}
+  #menu>li{height:auto;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+  #menu>li:last-child{border-bottom:0}
+  #menu>li>a{flex:1;padding:13px 4px;font-size:1rem;color:var(--navy)}
+  .dd-t{width:44px;height:44px}
+  .submenu,.dd:hover>.submenu,.dd:focus-within>.submenu{position:static;display:none;box-shadow:none;border:0;padding:0 0 10px 8px;min-width:0;width:100%}
+  .dd.open>.submenu{display:flex}
+  .submenu a{white-space:normal;padding:10px 8px}
+  .nav-cta{border:0;padding:13px 4px}
 }
 
 /* hero */
@@ -214,6 +230,7 @@ nav a:hover{color:var(--navy)}
 .mw .m{display:grid;place-items:center;height:92px;padding:14px 18px;border:1px solid #dbe7f3;border-radius:14px;background:#fff;font-weight:800;color:var(--navy);font-size:1.05rem;letter-spacing:.01em;text-align:center}
 .mw .m img{max-width:100%;max-height:100%;object-fit:contain}.mw .m.dk{background:#0b2a55;border-color:#0b2a55}.mw .m.tx{display:flex;gap:8px;align-items:center;justify-content:center}.mw .m.tx img{height:34px;width:auto}
 .mnote{margin-top:16px;color:var(--muted);font-size:.9rem}
+.more{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px 22px}.more a{font-weight:700;color:var(--navy);text-decoration:none}.more a:hover{text-decoration:underline}.on-dark .more a{color:var(--cyan)}
 .eq a.go{margin-top:10px;font-weight:700;font-size:.9rem;color:#0f7a3b;text-decoration:none}
 .eq a.go:hover{text-decoration:underline}
 .eqs-foot{margin-top:26px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
@@ -354,16 +371,19 @@ details[open] summary::after{content:"–"}
 details p{color:var(--muted);padding-bottom:18px}
 
 /* footer */
-footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
-.foot{display:flex;flex-wrap:wrap;gap:32px;justify-content:space-between;align-items:center}
-.foot .logo{background:#fff;border-radius:16px;padding:10px 16px}
-.foot ul.fl{display:block;columns:2;column-gap:32px;flex:1 1 380px;max-width:520px}.foot ul.fl li{break-inside:avoid;margin-bottom:6px}
-@media(max-width:600px){.foot ul.fl{columns:1}}
-.foot .logo img{height:84px;width:auto}
-.foot a{color:#fff;text-decoration:none;font-weight:600}
-.foot a:hover{color:var(--cyan)}
-.foot ul{list-style:none;display:grid;gap:8px}
+footer{background:var(--navy-dk);color:#c3d6ee;padding:50px 0 96px}
+.fgrid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:32px}
+.fgrid .logo{display:inline-block;background:#fff;border-radius:16px;padding:10px 16px;margin-bottom:14px}
+.fgrid .logo img{height:84px;width:auto}
+.fgrid p{font-size:.92rem}
+.fh{font:700 .78rem/1 Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px}
+footer ul{list-style:none;display:grid;gap:8px}
+footer a{color:#fff;text-decoration:none;font-weight:600}
+footer a:hover{color:var(--cyan)}
+.fcontact{margin-top:14px}
 .copy{margin-top:28px;font-size:.82rem;opacity:.7}
+@media(max-width:900px){.fgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.fgrid{grid-template-columns:1fr}}
 
 /* botón flotante */
 .fab{position:fixed;right:18px;bottom:18px;z-index:60;display:flex;align-items:center;gap:10px;background:var(--wa);color:#04361a;text-decoration:none;font-weight:800;border-radius:99px;padding:15px 20px 15px 16px;box-shadow:0 10px 28px rgba(0,0,0,.3)}
@@ -382,20 +402,12 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
 {{TOPBAR}}
 <header>
   <div class="wrap nav">
-    <a class="brand" href="#inicio" aria-label="Refrigeración Team, inicio">
+    <a class="brand" href="/" aria-label="Refrigeración Team, inicio">
       <img src="/img/logo.png" alt="Logo Refrigeración Team Cavas Cuarto" width="63" height="54">
       <span>Refrigeración Team<small>Cavas cuarto</small></span>
     </a>
     <nav aria-label="Principal">
-      <ul id="menu">
-        <li><a href="#servicios">Servicios</a></li>
-        <li><a href="#equipos">Equipos</a></li>
-        <li><a href="#temperaturas">Temperaturas</a></li>
-        <li><a href="#negocios">Para tu negocio</a></li>
-        <li><a href="#trabajos">Trabajos</a></li>
-        <li><a href="#cotizar">Cotizar</a></li>
-        <li><a href="#faq">Preguntas</a></li>
-      </ul>
+{{NAV}}
     </nav>
     <button class="menu-btn" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
     <a class="btn btn-wa btn-sm" data-wa="Hola, quiero cotizar una cava cuarto." href="#">
@@ -437,7 +449,7 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
   <div class="wrap">
     <ul>
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l3-1 12-12-2-2L4 18z"/><path d="M14 6l4 4"/></svg>Diseño a medida</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/></svg>Fabricamos los paneles</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/></svg>Paneles y equipo incluidos</li>
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 7l3-3 3 3-3 3M4 20l9-9 3 3-9 9H4z"/></svg>Instalación completa</li>
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Toda Venezuela</li>
     </ul>
@@ -467,6 +479,7 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
       <strong>Todo el sistema incluido:</strong>
       <span class="t">Paneles aislantes</span><span class="t">Puerta</span><span class="t">Evaporador</span><span class="t">Condensadora</span><span class="t">Control de temperatura</span>
     </div>
+    <p class="more"><a href="/cavas-cuarto/">Todo sobre nuestras cavas cuarto →</a></p>
   </div>
 </section>
 
@@ -485,7 +498,7 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
     </div>
     <div class="eqs-foot">
       <a class="btn btn-wa" data-lugar="equipos-todos" data-wa="Hola, quiero cotizar equipos y materiales para cavas cuarto." href="#"><svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use href="#i-wa"/></svg>Pedir lista de equipos</a>
-      <a href="/equipos-y-materiales-para-cavas-cuarto/" style="font-weight:700;color:var(--navy)">Ver más sobre equipos y materiales →</a>
+      <a href="/equipos-y-materiales-para-cavas-cuarto/" style="font-weight:700;color:var(--navy)">Ver equipos y materiales →</a>
       <a href="/freezers-comerciales/" style="font-weight:700;color:var(--navy)">Freezers →</a>
     </div>
   </div>
@@ -534,6 +547,7 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
         <ul><li>Carnes</li><li>Pescados y mariscos</li><li>Pollo</li><li>Helados</li></ul>
       </div>
     </div>
+    <p class="more"><a href="/cuarto-de-refrigeracion/">Cuarto de refrigeración →</a> <a href="/cuarto-de-congelacion/">Cuarto de congelación →</a></p>
   </div>
 </section>
 
@@ -550,6 +564,7 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
     </div>
     <p class="also"><b>También:</b> <a href="/cava-cuarto-restaurante/">restaurantes</a>, <a href="/cava-cuarto-heladeria/">heladerías</a>, <a href="/cava-cuarto-panaderia/">panaderías</a>, <a href="/cava-cuarto-abasto-bodega/">abastos y bodegas</a> y más.</p>
     <p class="also"><b>Por temperatura:</b> <a href="/cuarto-de-refrigeracion/">cuarto de refrigeración</a> · <a href="/cuarto-de-congelacion/">cuarto de congelación</a> · <a href="/como-elegir-una-cava-cuarto/">cómo elegir tu cava cuarto</a></p>
+    <p class="more"><a href="/sectores/">Ver todos los negocios que atendemos →</a></p>
   </div>
 </section>
 
@@ -579,6 +594,7 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
       <figure class="t3 rv"><img src="/img/equipo-descarga.jpg" width="960" height="960" alt="Técnicos descargando una unidad condensadora y paneles de cava" loading="lazy"><figcaption>Paneles y equipos a obra</figcaption></figure>
       <figure class="t4 rv"><img src="/img/equipo-camion.jpg" width="960" height="960" alt="Equipo de instaladores con el camión cargado de paneles para cava cuarto" loading="lazy"><figcaption>En ruta con todo el material</figcaption></figure>
     </div>
+    <p class="more"><a href="/nosotros/">Conoce más sobre nosotros →</a></p>
   </div>
 </section>
 
@@ -605,6 +621,7 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
       <figure><div class="im"><img src="/img/c72.jpg" alt="Puerta de cava con herrajes" loading="eager" decoding="async" fetchpriority="low"></div><figcaption>Puerta con herrajes</figcaption></figure>
     </div>
   </div>
+  <div class="wrap"><p class="more"><a href="/proyectos/">Ver todos los proyectos →</a></p></div>
 </section>
 
 <div class="cta-mid"><div class="wrap in"><div><h3>¿Te gustó alguna de estas cavas?</h3><p>Respóndenos por WhatsApp y te cotizamos sin compromiso.</p></div><div class="acts"><a class="btn btn-wa" data-lugar="mid-galeria" data-wa="Hola, vi sus trabajos y quiero una cava como esas." href="#"><svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use href="#i-wa"/></svg>Cotizar por WhatsApp</a><a class="btn btn-call" href="tel:+584121856429" data-lugar="mid-galeria-llamar">0412 1856429</a></div></div></div>
@@ -617,6 +634,7 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
       <p class="lead">Hemos llevado cavas cuarto a negocios de todo el país. Estés donde estés, escríbenos y vamos hasta ti.</p>
       <div class="tags"><span>Occidente</span><span>Los Andes</span><span>Centro</span><span>Oriente</span><span>Guayana</span><span>Llanos</span></div>
       <a class="btn btn-wa" data-lugar="mapa" data-wa="Hola, quiero cotizar una cava cuarto en mi ciudad." href="#"><svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use href="#i-wa"/></svg>Cotiza en tu ciudad</a>
+      <p class="more"><a href="/cobertura/">Ver cobertura →</a></p>
     </div>
     <div>{{MAPA_VZLA}}<div class="cities" aria-hidden="true"><span>Caracas</span><span>Maracaibo</span><span>Valencia</span><span>Barquisimeto</span><span>Barcelona</span><span>Mérida</span><span>Maturín</span><span>San Cristóbal</span><span>Ciudad Guayana</span><span>San Fernando de Apure</span><span>Puerto Ayacucho</span><span>Coro</span></div></div>
   </div>
@@ -687,6 +705,7 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
       <details><summary>¿Cuánto cuesta una cava cuarto?</summary><p>Depende del tamaño, la temperatura y el equipo. Escríbenos por WhatsApp con tus medidas y te cotizamos.</p></details>
       <details><summary>¿Y si no sé las medidas?</summary><p>No hay problema. Cuéntanos qué vas a guardar y el espacio disponible, y te orientamos por WhatsApp.</p></details>
     </div>
+    <p class="more"><a href="/preguntas-frecuentes/">Ver todas las preguntas frecuentes →</a></p>
     <div style="margin-top:30px"><a class="btn btn-wa" data-wa="Hola, tengo una pregunta sobre las cavas cuarto." href="#"><svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use href="#i-wa"/></svg>¿Otra duda? Escríbenos</a></div>
   </div>
 </section>
@@ -694,18 +713,17 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
 
 <footer>
   <div class="wrap">
-    <div class="foot">
-      <div class="logo"><img src="/img/logo.png" alt="Refrigeración Team Cavas Cuarto" width="98" height="84" loading="lazy"></div>
-      <ul>
-        <li>Diseño · Fabricación · Instalación de cavas cuarto</li>
-        <li>Atendemos en toda Venezuela</li>
-      </ul>
-      <ul class="fl">{{FOOTLINKS}}</ul>
-      <ul>
-        <li><a href="tel:+584121856429">0412 1856429</a></li>
-        <li><a data-wa="Hola, quiero información sobre cavas cuarto." href="#">WhatsApp</a></li>
-        <li><a href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener">@cavascuartoteam</a></li>
-      </ul>
+    <div class="fgrid">
+      <div>
+        <a class="logo" href="/"><img src="/img/logo.png" alt="Refrigeración Team Cavas Cuarto" width="98" height="84" loading="lazy"></a>
+        <p>Diseño, fabricación e instalación de cavas cuarto, y venta de equipos y materiales. Atendemos en toda Venezuela.</p>
+        <ul class="fcontact">
+          <li><a href="tel:+584121856429">0412 1856429</a></li>
+          <li><a data-wa="Hola, quiero información sobre cavas cuarto." href="#">WhatsApp</a></li>
+          <li><a href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener">@cavascuartoteam</a></li>
+        </ul>
+      </div>
+      {{FOOTCOLS}}
     </div>
     <p class="copy">© <span id="yr"></span> Refrigeración Team Cavas Cuarto. Todos los derechos reservados.</p>
     <p class="copy" style="font-size:.72rem;opacity:.7">Foto de compresor: <a href="https://commons.wikimedia.org/wiki/File:Compressor_Bitzer_4NES-14Y-40P.jpg" rel="noopener" style="color:inherit">Wikimedia Commons</a>, CC BY-SA 4.0. Las marcas pertenecen a sus propietarios. Mapa: geoBoundaries, CC BY 4.0. Foto de unidad condensadora (recorte): <a href="https://commons.wikimedia.org/wiki/File:Cold_Room_Products_-_Mix_-_Door_-_Refrigeration_-_Evaporator_-_Panel.jpg" rel="noopener" style="color:inherit">Wikimedia Commons</a>, CC BY 4.0. Imágenes referenciales.</p>
@@ -726,62 +744,6 @@ footer{background:var(--navy-dk);color:#c3d6ee;padding:46px 0 96px}
 </svg>
 
 <script src="/js/wa.js"></script>
-<script>
-const NEGOCIO = "Refrigeración Team";
-
-// video de fondo del hero: solo en pantallas grandes, sin ahorro de datos, y después de cargar la página
-(function(){
-  const v = document.querySelector(".hero-bg"); if (!v) return;
-  const c = navigator.connection || {};
-  if (matchMedia("(max-width:860px)").matches || matchMedia("(prefers-reduced-motion:reduce)").matches || c.saveData || /2g/.test(c.effectiveType || "")) return;
-  const go = () => {
-    v.src = v.dataset.src;
-    v.addEventListener("playing", () => v.classList.add("on"), {once:true});
-    v.play().catch(() => {});
-    new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? v.play().catch(() => {}) : v.pause())).observe(v.parentElement);
-  };
-  const idle = window.requestIdleCallback || (f => setTimeout(f, 1200));
-  if (document.readyState === "complete") idle(go); else addEventListener("load", () => idle(go));
-})();
-
-// cotizador -> mensaje de WhatsApp
-document.getElementById("f").addEventListener("submit", e => {
-  e.preventDefault();
-  const v = id => document.getElementById(id).value.trim();
-  const med = [v("l"), v("a"), v("h")];
-  const l = ["Hola " + NEGOCIO + ", quiero cotizar una cava cuarto."];
-  if (v("nom"))  l.push("Nombre: " + v("nom"));
-  if (v("que"))  l.push("Necesito: " + v("que"));
-  if (v("tipo")) l.push("Negocio: " + v("tipo"));
-  if (v("temp")) l.push("Temperatura: " + v("temp"));
-  if (med.some(Boolean)) l.push("Medidas aprox. (largo x ancho x alto, m): " + med.map(x => x || "?").join(" x "));
-  else l.push("Medidas: aún no las sé, necesito orientación.");
-  if (v("ciu"))  l.push("Ubicación: " + v("ciu"));
-  if (document.getElementById("foto").checked) l.push("Te enviaré una foto del espacio por aquí.");
-  track("cotizador");
-  window.open(wa(l.join("\n")), "_blank", "noopener");
-});
-
-// galería ampliada
-const lb = document.getElementById("lb"), lbi = lb.querySelector("img");
-["rail","equipo"].forEach(id => document.getElementById(id).addEventListener("click", e => {
-  const im = e.target.closest("img"); if (!im) return;
-  lbi.src = im.src; lbi.alt = im.alt; lb.classList.add("on");
-}));
-lb.addEventListener("click", () => lb.classList.remove("on"));
-document.addEventListener("keydown", e => { if (e.key === "Escape") lb.classList.remove("on"); });
-
-
-(function(){var tv=document.getElementById("tv"),v=tv.querySelector("video");
-function abre(){tv.classList.add("on");if(!v.src){v.src=v.dataset.src}try{v.play()}catch(e){}try{window.track&&track("tutorial")}catch(e){}}
-function cierra(){tv.classList.remove("on");v.pause()}
-document.querySelectorAll("[data-tutorial]").forEach(function(b){b.addEventListener("click",abre)});
-tv.addEventListener("click",function(e){if(e.target===tv||e.target.tagName==="BUTTON")cierra()});
-document.addEventListener("keydown",function(e){if(e.key==="Escape")cierra()})})();
-
-(function(){var m=document.getElementById("cobertura");if(!m)return;
-if(!("IntersectionObserver"in window)){m.classList.add("go");return}
-new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting){m.classList.add("go");o.disconnect()}})},{threshold:.3}).observe(m)})();
-</script>
+<script src="/js/sitio.js"></script>
 </body>
 </html>

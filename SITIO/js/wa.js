@@ -51,6 +51,15 @@ if (hd && mb) {
   hd.querySelectorAll("nav a").forEach(a => a.addEventListener("click", () => set(false)));
   document.addEventListener("keydown", e => { if (e.key === "Escape") set(false); });
 }
+// submenús: se abren al pasar el mouse (escritorio) o con la flecha (celular y teclado)
+const cierraSub = (salvo) => document.querySelectorAll(".dd.open").forEach(d => { if (d !== salvo) { d.classList.remove("open"); d.querySelector(".dd-t").setAttribute("aria-expanded", false); } });
+document.querySelectorAll(".dd-t").forEach(b => b.addEventListener("click", e => {
+  e.stopPropagation();
+  const li = b.parentElement, on = !li.classList.contains("open");
+  cierraSub(li); li.classList.toggle("open", on); b.setAttribute("aria-expanded", on);
+}));
+document.addEventListener("click", e => { if (!e.target.closest(".dd")) cierraSub(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") cierraSub(); });
 
 const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } }), {threshold:.12});
 document.querySelectorAll(".rv").forEach(el => io.observe(el));

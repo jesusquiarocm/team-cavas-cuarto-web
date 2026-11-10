@@ -1,58 +1,90 @@
 {
  "/": {
-  "hash": "b537b9baa8ad189c453cd2312fbfa24e33b1924e",
+  "hash": "e18631c6585eb401eb52188438579ff9879d4cfe",
   "fecha": "2026-11-09"
  },
  "/cavas-cuarto-carniceria/": {
-  "hash": "67e9b85e6bc9de45401efa93416639a78f7ad596",
+  "hash": "6fec0998183300b946f6d11f62bbbb4855414ebb",
   "fecha": "2026-11-09"
  },
  "/cuartos-frios-pescaderia/": {
-  "hash": "de2db38bea2f5ad307db1528f451340407ebea18",
+  "hash": "41981a10b95fc1ce17541975e80f9254864a527d",
   "fecha": "2026-11-09"
  },
  "/cava-cuarto-polleria/": {
-  "hash": "b782529e057827c797472a08e7d023379e890934",
+  "hash": "4c0ed75749ebe7c958a42a421756d79f729860bb",
   "fecha": "2026-11-09"
  },
  "/cava-cuarto-restaurante/": {
-  "hash": "61d5d67896750bea118117c20600f3c8b58af384",
+  "hash": "f833cea1f00601d06914221989f8e47f24378685",
   "fecha": "2026-11-09"
  },
  "/cava-cuarto-heladeria/": {
-  "hash": "09c86f80884d521d3d33eaa1b260fa5693c260b5",
+  "hash": "08f9da0b79045a5785b46e6e806863abbdc7bb37",
   "fecha": "2026-11-09"
  },
  "/cava-cuarto-panaderia/": {
-  "hash": "0eee19a80a5beef3c04fc3da09b59339c192c3c1",
+  "hash": "a534d4e15c6c2036a696e9a68f9016aa7f2992da",
   "fecha": "2026-11-09"
  },
  "/cava-cuarto-abasto-bodega/": {
-  "hash": "69562432cd45ead2a7fc874d9aaf8317be057460",
+  "hash": "bf188f996a142372788ec9c26955293004497bcd",
   "fecha": "2026-11-09"
  },
  "/cuartos-frios-galpones-distribuidores/": {
-  "hash": "fb99fac33e945639dd805b3f64dd4fd23fcb4ba7",
+  "hash": "0be7970a06576569a2001eac81b1d5b4bc92167a",
   "fecha": "2026-11-09"
  },
  "/cuarto-de-refrigeracion/": {
-  "hash": "a05324f9c87a38f56afd772674f939f092ee7a57",
+  "hash": "252cc31425da187a315ce40bf865a9bc12658b9c",
   "fecha": "2026-11-09"
  },
  "/cuarto-de-congelacion/": {
-  "hash": "2b8f23fc001ebb1eb62e59ba0fade66cd583525f",
+  "hash": "c44ece82a146f7826f0d0779d518024748064a66",
   "fecha": "2026-11-09"
  },
  "/como-elegir-una-cava-cuarto/": {
-  "hash": "ad42ac24e2be0ef3f2a8a8a79be0580f1fc95738",
+  "hash": "be7e3c4e6bbfe196e31640794b29e879ba5876d8",
   "fecha": "2026-11-09"
  },
  "/equipos-y-materiales-para-cavas-cuarto/": {
-  "hash": "68f8878bc622d97722d749ff7bbf83a2f0f32735",
+  "hash": "d4f9f00b627916a1e4913e331da7da1982a7fd94",
   "fecha": "2026-11-09"
  },
  "/freezers-comerciales/": {
-  "hash": "91b6dce05a50b977af61acd08951e4b81ea3762e",
+  "hash": "571774c2d950066746fdbb1d5876668d4b7a32b1",
+  "fecha": "2026-11-09"
+ },
+ "/cavas-cuarto/": {
+  "hash": "28ea0e7f2d566a9a5cafc617d807b3a0ec69e3aa",
+  "fecha": "2026-11-09"
+ },
+ "/sectores/": {
+  "hash": "2e5e594f5a83690ffc5117eb30b4e0daf2b9adcd",
+  "fecha": "2026-11-09"
+ },
+ "/proyectos/": {
+  "hash": "ae7a9bd1c06f386bb39bf689a3c96052d154cb36",
+  "fecha": "2026-11-09"
+ },
+ "/nosotros/": {
+  "hash": "059263879966916ee0ed6bdb9d87fa09dadb73ef",
+  "fecha": "2026-11-09"
+ },
+ "/cobertura/": {
+  "hash": "f481f7f8b1e990567d0be6b5535a85398af3ddcd",
+  "fecha": "2026-11-09"
+ },
+ "/cotizar/": {
+  "hash": "cf4bdaf11095b3c7fbb27ffe545b4784f9b723ab",
+  "fecha": "2026-11-09"
+ },
+ "/preguntas-frecuentes/": {
+  "hash": "82af91ed027222c60e3c7742d68c50d40837373a",
+  "fecha": "2026-11-09"
+ },
+ "/contacto/": {
+  "hash": "b16e330cb4b9946f81ed7d2c5fcbb9b60e4c51bc",
   "fecha": "2026-11-09"
  }
 }
