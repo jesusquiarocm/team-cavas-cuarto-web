@@ -467,7 +467,9 @@ EXTRA_CSS = """
 .ccard b{font:800 1.25rem/1.2 Sora,sans-serif}.ccard span{font-weight:700;color:var(--navy)}.ccard small{color:var(--muted)}
 @media(max-width:760px){.ccards{grid-template-columns:1fr}}
 .ogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-top:28px}
-.obra{border:1px solid var(--line);border-radius:var(--r);padding:24px;background:#fff;display:flex;flex-direction:column;gap:8px}
+.o-foto{margin:-24px -24px 6px;aspect-ratio:4/3;overflow:hidden;background:#e3eef8;border-radius:var(--r) var(--r) 0 0}.o-foto img{width:100%;height:100%;object-fit:cover}
+.o-med{font-weight:700;color:var(--navy)!important}
+.obra{border:1px solid var(--line);border-radius:var(--r);padding:24px;overflow:hidden;background:#fff;display:flex;flex-direction:column;gap:8px}
 .obra h3{font-size:1.15rem;color:var(--navy)}.obra p{color:var(--muted);font-size:.95rem}
 .o-lugar{font:700 .8rem/1.2 Inter,sans-serif!important;letter-spacing:.08em;text-transform:uppercase;color:var(--sky)!important}
 .o-meta a,.o-links a{color:var(--navy);font-weight:700;text-decoration:none}.o-meta b{color:var(--ink)}
@@ -789,27 +791,29 @@ IG = "https://www.instagram.com/"
 PROYECTOS = [
  dict(lugar="Anzoátegui", estado="Anzoátegui", tipo="Cavas para pulpo, pescados y mariscos", anio="2025", temp="Conservación de producto marino",
       txt="Fabricamos e instalamos cavas cuarto pensadas para conservar pulpo, pescados y otras especies marinas en perfectas condiciones.",
+      medidas="5 × 10 × 2,40 m (una de ellas)", foto="obra-anzoategui",
       posts=["p/DLVzECZPzHv/", "reel/DOkBOiZDA49/", "reel/DOpEBqJDDIf/"], rel=["cuartos-frios-pescaderia", "cuarto-de-congelacion"]),
  dict(lugar="La Guaira", estado="La Guaira", tipo="Cava cuarto triple", anio="2025", temp="Congelación y conservación",
       txt="Una cava cuarto triple que reúne congelación y conservación en un solo espacio, para optimizar la logística de frío del cliente.",
+      foto="obra-la-guaira-triple",
       posts=["p/DLGgTWAs6Pd/", "reel/DLLR66DPOLA/"], rel=["cuartos-frios-galpones-distribuidores", "cuarto-de-congelacion"]),
  dict(lugar="Tocuyito, Carabobo", estado="Carabobo", tipo="Cava cuarto de congelación", anio="2025", temp="Congelación",
       txt="Cava cuarto diseñada para congelación, fabricada e instalada en Tocuyito, estado Carabobo.",
       posts=["reel/DKKo8SaRGvK/"], rel=["cuarto-de-congelacion"]),
  dict(lugar="San Bernardino, Caracas", estado="Distrito Capital", tipo="Cava cuarto de congelación", anio="2025", temp="Congelación",
       txt="Cava cuarto de congelación hecha a la medida del espacio del cliente en San Bernardino, Caracas.",
-      posts=["p/DHFFMIbsawn/", "p/DGwIQ0CvQOq/"], rel=["cuarto-de-congelacion"]),
- dict(lugar="Caracas", estado="Distrito Capital", tipo="Cava cuarto", anio="2025", temp="Instalación con garantía y servicio técnico",
-      txt="Otro cliente en Caracas con su cava cuarto fabricada e instalada por nuestro equipo.",
-      posts=["reel/DHHlBz2MOhE/"], rel=[]),
+      medidas="4 × 5 × 3 m", foto="obra-san-bernardino",
+      posts=["p/DHFFMIbsawn/", "p/DGwIQ0CvQOq/", "reel/DHHlBz2MOhE/"], rel=["cuarto-de-congelacion"]),
  dict(lugar="La Guaira", estado="La Guaira", tipo="Cava para productos biológicos", anio="2024", temp="Conservación",
       txt="Cava cuarto diseñada y elaborada para la conservación de productos biológicos en el estado La Guaira.",
       posts=["reel/C9N5FKGhHKU/"], rel=["cuarto-de-refrigeracion"]),
  dict(lugar="Caracas", estado="Distrito Capital", tipo="Cava de congelación para carne de cerdo", anio="2024", temp="Congelación",
       txt="Cava cuarto para congelar carne de cerdo, con control de temperatura preciso y humedad controlada.",
+      foto="obra-caracas-cerdo",
       posts=["p/C7u4LurOJHh/"], rel=["cavas-cuarto-carniceria", "cuarto-de-congelacion"]),
  dict(lugar="Cumaná, Sucre", estado="Sucre", tipo="Cava de congelación y conservación de alimentos", anio="2024", temp="Congelación",
       txt="Cava cuarto para congelar y conservar alimentos, instalada en Cumaná, estado Sucre.",
+      foto="obra-cumana",
       posts=["reel/C5wsEYiOXxp/", "reel/C5jznPONBoK/"], rel=["cava-cuarto-restaurante", "cuarto-de-congelacion"]),
 ]
 ESTADOS = ["Anzoátegui", "Aragua", "Bolívar", "Carabobo", "Caracas", "La Guaira", "Lara", "Margarita (Nueva Esparta)", "Mérida", "Miranda", "Monagas", "Sucre", "Trujillo", "Zulia"]
@@ -817,8 +821,10 @@ ESTADOS = ["Anzoátegui", "Aragua", "Bolívar", "Carabobo", "Caracas", "La Guair
 def obra_card(o):
     links = "".join(f'<a href="{IG}cavascuartoteam/{u}" target="_blank" rel="noopener">{"Ver video" if u.startswith("reel") else "Ver fotos"} en Instagram →</a>' for u in o["posts"])
     rel = " · ".join(f'<a href="/{r}/">{esc(BYSLUG[r]["nombre"])}</a>' for r in o["rel"])
-    return (f'<article class="obra rv"><p class="o-lugar">{esc(o["lugar"])} · {o["anio"]}</p><h3>{esc(o["tipo"])}</h3>'
-            f'<p>{esc(o["txt"])}</p><p class="o-meta"><b>{esc(o["temp"])}</b>{" · Relacionado: " + rel if rel else ""}</p><p class="o-links">{links}</p></article>')
+    foto = (f'<div class="o-foto"><img src="/img/{o["foto"]}.jpg" alt="{esc(o["tipo"])} en {esc(o["lugar"])}" loading="lazy"></div>' if o.get("foto") else "")
+    med = f'<p class="o-med">Medidas: {esc(o["medidas"])}</p>' if o.get("medidas") else ""
+    return (f'<article class="obra rv">{foto}<p class="o-lugar">{esc(o["lugar"])} · {o["anio"]}</p><h3>{esc(o["tipo"])}</h3>'
+            f'<p>{esc(o["txt"])}</p>{med}<p class="o-meta"><b>{esc(o["temp"])}</b>{" · Relacionado: " + rel if rel else ""}</p><p class="o-links">{links}</p></article>')
 
 def obras_de(slug):
     return [o for o in PROYECTOS if slug in o["rel"]]
