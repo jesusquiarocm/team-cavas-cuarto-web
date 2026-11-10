@@ -278,6 +278,12 @@ def add_dims(s):
                 srcset = ", ".join(f"{u} {a}w" for a, u in vs) + f", /{src.group(1)} {w}w"
                 extra = f' srcset="{srcset}"' + ("" if "sizes=" in tag else ' sizes="(max-width: 520px) 92vw, 360px"')
                 tag = tag.replace("<img ", "<img" + extra + " ", 1)
+        # ?v= con la huella del archivo: si se cambia una foto, el navegador no muestra la vieja guardada
+        def ver(mu):
+            f = SITIO / mu.group(1)
+            if not f.exists(): return mu.group(0)
+            return "/%s?v=%s" % (mu.group(1), hashlib.sha1(f.read_bytes()).hexdigest()[:8])
+        tag = re.sub(r'/(img/[^"\s,?]+\.jpg)', ver, tag)
         return tag
     return re.sub(r"<img [^>]*>", f, s)
 
