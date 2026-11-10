@@ -770,13 +770,13 @@ def build_extra_pages(h):
 <div class="bens">
 <div class="ben rv"><h3>Cavas cuarto a medida</h3><p>Diseñamos, armamos e instalamos cavas de refrigeración y de congelación. <a href="/cavas-cuarto/">Ver cavas cuarto →</a></p></div>
 <div class="ben rv"><h3>Equipos y materiales</h3><p>Unidades condensadoras, compresores, difusores, controles e insumos de marcas reconocidas. <a href="{EQUIPOS}">Ver equipos →</a></p></div>
-<div class="ben rv"><h3>Mantenimiento</h3><p>Mantenimiento preventivo y correctivo de cavas cuarto y equipos de refrigeración. <a href="/mantenimiento-cavas-cuarto/">Ver mantenimiento →</a></p></div>
+<div class="ben rv"><h3>Mantenimiento</h3><p>Mantenimiento preventivo y correctivo de cavas cuarto, equipos de refrigeración y aires acondicionados. <a href="/mantenimiento-cavas-cuarto/">Ver mantenimiento →</a></p></div>
 <div class="ben rv"><h3>Freezers para negocios</h3><p>Freezers y neveras para el punto de venta, como complemento de tu cava. <a href="/freezers-comerciales/">Ver freezers →</a></p></div>
 </div></div></section>
 {seccion(h, "proceso")}
 <section><div class="wrap prose"><span class="eyebrow">Dónde estamos</span><h2>Desde Barcelona para toda Venezuela</h2>
 <p>Nuestra oficina está en Barcelona, estado Anzoátegui, y atendemos a cualquier hora. Llevamos el material y el equipo hasta tu local, estés donde estés: ya hemos trabajado en {", ".join(ESTADOS[:-1])} y {ESTADOS[-1]}. Mira las zonas donde hemos trabajado en la página de <a href="/cobertura/">cobertura</a>, o escríbenos tu ciudad por WhatsApp.</p>
-<p>Todas nuestras cavas cuarto tienen garantía, y ofrecemos <a href="/mantenimiento-cavas-cuarto/">mantenimiento preventivo y servicio técnico</a>. Refrigeración Team Cavas Cuarto, RIF J-50297485-7.</p>
+<p>Todas nuestras cavas cuarto tienen garantía, y ofrecemos <a href="/mantenimiento-cavas-cuarto/">mantenimiento preventivo y servicio técnico</a> de cavas, equipos y aires acondicionados. Refrigeración Team Cavas Cuarto, RIF J-50297485-7.</p>
 <p>Síguenos en Instagram, <a href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener">@cavascuartoteam</a>, donde publicamos nuestros trabajos.</p></div></section>
 {band("Hola, quiero información sobre sus servicios.")}'''
     shell("/nosotros/", "Quiénes Somos | Refrigeración Team Cavas Cuarto",
@@ -987,10 +987,12 @@ PRECIO_FAQ = [
  ("¿Cuánto cuesta una cava cuarto de 2 × 2 metros?", "Como referencia, una cava pequeña de 2 × 2 metros sale en unos 6.000 a 6.500 USD. Es la más pequeña que fabricamos; el precio exacto se define en la cotización."),
  ("¿Por qué no hay una lista de precios fija?", "Porque cada cava se hace a la medida: cambian las dimensiones, la temperatura, el equipo, la puerta, los accesorios y el traslado. Por eso cotizamos cada caso por separado."),
  ("¿Una cava de congelación cuesta más que una de refrigeración?", "Por lo general sí, porque necesita un equipo más potente y un mejor aislamiento para mantener −18 °C. Te damos las dos opciones si no estás seguro."),
- ("¿Las cavas tienen garantía?", "Sí. Todas nuestras cavas cuarto tienen garantía, y además ofrecemos mantenimiento preventivo y servicio técnico."),
+ ("¿Las cavas tienen garantía?", "Sí. Todas nuestras cavas cuarto tienen garantía, y además ofrecemos mantenimiento preventivo de cavas, equipos y aires acondicionados, y servicio técnico."),
  ("¿Cómo pido el precio de mi cava?", "Escríbenos por WhatsApp o usa el cotizador con lo que vas a guardar, la temperatura y las medidas aproximadas. Si no sabes las medidas, una foto del espacio basta para empezar."),
 ]
 MANT_FAQ = [
+ ("¿Hacen mantenimiento de aires acondicionados?", "Sí. Además de las cavas cuarto y los equipos de refrigeración, hacemos mantenimiento de aires acondicionados. Escríbenos con una foto del equipo y su ubicación y te orientamos."),
+ ("¿Qué incluye el mantenimiento preventivo?", "Limpieza y revisión de la condensadora, el evaporador, los ventiladores, el drenaje, la puerta y sus sellos, el control de temperatura y la parte eléctrica, más recomendaciones según el uso de tu cava. En los aires acondicionados incluye limpieza de filtros y de las unidades, y revisión de su funcionamiento."),
  ("¿Cada cuánto se le hace mantenimiento a una cava cuarto?", "Depende del uso, del tamaño y del lugar donde está la condensadora. Te recomendamos una frecuencia según tu caso; en cavas de trabajo intenso conviene revisarlas más seguido."),
  ("¿Hacen mantenimiento a cavas que no instalaron ustedes?", "Escríbenos con fotos de tu cava y de su equipo, y te decimos cómo podemos ayudarte."),
  ("¿Atienden emergencias?", "Atendemos a cualquier hora. Si tu cava dejó de enfriar, escríbenos por WhatsApp con fotos o un video del equipo y te orientamos de inmediato."),
@@ -1055,7 +1057,7 @@ def build_fase2_pages(h):
     body = f'''<section><div class="wrap prose"><span class="eyebrow">Mantenimiento</span>
 <h2>Que tu cava no se detenga</h2>
 <p>Una cava cuarto trabaja todos los días, a toda hora. Con el tiempo se acumula suciedad en la condensadora y el evaporador, los sellos de la puerta se desgastan y las conexiones se aflojan. El mantenimiento preventivo encuentra esos problemas antes de que la cava deje de enfriar y pierdas mercancía.</p>
-<p>Hacemos mantenimiento preventivo y correctivo de cavas cuarto y equipos de refrigeración, y vendemos los repuestos y equipos que tu cava necesite.</p>
+<p>Hacemos mantenimiento preventivo y correctivo de <strong>cavas cuarto</strong>, <strong>equipos de refrigeración</strong> (condensadoras, compresores, evaporadores y controles) y <strong>aires acondicionados</strong>, y vendemos los repuestos y equipos que necesites.</p>
 </div></section>
 <section style="background:var(--ice)"><div class="wrap"><span class="eyebrow">Mantenimiento preventivo</span><h2>Qué revisamos</h2>
 <div class="bens">
@@ -1066,20 +1068,24 @@ def build_fase2_pages(h):
 <div class="ben rv"><h3>Control y parte eléctrica</h3><p>Control de temperatura, tablero y conexiones, para que la cava trabaje con precisión y sin riesgos.</p></div>
 <div class="ben rv"><h3>Recomendaciones</h3><p>Te decimos qué conviene cambiar o mejorar, y cada cuánto revisar tu cava según su uso.</p></div>
 </div></div></section>
-<section><div class="wrap prose"><span class="eyebrow">Mantenimiento correctivo</span><h2>Señales de que tu cava necesita servicio</h2>
+<section><div class="wrap prose"><span class="eyebrow">Aires acondicionados</span><h2>También cuidamos tus aires acondicionados</h2>
+<p>Además de las cavas cuarto, hacemos mantenimiento de aires acondicionados. Un aire sin mantenimiento enfría menos, gasta más luz y suele fallar justo en los días de más calor. La revisión preventiva incluye limpieza de filtros y de las unidades interior y exterior, revisión del drenaje, de los ventiladores y de la parte eléctrica, y comprobar que el equipo enfríe como debe.</p>
+<p>Escríbenos con una foto del equipo y su ubicación, y te decimos cómo podemos ayudarte.</p>
+</div></section>
+<section style="background:var(--ice)"><div class="wrap prose"><span class="eyebrow">Mantenimiento correctivo</span><h2>Señales de que tu cava necesita servicio</h2>
 <ul class="lista"><li>No llega a la temperatura de siempre o tarda mucho en bajar.</li><li>Se forma hielo en exceso en el evaporador o en la puerta.</li><li>El equipo hace ruidos extraños o se apaga y enciende muy seguido.</li><li>Hay agua en el piso o gotea por el drenaje.</li><li>La factura de luz subió sin razón aparente.</li></ul>
 <p>Si notas alguna de estas señales, escríbenos con fotos o un video del equipo. Atendemos a cualquier hora y te orientamos de inmediato.</p>
 <p>¿Necesitas repuestos? Mira nuestros <a href="{EQUIPOS}">equipos y materiales</a>.</p>
 </div></section>
-<section style="background:var(--ice)"><div class="wrap"><span class="eyebrow">Preguntas frecuentes</span><h2>Dudas sobre el mantenimiento</h2>{faq_html(MANT_FAQ)}</div></section>
-{band("Hola, necesito mantenimiento para mi cava cuarto.", "Agenda el mantenimiento de tu cava", "Escríbenos por WhatsApp con fotos de tu cava y de su equipo. Atendemos a cualquier hora.")}'''
-    shell("/mantenimiento-cavas-cuarto/", "Mantenimiento de Cavas Cuarto | Refrigeración Team",
-          "Mantenimiento preventivo y correctivo de cavas cuarto y equipos de refrigeración en Venezuela. Servicio técnico y repuestos. Atención a cualquier hora.",
-          [("Cavas cuarto", "/cavas-cuarto/"), ("Mantenimiento", "/mantenimiento-cavas-cuarto/")], "Mantenimiento de cavas cuarto",
-          "Mantenimiento preventivo y correctivo de cavas cuarto y equipos de refrigeración, con servicio técnico y repuestos. Atendemos a cualquier hora.",
-          body, [{"@type": "Service", "name": "Mantenimiento preventivo y correctivo de cavas cuarto", "serviceType": "Mantenimiento de refrigeración comercial",
+<section><div class="wrap"><span class="eyebrow">Preguntas frecuentes</span><h2>Dudas sobre el mantenimiento</h2>{faq_html(MANT_FAQ)}</div></section>
+{band("Hola, necesito mantenimiento para mi cava cuarto o aire acondicionado.", "Agenda el mantenimiento de tu equipo", "Escríbenos por WhatsApp con fotos de tu cava, tu equipo o tu aire acondicionado. Atendemos a cualquier hora.")}'''
+    shell("/mantenimiento-cavas-cuarto/", "Mantenimiento de Cavas Cuarto y Aire Acondicionado",
+          "Mantenimiento preventivo y correctivo de cavas cuarto, equipos de refrigeración y aires acondicionados en Venezuela. Servicio técnico y repuestos.",
+          [("Cavas cuarto", "/cavas-cuarto/"), ("Mantenimiento", "/mantenimiento-cavas-cuarto/")], "Mantenimiento de cavas cuarto, equipos y aires acondicionados",
+          "Mantenimiento preventivo y correctivo de cavas cuarto, equipos de refrigeración y aires acondicionados, con servicio técnico y repuestos. Atendemos a cualquier hora.",
+          body, [{"@type": "Service", "name": "Mantenimiento de cavas cuarto, equipos de refrigeración y aires acondicionados", "serviceType": "Mantenimiento de refrigeración comercial y aire acondicionado",
                   "provider": emp, "areaServed": {"@type": "Country", "name": "Venezuela"}, "url": f"{BASE}/mantenimiento-cavas-cuarto/"}, faq_schema(MANT_FAQ)],
-          "Hola, necesito mantenimiento para mi cava cuarto.", img="real-interior1", imgalt="Interior de una cava cuarto con evaporadores")
+          "Hola, necesito mantenimiento para mi cava cuarto o aire acondicionado.", img="real-interior1", imgalt="Interior de una cava cuarto con evaporadores")
 
 # ------------------------------------------------------------------- build
 make_og()
