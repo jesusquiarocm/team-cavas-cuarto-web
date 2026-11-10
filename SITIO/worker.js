@@ -42,8 +42,11 @@ export default {
     if (/^\/img\/[^/]+\.jpg$/.test(p)) h.set("Vary", "Accept");
     if (/^\/(img|video|tutorial)\//.test(p) || p === "/favicon.ico") {
       h.set("Cache-Control", "public, max-age=2592000, stale-while-revalidate=86400");
+    } else if (p.startsWith("/fonts/")) {
+      h.set("Cache-Control", "public, max-age=31536000, immutable");
     } else if (p.startsWith("/js/")) {
-      h.set("Cache-Control", "public, max-age=3600, stale-while-revalidate=86400");
+      // las páginas piden /js/x.js?v=<versión>, así que se puede guardar 30 días
+      h.set("Cache-Control", url.search ? "public, max-age=2592000, immutable" : "public, max-age=3600");
     }
     if ((h.get("Content-Type") || "").startsWith("text/html")) {
       h.set("Content-Type", "text/html; charset=utf-8");

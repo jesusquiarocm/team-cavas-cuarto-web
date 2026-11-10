@@ -40,7 +40,7 @@ if (lb) {
   const lbi = lb.querySelector("img");
   ["rail","equipo","galeria"].forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener("click", e => {
     const im = e.target.closest("img"); if (!im) return;
-    lbi.src = im.currentSrc || im.src; lbi.alt = im.alt; lb.classList.add("on");
+    lbi.src = im.src; lbi.alt = im.alt; lb.classList.add("on");
   }); });
   lb.addEventListener("click", () => lb.classList.remove("on"));
   document.addEventListener("keydown", e => { if (e.key === "Escape") lb.classList.remove("on"); });

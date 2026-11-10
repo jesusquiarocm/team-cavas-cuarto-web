@@ -248,17 +248,37 @@ def robots_meta():
     return '<meta name="robots" content="index, follow, max-image-preview:large">' if INDEXAR else \
            '<!-- PROTOTIPO: noindex hasta publicar con dominio real -->\n<meta name="robots" content="noindex, nofollow">'
 
+ANCHOS = (480, 800)   # versiones reducidas de cada foto: nombre-480.jpg, nombre-800.jpg
+
+def hacer_variantes():
+    for jp in (SITIO / "img").glob("*.jpg"):
+        if re.search(r"-(\d+)$", jp.stem) or jp.stem == "og": continue
+        im = Image.open(jp)
+        for a in ANCHOS:
+            v = jp.with_name(f"{jp.stem}-{a}.jpg")
+            if im.width <= a + 80: continue
+            if v.exists() and v.stat().st_mtime >= jp.stat().st_mtime: continue
+            r = im.convert("RGB").resize((a, round(im.height * a / im.width)), Image.LANCZOS)
+            r.save(v, quality=80, optimize=True, progressive=True)
+
 def add_dims(s):
-    """Agrega width/height a las <img> locales para evitar saltos de diseño."""
+    """Agrega width/height (evita saltos de diseño) y srcset con las versiones reducidas."""
     def f(m):
         tag = m.group(0)
-        if "width=" in tag: return tag
         src = re.search(r'src="/(img/[^"]+)"', tag)
         if not src: return tag
         p = SITIO / src.group(1)
-        if not p.exists(): return tag
+        if not p.exists() or p.suffix == ".svg": return tag
         w, h = Image.open(p).size
-        return tag.replace("<img ", f'<img width="{w}" height="{h}" ', 1)
+        if "width=" not in tag:
+            tag = tag.replace("<img ", f'<img width="{w}" height="{h}" ', 1)
+        if p.suffix == ".jpg" and "srcset=" not in tag:
+            vs = [(a, f"/img/{p.stem}-{a}.jpg") for a in ANCHOS if (p.parent / f"{p.stem}-{a}.jpg").exists()]
+            if vs:
+                srcset = ", ".join(f"{u} {a}w" for a, u in vs) + f", /{src.group(1)} {w}w"
+                extra = f' srcset="{srcset}"' + ("" if "sizes=" in tag else ' sizes="(max-width: 520px) 92vw, 360px"')
+                tag = tag.replace("<img ", "<img" + extra + " ", 1)
+        return tag
     return re.sub(r"<img [^>]*>", f, s)
 
 def analytics():
@@ -425,7 +445,7 @@ LB = '<div id="lb" role="dialog" aria-modal="true" aria-label="Foto ampliada"><b
 FAB = re.search(r'<a class="fab".*?</a>', home, re.S).group(0)
 SYMBOL = re.search(r'<svg width="0".*?</svg>', home, re.S).group(0)
 MBAR = re.search(r'<div class="mbar">.*?</div>', home, re.S).group(0)
-FONTS = re.search(r'<link rel="preconnect" href="https://fonts.googleapis.com">.*?display=swap" rel="stylesheet">', home, re.S).group(0)
+FONTS = re.search(r'<link rel="preload" href="/fonts/sora-latin.woff2".*?crossorigin>\n<link rel="preload" href="/fonts/inter-latin.woff2"[^>]*>', home, re.S).group(0)
 
 EXTRA_CSS = """
 .crumbs{font-size:.85rem;color:#9fc0e6;margin-bottom:18px}.crumbs a{color:#cfe0f5;text-decoration:none}.crumbs a:hover{color:#fff}
@@ -494,6 +514,8 @@ def wa_hrefs(s):
 
 EMPRESA = {"@type": "LocalBusiness", "@id": f"{BASE}/#empresa", "name": "Refrigeración Team Cavas Cuarto", "telephone": "+584121856429", "url": f"{BASE}/"}
 
+EXTRA_CSS = re.sub(r"\bInter,", "Inter,'Inter Fallback',", re.sub(r"\bSora,", "Sora,'Sora Fallback',", EXTRA_CSS))
+
 def head(title, desc, path, img, schema, canonical=True):
     url = f"{BASE}{path}"
     return f"""<!doctype html>
@@ -520,7 +542,7 @@ def head(title, desc, path, img, schema, canonical=True):
 <body>
 """
 
-SCRIPT = '<script src="/js/wa.js"></script>\n<script src="/js/sitio.js"></script>\n</body>\n</html>\n'
+SCRIPT = '<script src="/js/wa.js" defer></script>\n<script src="/js/sitio.js" defer></script>\n</body>\n</html>\n'
 
 WA_ICON = '<svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use href="#i-wa"/></svg>'
 
@@ -551,7 +573,7 @@ def build_page(p):
 <h1>{esc(p['h1'])}</h1>
 <p class="sub">{esc(p['intro'])}</p>
 <div style="display:flex;flex-wrap:wrap;gap:12px"><a class="btn btn-wa" data-lugar="hero" data-wa="{esc(p['wa'])}" href="#">{WA_ICON}Cotizar por WhatsApp</a><a class="btn btn-ghost" href="tel:+584121856429" data-lugar="hero-llamar">Llamar ahora</a></div>
-</div><div class="ph{' eqph' if p.get('icon') else ''}">{p['icon'] if p.get('icon') else f'<img src="/img/{p["img"]}.jpg" alt="{esc(p["imgalt"])}" fetchpriority="high">'}</div></div></section>
+</div><div class="ph{' eqph' if p.get('icon') else ''}">{p['icon'] if p.get('icon') else f'<img src="/img/{p["img"]}.jpg" alt="{esc(p["imgalt"])}" fetchpriority="high" sizes="(max-width: 860px) 92vw, 440px">'}</div></div></section>
 <section><div class="wrap"><span class="eyebrow">{p.get('ben_eyebrow') or ('Pasos a seguir' if p.get('guia') else 'Por qué una cava cuarto')}</span>
 <h2>{p.get('ben_h2') or ('Qué tener claro antes de cotizar' if p.get('guia') else 'Lo que ganas con tu cava cuarto')}</h2>
 <div class="bens">{''.join(f'<div class="ben rv"><h3>{esc(h)}</h3><p>{esc(t)}</p></div>' for h, t in p['ben'])}</div></div></section>
@@ -602,7 +624,7 @@ def band(wa, titulo="Cuéntanos qué necesitas y te cotizamos", texto="Escríben
 
 def shell(path, title, desc, crumbs, h1, intro, body, nodes, wa, img=None, imgalt="", extra=""):
     schema = {"@context": "https://schema.org", "@graph": nodes + [crumbs_schema(crumbs)]}
-    foto = f'<div class="ph"><img src="/img/{img}.jpg" alt="{esc(imgalt)}" fetchpriority="high"></div>' if img else ""
+    foto = f'<div class="ph"><img src="/img/{img}.jpg" alt="{esc(imgalt)}" fetchpriority="high" sizes="(max-width: 860px) 92vw, 440px"></div>' if img else ""
     o = head(title, desc, path, img or "", schema) + TOPBAR + "\n" + header(path) + "\n<main>\n"
     o += (f'<section class="phero on-dark{"" if img else " slim"}"><div class="wrap grid"><div>{crumbs_html(crumbs)}'
           f'<h1>{esc(h1)}</h1><p class="sub">{esc(intro)}</p>'
@@ -990,6 +1012,11 @@ make_og()
 (SITIO / "js").mkdir(exist_ok=True)
 (SITIO / "js" / "wa.js").write_text(WAJS, encoding="utf-8")
 (SITIO / "js" / "sitio.js").write_text((AQUI / "sitio.js").read_text(encoding="utf-8"), encoding="utf-8")
+hacer_variantes()
+# los scripts llevan su versión en la URL, así se pueden guardar en caché por mucho tiempo
+VER = hashlib.sha1((WAJS + (AQUI / "sitio.js").read_text(encoding="utf-8")).encode()).hexdigest()[:8]
+SCRIPT = SCRIPT.replace("/js/wa.js", f"/js/wa.js?v={VER}").replace("/js/sitio.js", f"/js/sitio.js?v={VER}")
+home = home.replace('<script src="/js/wa.js"></script>\n<script src="/js/sitio.js"></script>', SCRIPT.replace("\n</body>\n</html>\n", ""))
 # WebP de cada foto (el worker la sirve a los navegadores que la aceptan)
 for jp in (SITIO / "img").glob("*.jpg"):
     wp = jp.with_suffix(".webp")
