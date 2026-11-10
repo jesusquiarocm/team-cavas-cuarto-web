@@ -14,7 +14,7 @@ WHATSAPP = "584121856429"
 HOY = datetime.date.today().isoformat()
 GA_ID = ""      # ej. "G-XXXXXXXXXX" (Google Analytics 4); vacío = sin analítica
 PIXEL_ID = ""   # ej. "1234567890" (Meta Pixel); vacío = sin píxel
-TOPBAR = '<div class="topbar">Cotización gratis por WhatsApp · <a href="tel:+584121856429" data-lugar="topbar-llamar">0412 1856429</a></div>'
+TOPBAR = '<div class="topbar">Cotización gratis por WhatsApp · Atención a cualquier hora · <a href="tel:+584121856429" data-lugar="topbar-llamar">0412 1856429</a></div>'
 
 AQUI = Path(__file__).parent
 SITIO = AQUI.parent / "SITIO"
@@ -352,7 +352,8 @@ def menu_items():
     return [
         ("Cavas cuarto", "/cavas-cuarto/", [("Fabricación e instalación", "/cavas-cuarto/"),
             ("Cuarto de refrigeración (0 a 5 °C)", "/cuarto-de-refrigeracion/"), ("Cuarto de congelación (−18 °C)", "/cuarto-de-congelacion/"),
-            ("Cómo elegir tu cava", "/como-elegir-una-cava-cuarto/")]),
+            ("Cómo elegir tu cava", "/como-elegir-una-cava-cuarto/"), ("Precios de referencia", "/precio-cava-cuarto/"),
+            ("Mantenimiento", "/mantenimiento-cavas-cuarto/")]),
         ("Para tu negocio", "/sectores/", [("Todos los negocios", "/sectores/")] + [(BYSLUG[s]["nombre"], f"/{s}/") for s in SECTORES]),
         ("Equipos", EQUIPOS, [("Equipos y materiales", EQUIPOS), ("Freezers comerciales", "/freezers-comerciales/")]),
         ("Proyectos", "/proyectos/", None),
@@ -377,6 +378,7 @@ def nav_html(path):
 def foot_cols():
     cols = [("Cavas cuarto", [("Fabricación e instalación", "/cavas-cuarto/"), ("Cuarto de refrigeración", "/cuarto-de-refrigeracion/"),
                 ("Cuarto de congelación", "/cuarto-de-congelacion/"), ("Cómo elegir tu cava", "/como-elegir-una-cava-cuarto/"),
+                ("Precio de una cava cuarto", "/precio-cava-cuarto/"), ("Mantenimiento", "/mantenimiento-cavas-cuarto/"),
                 ("Equipos y materiales", EQUIPOS), ("Freezers", "/freezers-comerciales/")]),
             ("Para tu negocio", [(BYSLUG[s]["nombre"], f"/{s}/") for s in SECTORES]),
             ("Empresa", [("Proyectos", "/proyectos/"), ("Nosotros", "/nosotros/"), ("Cobertura", "/cobertura/"),
@@ -464,6 +466,19 @@ EXTRA_CSS = """
 .ccard svg{width:34px;height:34px;color:var(--navy);margin-bottom:6px}.ccard.wa svg{color:var(--wa-dk)}
 .ccard b{font:800 1.25rem/1.2 Sora,sans-serif}.ccard span{font-weight:700;color:var(--navy)}.ccard small{color:var(--muted)}
 @media(max-width:760px){.ccards{grid-template-columns:1fr}}
+.ogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-top:28px}
+.obra{border:1px solid var(--line);border-radius:var(--r);padding:24px;background:#fff;display:flex;flex-direction:column;gap:8px}
+.obra h3{font-size:1.15rem;color:var(--navy)}.obra p{color:var(--muted);font-size:.95rem}
+.o-lugar{font:700 .8rem/1.2 Inter,sans-serif!important;letter-spacing:.08em;text-transform:uppercase;color:var(--sky)!important}
+.o-meta a,.o-links a{color:var(--navy);font-weight:700;text-decoration:none}.o-meta b{color:var(--ink)}
+.o-links{display:flex;flex-direction:column;gap:4px;margin-top:auto;padding-top:6px}
+.pbox{margin-top:22px;border-radius:var(--r);padding:26px 28px;background:linear-gradient(160deg,var(--navy-dk),var(--navy));color:#fff}
+.pbox .big{font:800 clamp(1.7rem,4.5vw,2.4rem)/1.1 Sora,sans-serif;color:var(--cyan);margin:0}.pbox p{color:#d7e6f7}.pbox strong{color:#fff}
+.lista{margin:16px 0 0 20px;color:var(--muted);font-size:1.04rem}.lista li{margin-bottom:6px}
+.napbox{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.napbox div{background:var(--ice);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:2px}
+.napbox b{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sky)}.napbox span{font-weight:700;color:var(--navy)}
+@media(max-width:760px){.napbox{grid-template-columns:1fr 1fr}}
 """
 
 def wa_hrefs(s):
@@ -507,6 +522,18 @@ SCRIPT = '<script src="/js/wa.js"></script>\n<script src="/js/sitio.js"></script
 
 WA_ICON = '<svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use href="#i-wa"/></svg>'
 
+def mas_html(p):
+    bloques = MAS.get(p["slug"], [])
+    if not bloques: return ""
+    return '<section style="padding-top:0"><div class="wrap prose">' + "".join(
+        f'<h2 style="font-size:clamp(1.4rem,3vw,1.9rem);margin-top:34px">{esc(t)}</h2>' + "".join(f"<p>{x}</p>" for x in ps) for t, ps in bloques) + "</div></section>\n"
+
+def obras_html(slug):
+    ob = obras_de(slug)
+    if not ob: return ""
+    return ('<section><div class="wrap"><span class="eyebrow">Obras reales</span><h2>Cavas que hemos hecho</h2>'
+            f'<div class="ogrid">{"".join(obra_card(o) for o in ob)}</div><p class="more"><a href="/proyectos/">Ver todos los proyectos →</a></p></div></section>\n')
+
 def build_page(p):
     path = f"/{p['slug']}/"
     business = EMPRESA
@@ -526,14 +553,14 @@ def build_page(p):
 <section><div class="wrap"><span class="eyebrow">{p.get('ben_eyebrow') or ('Pasos a seguir' if p.get('guia') else 'Por qué una cava cuarto')}</span>
 <h2>{p.get('ben_h2') or ('Qué tener claro antes de cotizar' if p.get('guia') else 'Lo que ganas con tu cava cuarto')}</h2>
 <div class="bens">{''.join(f'<div class="ben rv"><h3>{esc(h)}</h3><p>{esc(t)}</p></div>' for h, t in p['ben'])}</div></div></section>
-{p.get('extra', '')}
+{mas_html(p)}{p.get('extra', '')}
 <section style="padding-top:0"><div class="wrap"><div class="tempbox rv"><h2 style="font-size:1.5rem">{esc(p['temp'][0])}</h2>
 <p class="lead" style="margin-top:6px">{esc(p['temp'][1])}</p>
 <ul>{''.join(f'<li>{esc(i)}</li>' for i in p['items'])}</ul></div></div></section>
-<section style="background:var(--ice)"><div class="wrap"><span class="eyebrow">Preguntas frecuentes</span><h2>Dudas comunes</h2>
+{obras_html(p['slug'])}<section style="background:var(--ice)"><div class="wrap"><span class="eyebrow">Preguntas frecuentes</span><h2>Dudas comunes</h2>
 <div class="faq">{''.join(f'<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in p['faq'])}</div></div></section>
 <section><div class="wrap"><div class="band on-dark"><h2>Cuéntanos qué necesitas y te cotizamos</h2>
-<p>Escríbenos por WhatsApp con tus medidas aproximadas y lo que vas a guardar. Si no las sabes, te ayudamos.</p>
+<p>Escríbenos por WhatsApp con tus medidas aproximadas y lo que vas a guardar. Todas nuestras cavas tienen garantía.</p>
 <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center"><a class="btn btn-wa" data-lugar="cierre" data-wa="{esc(p['wa'])}" href="#">{WA_ICON}Escribir por WhatsApp</a><a class="btn btn-ghost" href="/cotizar/">Llenar el cotizador</a></div></div>
 <h2 style="font-size:1.4rem;margin-top:44px">También te puede interesar</h2>
 <div class="rel">{''.join(f'<a href="/{r}/">{esc(BYSLUG[r]["h1"])}<small>Ver más →</small></a>' for r in p['rel'])}</div></div></section>
@@ -566,7 +593,7 @@ def faq_html(items):
 def faq_schema(items):
     return {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in items]}
 
-def band(wa, titulo="Cuéntanos qué necesitas y te cotizamos", texto="Escríbenos por WhatsApp con tus medidas aproximadas y lo que vas a guardar. Si no las sabes, te ayudamos."):
+def band(wa, titulo="Cuéntanos qué necesitas y te cotizamos", texto="Escríbenos por WhatsApp con tus medidas aproximadas y lo que vas a guardar. Todas nuestras cavas tienen garantía."):
     return (f'<section><div class="wrap"><div class="band on-dark"><h2>{esc(titulo)}</h2><p>{esc(texto)}</p>'
             f'<div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center"><a class="btn btn-wa" data-lugar="cierre" data-wa="{esc(wa)}" href="#">{WA_ICON}Escribir por WhatsApp</a>'
             f'<a class="btn btn-ghost" href="/cotizar/">Llenar el cotizador</a></div></div></div></section>')
@@ -643,6 +670,10 @@ def build_extra_pages(h):
 <p class="lead">Algunas de las cavas cuarto y cuartos fríos que hemos entregado. Toca una foto para verla en grande.</p>
 <div class="pgrid" id="galeria">{grid}</div>
 <p class="more"><a href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener">Ver más trabajos en Instagram →</a></p></div></section>
+<section><div class="wrap"><span class="eyebrow">Obras por estado</span><h2>Algunas obras y dónde las hicimos</h2>
+<p class="lead">Proyectos publicados en nuestro Instagram, con el lugar y el tipo de cava.</p>
+<div class="ogrid">{"".join(obra_card(o) for o in PROYECTOS)}</div>
+<p class="estados-t" style="margin-top:30px">Estados donde hemos trabajado: {", ".join(ESTADOS)}.</p></div></section>
 <section><div class="wrap prose"><span class="eyebrow">Cada cava es distinta</span><h2>Hechas a la medida de cada cliente</h2>
 <p>Ninguna de estas cavas es igual a otra: cada una se diseñó para el espacio, el producto y la temperatura de su dueño. Hay cavas de refrigeración para producto fresco, cuartos de congelación, cavas dobles y cuartos fríos industriales dentro de galpones.</p>
 <p>Si te gusta alguna, envíanos la foto por WhatsApp con las medidas de tu espacio y te cotizamos una parecida.</p></div></section>
@@ -651,7 +682,8 @@ def build_extra_pages(h):
           "Fotos de cavas cuarto y cuartos fríos que hemos fabricado e instalado en Venezuela: refrigeración, congelación, cavas dobles e industriales.",
           [("Proyectos", "/proyectos/")], "Cavas cuarto que hemos instalado",
           "Mira algunos de nuestros trabajos: cavas de refrigeración, cuartos de congelación y cuartos fríos industriales hechos a la medida.",
-          body, [{"@type": "CollectionPage", "name": "Proyectos de cavas cuarto", "url": f"{BASE}/proyectos/", "about": emp}],
+          body, [{"@type": "CollectionPage", "name": "Proyectos de cavas cuarto", "url": f"{BASE}/proyectos/", "about": emp,
+                  "mainEntity": {"@type": "ItemList", "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": f'{o["tipo"]} en {o["lugar"]} ({o["anio"]})', "url": IG + "cavascuartoteam/" + o["posts"][0]} for i, o in enumerate(PROYECTOS)]}}],
           "Hola, vi sus proyectos y quiero una cava como esas.")
 
     # /nosotros/
@@ -660,28 +692,31 @@ def build_extra_pages(h):
 <div class="bens">
 <div class="ben rv"><h3>Cavas cuarto a medida</h3><p>Diseñamos, armamos e instalamos cavas de refrigeración y de congelación. <a href="/cavas-cuarto/">Ver cavas cuarto →</a></p></div>
 <div class="ben rv"><h3>Equipos y materiales</h3><p>Unidades condensadoras, compresores, difusores, controles e insumos de marcas reconocidas. <a href="{EQUIPOS}">Ver equipos →</a></p></div>
+<div class="ben rv"><h3>Mantenimiento</h3><p>Mantenimiento preventivo y correctivo de cavas cuarto y equipos de refrigeración. <a href="/mantenimiento-cavas-cuarto/">Ver mantenimiento →</a></p></div>
 <div class="ben rv"><h3>Freezers para negocios</h3><p>Freezers y neveras para el punto de venta, como complemento de tu cava. <a href="/freezers-comerciales/">Ver freezers →</a></p></div>
 </div></div></section>
 {seccion(h, "proceso")}
-<section><div class="wrap prose"><span class="eyebrow">Dónde estamos</span><h2>Trabajamos en toda Venezuela</h2>
-<p>Llevamos el material y el equipo hasta tu local, estés donde estés. Mira las zonas donde hemos trabajado en la página de <a href="/cobertura/">cobertura</a>, o escríbenos tu ciudad por WhatsApp.</p>
+<section><div class="wrap prose"><span class="eyebrow">Dónde estamos</span><h2>Desde Barcelona para toda Venezuela</h2>
+<p>Nuestra oficina está en Barcelona, estado Anzoátegui, y atendemos a cualquier hora. Llevamos el material y el equipo hasta tu local, estés donde estés: ya hemos trabajado en {", ".join(ESTADOS[:-1])} y {ESTADOS[-1]}. Mira las zonas donde hemos trabajado en la página de <a href="/cobertura/">cobertura</a>, o escríbenos tu ciudad por WhatsApp.</p>
+<p>Todas nuestras cavas cuarto tienen garantía, y ofrecemos <a href="/mantenimiento-cavas-cuarto/">mantenimiento preventivo y servicio técnico</a>. Refrigeración Team Cavas Cuarto, RIF J-50297485-7.</p>
 <p>Síguenos en Instagram, <a href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener">@cavascuartoteam</a>, donde publicamos nuestros trabajos.</p></div></section>
 {band("Hola, quiero información sobre sus servicios.")}'''
     shell("/nosotros/", "Quiénes Somos | Refrigeración Team Cavas Cuarto",
           "Conoce al equipo de Refrigeración Team: diseñamos, fabricamos e instalamos cavas cuarto y vendemos equipos de refrigeración en toda Venezuela.",
           [("Nosotros", "/nosotros/")], "Somos Refrigeración Team",
-          "Un equipo propio dedicado a las cavas cuarto y la refrigeración comercial: diseñamos tu cava, la armamos, la instalamos y te vendemos los equipos para ella.",
+          "Un equipo propio con más de 5 años en cavas cuarto y refrigeración comercial: diseñamos tu cava, la armamos, la instalamos, le damos mantenimiento y te vendemos los equipos para ella.",
           body, [{"@type": "AboutPage", "name": "Quiénes somos", "url": f"{BASE}/nosotros/", "about": emp}],
           "Hola, quiero información sobre sus servicios.", img="equipo-grupo", imgalt="Equipo de Refrigeración Team junto al camión de trabajo")
 
     # /cobertura/
     body = f'''{seccion(h, "cobertura", "/cobertura/")}
 <section><div class="wrap prose"><span class="eyebrow">Fuera de tu ciudad</span><h2>Cómo trabajamos en tu zona</h2>
+<p>Nuestra oficina está en Barcelona, Anzoátegui, y desde ahí coordinamos obras en todo el país. Hemos instalado cavas en Caracas, La Guaira, Tocuyito, Cumaná y en varias zonas de Anzoátegui, entre otras. Mira algunas en <a href="/proyectos/">proyectos</a>.</p>
 <p>Escríbenos tu ciudad o estado, las medidas aproximadas del espacio y lo que vas a guardar. Con eso te enviamos la cotización y coordinamos el traslado del material y del equipo hasta tu local.</p>
 <p>Si no sabes las medidas, una foto del espacio ayuda mucho. También puedes usar el <a href="/cotizar/">cotizador</a>: en menos de un minuto nos llega todo por WhatsApp.</p></div></section>
 {band("Hola, quiero cotizar una cava cuarto en mi ciudad.")}'''
     shell("/cobertura/", "Cobertura en Toda Venezuela | Refrigeración Team",
-          "Fabricamos e instalamos cavas cuarto en toda Venezuela: occidente, los Andes, centro, oriente, Guayana y los llanos. Cotiza en tu ciudad por WhatsApp.",
+          "Cavas cuarto en Anzoátegui, Caracas, La Guaira, Carabobo, Sucre, Zulia, Lara, Mérida, Bolívar y más estados. Oficina en Barcelona. Cotiza por WhatsApp.",
           [("Nosotros", "/nosotros/"), ("Cobertura", "/cobertura/")], "Instalamos cavas cuarto en toda Venezuela",
           "Llevamos tu cava cuarto hasta tu local, en cualquier estado del país.",
           body, [{"@type": "WebPage", "name": "Cobertura", "url": f"{BASE}/cobertura/", "about": emp}],
@@ -710,6 +745,8 @@ def build_extra_pages(h):
             if k not in vistos: vistos.add(k); out.append((qq, aa))
         if out: grupos.append((titulo, out, enlace))
     grupo("Generales", home_faq)
+    grupo("Precio", PRECIO_FAQ, ("Precio de una cava cuarto", "/precio-cava-cuarto/"))
+    grupo("Mantenimiento", MANT_FAQ, ("Mantenimiento de cavas cuarto", "/mantenimiento-cavas-cuarto/"))
     grupo("Antes de cotizar", BYSLUG["como-elegir-una-cava-cuarto"]["faq"], ("Guía: cómo elegir tu cava cuarto", "/como-elegir-una-cava-cuarto/"))
     grupo("Refrigeración", BYSLUG["cuarto-de-refrigeracion"]["faq"], ("Cuarto de refrigeración", "/cuarto-de-refrigeracion/"))
     grupo("Congelación", BYSLUG["cuarto-de-congelacion"]["faq"], ("Cuarto de congelación", "/cuarto-de-congelacion/"))
@@ -733,7 +770,9 @@ def build_extra_pages(h):
 <a class="ccard wa" data-lugar="contacto" data-wa="Hola, quiero información sobre cavas cuarto." href="#">{WA_ICON}<b>WhatsApp</b><span>0412 1856429</span><small>La forma más rápida de cotizar</small></a>
 <a class="ccard" href="tel:+584121856429" data-lugar="contacto-llamar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg><b>Llamar</b><span>0412 1856429</span><small>Habla directo con nosotros</small></a>
 <a class="ccard" href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg><b>Instagram</b><span>@cavascuartoteam</span><small>Mira nuestros trabajos</small></a>
-</div></div></section>
+</div>
+<div class="napbox"><div><b>Oficina</b><span>Barcelona, estado Anzoátegui</span></div><div><b>Horario</b><span>Atención a cualquier hora</span></div><div><b>RIF</b><span>J-50297485-7</span></div><div><b>Cobertura</b><span>Toda Venezuela</span></div></div>
+</div></section>
 <section style="background:var(--ice)"><div class="wrap prose"><span class="eyebrow">Cotización</span><h2>¿Quieres una cotización?</h2>
 <p>Usa el <a href="/cotizar/">cotizador</a> o escríbenos por WhatsApp con lo que vas a guardar, la temperatura y las medidas aproximadas del espacio. Atendemos en <a href="/cobertura/">toda Venezuela</a>.</p></div></section>'''
     shell("/contacto/", "Contacto | Refrigeración Team Cavas Cuarto",
@@ -743,7 +782,202 @@ def build_extra_pages(h):
           body, [{"@type": "ContactPage", "name": "Contacto", "url": f"{BASE}/contacto/", "about": emp}],
           "Hola, quiero información sobre cavas cuarto.")
 
-EXTRA_URLS = ["/cavas-cuarto/", "/sectores/", "/proyectos/", "/nosotros/", "/cobertura/", "/cotizar/", "/preguntas-frecuentes/", "/contacto/"]
+EXTRA_URLS = ["/precio-cava-cuarto/", "/mantenimiento-cavas-cuarto/", "/cavas-cuarto/", "/sectores/", "/proyectos/", "/nosotros/", "/cobertura/", "/cotizar/", "/preguntas-frecuentes/", "/contacto/"]
+
+# ------------------------------------------------------- obras publicadas (Instagram del cliente)
+IG = "https://www.instagram.com/"
+PROYECTOS = [
+ dict(lugar="Anzoátegui", estado="Anzoátegui", tipo="Cavas para pulpo, pescados y mariscos", anio="2025", temp="Conservación de producto marino",
+      txt="Fabricamos e instalamos cavas cuarto pensadas para conservar pulpo, pescados y otras especies marinas en perfectas condiciones.",
+      posts=["p/DLVzECZPzHv/", "reel/DOkBOiZDA49/", "reel/DOpEBqJDDIf/"], rel=["cuartos-frios-pescaderia", "cuarto-de-congelacion"]),
+ dict(lugar="La Guaira", estado="La Guaira", tipo="Cava cuarto triple", anio="2025", temp="Congelación y conservación",
+      txt="Una cava cuarto triple que reúne congelación y conservación en un solo espacio, para optimizar la logística de frío del cliente.",
+      posts=["p/DLGgTWAs6Pd/", "reel/DLLR66DPOLA/"], rel=["cuartos-frios-galpones-distribuidores", "cuarto-de-congelacion"]),
+ dict(lugar="Tocuyito, Carabobo", estado="Carabobo", tipo="Cava cuarto de congelación", anio="2025", temp="Congelación",
+      txt="Cava cuarto diseñada para congelación, fabricada e instalada en Tocuyito, estado Carabobo.",
+      posts=["reel/DKKo8SaRGvK/"], rel=["cuarto-de-congelacion"]),
+ dict(lugar="San Bernardino, Caracas", estado="Distrito Capital", tipo="Cava cuarto de congelación", anio="2025", temp="Congelación",
+      txt="Cava cuarto de congelación hecha a la medida del espacio del cliente en San Bernardino, Caracas.",
+      posts=["p/DHFFMIbsawn/", "p/DGwIQ0CvQOq/"], rel=["cuarto-de-congelacion"]),
+ dict(lugar="Caracas", estado="Distrito Capital", tipo="Cava cuarto", anio="2025", temp="Instalación con garantía y servicio técnico",
+      txt="Otro cliente en Caracas con su cava cuarto fabricada e instalada por nuestro equipo.",
+      posts=["reel/DHHlBz2MOhE/"], rel=[]),
+ dict(lugar="La Guaira", estado="La Guaira", tipo="Cava para productos biológicos", anio="2024", temp="Conservación",
+      txt="Cava cuarto diseñada y elaborada para la conservación de productos biológicos en el estado La Guaira.",
+      posts=["reel/C9N5FKGhHKU/"], rel=["cuarto-de-refrigeracion"]),
+ dict(lugar="Caracas", estado="Distrito Capital", tipo="Cava de congelación para carne de cerdo", anio="2024", temp="Congelación",
+      txt="Cava cuarto para congelar carne de cerdo, con control de temperatura preciso y humedad controlada.",
+      posts=["p/C7u4LurOJHh/"], rel=["cavas-cuarto-carniceria", "cuarto-de-congelacion"]),
+ dict(lugar="Cumaná, Sucre", estado="Sucre", tipo="Cava de congelación y conservación de alimentos", anio="2024", temp="Congelación",
+      txt="Cava cuarto para congelar y conservar alimentos, instalada en Cumaná, estado Sucre.",
+      posts=["reel/C5wsEYiOXxp/", "reel/C5jznPONBoK/"], rel=["cava-cuarto-restaurante", "cuarto-de-congelacion"]),
+]
+ESTADOS = ["Anzoátegui", "Aragua", "Bolívar", "Carabobo", "Caracas", "La Guaira", "Lara", "Margarita (Nueva Esparta)", "Mérida", "Miranda", "Monagas", "Sucre", "Trujillo", "Zulia"]
+
+def obra_card(o):
+    links = "".join(f'<a href="{IG}cavascuartoteam/{u}" target="_blank" rel="noopener">{"Ver video" if u.startswith("reel") else "Ver fotos"} en Instagram →</a>' for u in o["posts"])
+    rel = " · ".join(f'<a href="/{r}/">{esc(BYSLUG[r]["nombre"])}</a>' for r in o["rel"])
+    return (f'<article class="obra rv"><p class="o-lugar">{esc(o["lugar"])} · {o["anio"]}</p><h3>{esc(o["tipo"])}</h3>'
+            f'<p>{esc(o["txt"])}</p><p class="o-meta"><b>{esc(o["temp"])}</b>{" · Relacionado: " + rel if rel else ""}</p><p class="o-links">{links}</p></article>')
+
+def obras_de(slug):
+    return [o for o in PROYECTOS if slug in o["rel"]]
+
+# ------------------------------------------------------- contenido ampliado por página
+MAS = {
+ "cavas-cuarto-carniceria": [
+  ("Cómo pensamos la cava de una carnicería", [
+   "En una carnicería la cava trabaja todo el día: entra mercancía, se sacan cortes para el mostrador y la puerta se abre muchas veces. Por eso dimensionamos el equipo de frío para que la temperatura se recupere rápido después de cada apertura, y no solo para el tamaño de la cava.",
+   "También pensamos el interior según tu forma de trabajar: rieles y ganchos para colgar reses o medias reses, estantes para cortes en bandeja, o espacio libre para cajas. Si además congelas, lo habitual es separar una zona o una segunda cava a −18 °C, para no mezclar producto fresco con congelado."]),
+  ("Lo que conviene definir antes de cotizar", [
+   "Cuántos kilos recibes por semana y cada cuánto, si colgarás la carne o la guardarás en cajas, y cuánto espacio tienes en el local. Con esos tres datos te recomendamos el tamaño, la temperatura y el equipo. Una foto del espacio ayuda mucho."])],
+ "cuartos-frios-pescaderia": [
+  ("Frío pensado para producto del mar", [
+   "El pescado y los mariscos se dañan rápido si la temperatura sube, aunque sea por poco tiempo. Por eso el cuarto frío de una pescadería necesita un equipo que mantenga el frío estable aun con la puerta en uso, buen aislamiento y una puerta que selle bien.",
+   "En Anzoátegui hemos fabricado varias cavas para pulpo, pescados y otras especies marinas. Para el producto del día se usa refrigeración; para almacenar por semanas, congelación a −18 °C. Muchas pescaderías combinan las dos."]),
+  ("Higiene y limpieza", [
+   "Los paneles de la cava tienen superficies lisas que se limpian con facilidad, algo importante cuando se trabaja con agua, hielo y producto del mar. Te orientamos sobre el piso, el drenaje y la distribución interior para que el trabajo diario sea más ordenado."])],
+ "cava-cuarto-polleria": [
+  ("Capacidad para trabajar con volumen", [
+   "En una pollería o un frigorífico el reto es el volumen: llegan muchas cajas o bolsas a la vez y hay que bajarlas de temperatura rápido. Dimensionamos el equipo para esa carga de entrada, no solo para mantener el frío cuando la cava está llena.",
+   "El pollo que se vende en pocos días va en refrigeración, de 0 a 5 °C. El que se almacena por más tiempo, en congelación a −18 °C. Si manejas ambos, se puede hacer una cava doble o dos cavas, cada una con su equipo."]),
+  ("Orden dentro de la cava", [
+   "Planificamos la distribución para que la mercancía entre y salga en orden: lo primero que entra es lo primero que sale. Estantes o paletas, pasillos y una puerta del ancho adecuado hacen la diferencia en el trabajo diario."])],
+ "cava-cuarto-restaurante": [
+  ("Una cava para una cocina que no para", [
+   "En un restaurante la cava guarda de todo: carnes, pollo, lácteos, verduras, bebidas y preparaciones. La clave es el orden: zonas o estantes para cada tipo de producto, con lo crudo separado de lo listo para servir.",
+   "La mayoría de las cocinas usan refrigeración de 0 a 5 °C. Si además congelas, conviene una zona o una cava aparte a −18 °C. Así cada producto se mantiene a su temperatura y la cocina trabaja más rápido."]),
+  ("Cuándo pasar de neveras a cava cuarto", [
+   "Cuando tienes varias neveras llenas, compras más seguido de lo que quisieras o pierdes producto por falta de espacio, una cava cuarto suele ser la mejor inversión. Ocupa un solo espacio, se organiza mejor y mantiene la temperatura más estable."])],
+ "cava-cuarto-heladeria": [
+  ("Frío muy estable para el helado", [
+   "El helado se daña con los cambios de temperatura: se descongela un poco, se vuelve a congelar y pierde textura. Por eso en una heladería el cuarto de congelación necesita un equipo bien dimensionado y una puerta que selle bien, para que la temperatura no suba cada vez que entras.",
+   "También guardamos espacio para la materia prima: frutas congeladas, bases y producto terminado, ordenados para que lo más antiguo salga primero."]),
+  ("Tamaño y equipo", [
+   "El tamaño depende de tu producción semanal y de cada cuánto repones. Te recomendamos las medidas y el equipo según tu volumen, desde cavas pequeñas para un local hasta cuartos más grandes para una planta de producción."])],
+ "cava-cuarto-panaderia": [
+  ("Insumos frescos todo el día", [
+   "Una panadería o pastelería guarda lácteos, cremas, rellenos, masas y producto terminado, y cada uno necesita frío para durar. Con una cava cuarto tienes todo en un solo lugar, ordenado y a la temperatura correcta.",
+   "Lo habitual es refrigeración de 0 a 5 °C. Si trabajas con masas o producto congelado, se agrega una zona o una cava a −18 °C."]),
+  ("Pensada para tu producción", [
+   "Distribuimos estantes y espacio según cómo produces: bandejas, cajas o carros. Así la cava ayuda al trabajo diario en lugar de estorbar."])],
+ "cava-cuarto-abasto-bodega": [
+  ("Más producto frío para vender", [
+   "En un abasto o una bodega, lo que está frío se vende más. Una cava cuarto te permite guardar cajas de refrescos, cervezas, lácteos y charcutería sin llenar el local de neveras, y reponer rápido cuando se vacían los exhibidores.",
+   "La mayoría de estos productos van en refrigeración de 0 a 5 °C. Si también vendes congelados, conviene una zona aparte a −18 °C."]),
+  ("Cava de depósito o cava para clientes", [
+   "Hay negocios que usan la cava solo como depósito y otros que la abren al cliente. Cuéntanos cómo atiendes y te recomendamos la configuración, la puerta y la iluminación que mejor funcionan en tu local."])],
+ "cuartos-frios-galpones-distribuidores": [
+  ("Cuartos fríos para mover mercancía", [
+   "En un galpón la cava es parte de la logística: recibes, almacenas y despachas. Por eso pensamos el tamaño, las puertas y el flujo para que puedan pasar paletas y montacargas sin estorbos.",
+   "En La Guaira, por ejemplo, fabricamos una cava cuarto triple que reúne congelación y conservación en un solo espacio. Con varias zonas puedes manejar productos distintos, cada uno a su temperatura."]),
+  ("Equipo para carga alta", [
+   "Un cuarto frío grande necesita evaporadores y condensadoras dimensionados para el volumen y para la cantidad de mercancía que entra cada día. Te recomendamos el equipo según tu operación y te ofrecemos mantenimiento preventivo para que no se detenga."])],
+ "cuarto-de-refrigeracion": [
+  ("Cómo funciona un cuarto de refrigeración", [
+   "Los paneles aislantes mantienen el frío adentro; el evaporador, dentro de la cava, enfría el aire y lo reparte; la unidad condensadora, afuera, expulsa el calor; y el control de temperatura mantiene la cava entre 0 y 5 °C.",
+   "Es la opción para productos frescos que se venden en pocos días: lácteos, frutas, verduras, bebidas, carnes frescas y preparaciones. No congela el producto, solo lo conserva."]),
+  ("Qué influye en el tamaño y el equipo", [
+   "El tamaño de la cava, cuánta mercancía entra cada día, cuántas veces se abre la puerta y el calor del lugar donde va la condensadora. Con esos datos elegimos el equipo correcto. Mira los <a href=\"/precio-cava-cuarto/\">precios de referencia</a> o escríbenos para cotizar."])],
+ "cuarto-de-congelacion": [
+  ("Cómo se logra la congelación", [
+   "Para mantener −18 °C, el cuarto de congelación necesita un equipo más potente que uno de refrigeración, buen aislamiento y una puerta que selle bien. Todo se dimensiona según el tamaño de la cava y la cantidad de producto.",
+   "Hemos instalado cuartos de congelación en Caracas, Tocuyito (Carabobo), Cumaná (Sucre) y La Guaira, para carnes, cerdo, producto del mar y alimentos en general."]),
+  ("Para qué se usa", [
+   "Para almacenar por semanas o meses: carnes, pollo, pescados, mariscos, helados y cualquier producto que se venda congelado. Si también tienes producto fresco, se puede hacer una cava doble con una zona de refrigeración."])],
+ "como-elegir-una-cava-cuarto": [
+  ("Errores comunes al elegir", [
+   "Elegir el equipo solo por el tamaño de la cava, sin pensar en cuánta mercancía entra cada día ni cuántas veces se abre la puerta. Hacer la cava justa para lo que vendes hoy, sin espacio para crecer. Y no prever dónde va la condensadora, que necesita ventilación.",
+   "Te ayudamos a evitarlos: con lo que vas a guardar, el espacio disponible y tu volumen te recomendamos el tamaño, la temperatura y el equipo."]),
+  ("Cuánto cuesta", [
+   "Una cava pequeña de 2 × 2 metros sale en unos 6.000 a 6.500 USD como referencia. El precio final depende del tamaño, la temperatura, el equipo y la ubicación. Mira la página de <a href=\"/precio-cava-cuarto/\">precio de una cava cuarto</a>."])],
+ "equipos-y-materiales-para-cavas-cuarto": [
+  ("Equipos y servicio técnico", [
+   "Además de vender equipos, los instalamos y les damos mantenimiento. Si tu cava ya existe y necesitas cambiar la condensadora, el compresor o el control de temperatura, escríbenos con fotos de tu equipo actual y te orientamos.",
+   "Mira también nuestro servicio de <a href=\"/mantenimiento-cavas-cuarto/\">mantenimiento preventivo y correctivo</a>."])],
+ "freezers-comerciales": [
+  ("Freezer, nevera o cava cuarto", [
+   "Un freezer horizontal sirve para producto congelado en volúmenes pequeños o medianos y para exhibir en el punto de venta. Una nevera vertical, para bebidas y productos frescos a la vista del cliente. Cuando el volumen crece, una cava cuarto da más espacio y orden.",
+   "Cuéntanos qué vas a guardar y cuánto espacio tienes, y te recomendamos la mejor opción para tu negocio."])],
+}
+
+PRECIO_FAQ = [
+ ("¿Cuánto cuesta una cava cuarto de 2 × 2 metros?", "Como referencia, una cava pequeña de 2 × 2 metros sale en unos 6.000 a 6.500 USD. Es la más pequeña que fabricamos; el precio exacto se define en la cotización."),
+ ("¿Por qué no hay una lista de precios fija?", "Porque cada cava se hace a la medida: cambian las dimensiones, la temperatura, el equipo, la puerta, los accesorios y el traslado. Por eso cotizamos cada caso por separado."),
+ ("¿Una cava de congelación cuesta más que una de refrigeración?", "Por lo general sí, porque necesita un equipo más potente y un mejor aislamiento para mantener −18 °C. Te damos las dos opciones si no estás seguro."),
+ ("¿Las cavas tienen garantía?", "Sí. Todas nuestras cavas cuarto tienen garantía, y además ofrecemos mantenimiento preventivo y servicio técnico."),
+ ("¿Cómo pido el precio de mi cava?", "Escríbenos por WhatsApp o usa el cotizador con lo que vas a guardar, la temperatura y las medidas aproximadas. Si no sabes las medidas, una foto del espacio basta para empezar."),
+]
+MANT_FAQ = [
+ ("¿Cada cuánto se le hace mantenimiento a una cava cuarto?", "Depende del uso, del tamaño y del lugar donde está la condensadora. Te recomendamos una frecuencia según tu caso; en cavas de trabajo intenso conviene revisarlas más seguido."),
+ ("¿Hacen mantenimiento a cavas que no instalaron ustedes?", "Escríbenos con fotos de tu cava y de su equipo, y te decimos cómo podemos ayudarte."),
+ ("¿Atienden emergencias?", "Atendemos a cualquier hora. Si tu cava dejó de enfriar, escríbenos por WhatsApp con fotos o un video del equipo y te orientamos de inmediato."),
+ ("¿Venden los repuestos?", "Sí. Vendemos unidades condensadoras, compresores, difusores, controles e insumos para cavas cuarto."),
+]
+
+def build_fase2_pages(h):
+    emp = {"@id": f"{BASE}/#empresa"}
+    # /precio-cava-cuarto/
+    body = f'''<section><div class="wrap prose"><span class="eyebrow">Precio de referencia</span>
+<h2>¿Cuánto cuesta una cava cuarto en Venezuela?</h2>
+<div class="pbox"><p class="big">Desde unos 6.000 – 6.500 USD</p><p>Precio de referencia de una cava cuarto pequeña de <strong>2 × 2 metros</strong>, la más pequeña que fabricamos. No es un precio fijo: cada cava se cotiza a la medida.</p></div>
+<p>Una cava cuarto no se vende por catálogo. Cada una se diseña para el espacio, el producto y la temperatura de cada cliente, así que el precio final cambia de un caso a otro. Te contamos qué lo hace subir o bajar para que llegues a la cotización con una idea clara.</p>
+</div></section>
+<section style="background:var(--ice)"><div class="wrap"><span class="eyebrow">Qué influye en el precio</span><h2>Los factores que definen el costo</h2>
+<div class="bens">
+<div class="ben rv"><h3>Tamaño</h3><p>Más metros de piso y de altura significan más paneles y un equipo de frío más grande.</p></div>
+<div class="ben rv"><h3>Temperatura</h3><p>Una cava de congelación (−18 °C) necesita más equipo y mejor aislamiento que una de refrigeración (0 a 5 °C).</p></div>
+<div class="ben rv"><h3>Equipo de frío</h3><p>La potencia y la marca de la unidad condensadora, el compresor y el evaporador.</p></div>
+<div class="ben rv"><h3>Puerta y accesorios</h3><p>Tipo y tamaño de la puerta, cortina de aire, estantes, rieles, luces y control de temperatura.</p></div>
+<div class="ben rv"><h3>Ubicación</h3><p>El traslado del material y del equipo hasta tu ciudad, y las condiciones del lugar de instalación.</p></div>
+<div class="ben rv"><h3>Uso diario</h3><p>Cuánta mercancía entra cada día y cuántas veces se abre la puerta: eso define la potencia del equipo.</p></div>
+</div></div></section>
+<section><div class="wrap prose"><span class="eyebrow">Cómo cotizar</span><h2>Recibe el precio de tu cava</h2>
+<p>Envíanos tres datos: qué vas a guardar, la temperatura que necesitas y las medidas aproximadas del espacio. Si no sabes las medidas, una foto basta para empezar. Con eso te enviamos la cotización por WhatsApp.</p>
+<p>Puedes usar el <a href="/cotizar/">cotizador</a>, revisar la guía <a href="/como-elegir-una-cava-cuarto/">cómo elegir tu cava cuarto</a> o ver las diferencias entre un <a href="/cuarto-de-refrigeracion/">cuarto de refrigeración</a> y un <a href="/cuarto-de-congelacion/">cuarto de congelación</a>.</p>
+</div></section>
+<section style="background:var(--ice)"><div class="wrap"><span class="eyebrow">Preguntas frecuentes</span><h2>Dudas sobre el precio</h2>{faq_html(PRECIO_FAQ)}</div></section>
+{band("Hola, quiero saber el precio de una cava cuarto.", "Pide el precio de tu cava")}'''
+    shell("/precio-cava-cuarto/", "Precio de una Cava Cuarto en Venezuela | Refrigeración Team",
+          "Una cava cuarto pequeña de 2 × 2 m cuesta desde unos 6.000 a 6.500 USD. Conoce qué influye en el precio y pide tu cotización por WhatsApp.",
+          [("Cavas cuarto", "/cavas-cuarto/"), ("Precio", "/precio-cava-cuarto/")], "Precio de una cava cuarto",
+          "Una cava pequeña de 2 × 2 metros sale en unos 6.000 a 6.500 USD como referencia. Cada cava se cotiza a la medida: aquí te explicamos de qué depende el precio.",
+          body, [{"@type": "Service", "name": "Fabricación e instalación de cavas cuarto", "provider": emp, "url": f"{BASE}/precio-cava-cuarto/",
+                  "areaServed": {"@type": "Country", "name": "Venezuela"},
+                  "offers": {"@type": "Offer", "priceCurrency": "USD", "price": "6000", "description": "Precio de referencia de una cava cuarto de 2 × 2 m; el precio final se cotiza a la medida.",
+                             "priceSpecification": {"@type": "PriceSpecification", "minPrice": 6000, "maxPrice": 6500, "priceCurrency": "USD"}}},
+                 faq_schema(PRECIO_FAQ)],
+          "Hola, quiero saber el precio de una cava cuarto.")
+
+    # /mantenimiento-cavas-cuarto/
+    body = f'''<section><div class="wrap prose"><span class="eyebrow">Mantenimiento</span>
+<h2>Que tu cava no se detenga</h2>
+<p>Una cava cuarto trabaja todos los días, a toda hora. Con el tiempo se acumula suciedad en la condensadora y el evaporador, los sellos de la puerta se desgastan y las conexiones se aflojan. El mantenimiento preventivo encuentra esos problemas antes de que la cava deje de enfriar y pierdas mercancía.</p>
+<p>Hacemos mantenimiento preventivo y correctivo de cavas cuarto y equipos de refrigeración, y vendemos los repuestos y equipos que tu cava necesite.</p>
+</div></section>
+<section style="background:var(--ice)"><div class="wrap"><span class="eyebrow">Mantenimiento preventivo</span><h2>Qué revisamos</h2>
+<div class="bens">
+<div class="ben rv"><h3>Condensadora</h3><p>Limpieza del serpentín y del ventilador, para que el equipo expulse bien el calor y no trabaje forzado.</p></div>
+<div class="ben rv"><h3>Evaporador</h3><p>Limpieza, revisión de ventiladores y del drenaje, para que el frío se reparta parejo dentro de la cava.</p></div>
+<div class="ben rv"><h3>Funcionamiento del sistema</h3><p>Revisión de presiones, temperaturas y del compresor, para detectar fallas o fugas a tiempo.</p></div>
+<div class="ben rv"><h3>Puerta y sellos</h3><p>Empaques, bisagras y cierre: una puerta que no sella deja escapar el frío y hace trabajar de más al equipo.</p></div>
+<div class="ben rv"><h3>Control y parte eléctrica</h3><p>Control de temperatura, tablero y conexiones, para que la cava trabaje con precisión y sin riesgos.</p></div>
+<div class="ben rv"><h3>Recomendaciones</h3><p>Te decimos qué conviene cambiar o mejorar, y cada cuánto revisar tu cava según su uso.</p></div>
+</div></div></section>
+<section><div class="wrap prose"><span class="eyebrow">Mantenimiento correctivo</span><h2>Señales de que tu cava necesita servicio</h2>
+<ul class="lista"><li>No llega a la temperatura de siempre o tarda mucho en bajar.</li><li>Se forma hielo en exceso en el evaporador o en la puerta.</li><li>El equipo hace ruidos extraños o se apaga y enciende muy seguido.</li><li>Hay agua en el piso o gotea por el drenaje.</li><li>La factura de luz subió sin razón aparente.</li></ul>
+<p>Si notas alguna de estas señales, escríbenos con fotos o un video del equipo. Atendemos a cualquier hora y te orientamos de inmediato.</p>
+<p>¿Necesitas repuestos? Mira nuestros <a href="{EQUIPOS}">equipos y materiales</a>.</p>
+</div></section>
+<section style="background:var(--ice)"><div class="wrap"><span class="eyebrow">Preguntas frecuentes</span><h2>Dudas sobre el mantenimiento</h2>{faq_html(MANT_FAQ)}</div></section>
+{band("Hola, necesito mantenimiento para mi cava cuarto.", "Agenda el mantenimiento de tu cava", "Escríbenos por WhatsApp con fotos de tu cava y de su equipo. Atendemos a cualquier hora.")}'''
+    shell("/mantenimiento-cavas-cuarto/", "Mantenimiento de Cavas Cuarto | Refrigeración Team",
+          "Mantenimiento preventivo y correctivo de cavas cuarto y equipos de refrigeración en Venezuela. Servicio técnico y repuestos. Atención a cualquier hora.",
+          [("Cavas cuarto", "/cavas-cuarto/"), ("Mantenimiento", "/mantenimiento-cavas-cuarto/")], "Mantenimiento de cavas cuarto",
+          "Mantenimiento preventivo y correctivo de cavas cuarto y equipos de refrigeración, con servicio técnico y repuestos. Atendemos a cualquier hora.",
+          body, [{"@type": "Service", "name": "Mantenimiento preventivo y correctivo de cavas cuarto", "serviceType": "Mantenimiento de refrigeración comercial",
+                  "provider": emp, "areaServed": {"@type": "Country", "name": "Venezuela"}, "url": f"{BASE}/mantenimiento-cavas-cuarto/"}, faq_schema(MANT_FAQ)],
+          "Hola, necesito mantenimiento para mi cava cuarto.", img="real-interior1", imgalt="Interior de una cava cuarto con evaporadores")
 
 # ------------------------------------------------------------------- build
 make_og()
@@ -763,6 +997,7 @@ BYSLUG["equipos-y-materiales-para-cavas-cuarto"]["extra"] = eqsec.replace('<sect
     re.search(r'<section class="marcas" id="marcas">.*?</section>', h, re.S).group(0)
 for p in PAGES: build_page(p)
 build_extra_pages(h)
+build_fase2_pages(h)
 
 urls = ["/"] + EXTRA_URLS + [f"/{p['slug']}/" for p in PAGES]
 # lastmod solo cambia cuando cambia el contenido de esa página (registro en lastmod.json)

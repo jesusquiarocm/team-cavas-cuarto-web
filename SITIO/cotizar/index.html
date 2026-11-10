@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "name": "Cotizar cava cuarto", "url": "https://cavascuartoteam.com/cotizar/", "about": {"@id": "https://cavascuartoteam.com/#empresa"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Cuánto cuesta una cava cuarto?", "acceptedAnswer": {"@type": "Answer", "text": "Depende del tamaño, la temperatura y el equipo. Escríbenos por WhatsApp con tus medidas y te cotizamos."}}, {"@type": "Question", "name": "¿Y si no sé las medidas?", "acceptedAnswer": {"@type": "Answer", "text": "No hay problema. Cuéntanos qué vas a guardar y el espacio disponible, y te orientamos por WhatsApp."}}]}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://cavascuartoteam.com/"}, {"@type": "ListItem", "position": 2, "name": "Cotizar", "item": "https://cavascuartoteam.com/cotizar/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "name": "Cotizar cava cuarto", "url": "https://cavascuartoteam.com/cotizar/", "about": {"@id": "https://cavascuartoteam.com/#empresa"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Cuánto cuesta una cava cuarto?", "acceptedAnswer": {"@type": "Answer", "text": "Como referencia, una cava pequeña de 2 × 2 metros sale en unos 6.000 a 6.500 USD. Cada cava se cotiza a la medida: el precio final depende del tamaño, la temperatura, el equipo y la ubicación."}}, {"@type": "Question", "name": "¿Y si no sé las medidas?", "acceptedAnswer": {"@type": "Answer", "text": "No hay problema. Cuéntanos qué vas a guardar y el espacio disponible, y te orientamos por WhatsApp."}}]}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://cavascuartoteam.com/"}, {"@type": "ListItem", "position": 2, "name": "Cotizar", "item": "https://cavascuartoteam.com/cotizar/"}]}]}</script>
 <style>
 :root{
   --navy:#0040A0; --navy-dk:#06224d; --sky:#29A9E8; --cyan:#00E3FF;
@@ -260,6 +260,7 @@ nav a:hover,nav a[aria-current="page"]{color:var(--navy)}
 .mapa{background:var(--ice);overflow:hidden}
 .mapa-grid{display:grid;grid-template-columns:.75fr 1.25fr;gap:40px;align-items:center}
 .mapa h2{margin:.3em 0 .4em}.mapa .tags{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 22px}
+.estados-t{margin-top:16px;font-weight:700;color:var(--navy);font-size:.92rem}.mapa .tags{margin-top:8px}
 .mapa .tags span{background:#fff;border:1px solid var(--line);color:var(--navy);font-weight:700;font-size:.85rem;border-radius:999px;padding:6px 14px}
 .vzmap{width:100%;height:auto;max-height:700px;display:block;filter:drop-shadow(0 22px 34px rgba(0,64,160,.22))}
 .vz-st path{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.96)}
@@ -333,6 +334,7 @@ footer ul{list-style:none;display:grid;gap:8px}
 footer a{color:#fff;text-decoration:none;font-weight:600}
 footer a:hover{color:var(--cyan)}
 .fcontact{margin-top:14px}
+.nap{margin-top:12px;line-height:1.6;color:#c3d6ee}
 .copy{margin-top:28px;font-size:.82rem;opacity:.7}
 @media(max-width:900px){.fgrid{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.fgrid{grid-template-columns:1fr}}
@@ -386,10 +388,23 @@ footer a:hover{color:var(--cyan)}
 .ccard svg{width:34px;height:34px;color:var(--navy);margin-bottom:6px}.ccard.wa svg{color:var(--wa-dk)}
 .ccard b{font:800 1.25rem/1.2 Sora,sans-serif}.ccard span{font-weight:700;color:var(--navy)}.ccard small{color:var(--muted)}
 @media(max-width:760px){.ccards{grid-template-columns:1fr}}
+.ogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-top:28px}
+.obra{border:1px solid var(--line);border-radius:var(--r);padding:24px;background:#fff;display:flex;flex-direction:column;gap:8px}
+.obra h3{font-size:1.15rem;color:var(--navy)}.obra p{color:var(--muted);font-size:.95rem}
+.o-lugar{font:700 .8rem/1.2 Inter,sans-serif!important;letter-spacing:.08em;text-transform:uppercase;color:var(--sky)!important}
+.o-meta a,.o-links a{color:var(--navy);font-weight:700;text-decoration:none}.o-meta b{color:var(--ink)}
+.o-links{display:flex;flex-direction:column;gap:4px;margin-top:auto;padding-top:6px}
+.pbox{margin-top:22px;border-radius:var(--r);padding:26px 28px;background:linear-gradient(160deg,var(--navy-dk),var(--navy));color:#fff}
+.pbox .big{font:800 clamp(1.7rem,4.5vw,2.4rem)/1.1 Sora,sans-serif;color:var(--cyan);margin:0}.pbox p{color:#d7e6f7}.pbox strong{color:#fff}
+.lista{margin:16px 0 0 20px;color:var(--muted);font-size:1.04rem}.lista li{margin-bottom:6px}
+.napbox{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.napbox div{background:var(--ice);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:2px}
+.napbox b{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sky)}.napbox span{font-weight:700;color:var(--navy)}
+@media(max-width:760px){.napbox{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<div class="topbar">Cotización gratis por WhatsApp · <a href="tel:+584121856429" data-lugar="topbar-llamar">0412 1856429</a></div>
+<div class="topbar">Cotización gratis por WhatsApp · Atención a cualquier hora · <a href="tel:+584121856429" data-lugar="topbar-llamar">0412 1856429</a></div>
 <header>
   <div class="wrap nav">
     <a class="brand" href="/" aria-label="Refrigeración Team, inicio">
@@ -398,7 +413,7 @@ footer a:hover{color:var(--cyan)}
     </a>
     <nav aria-label="Principal">
       <ul id="menu">
-        <li class="dd"><a href="/cavas-cuarto/">Cavas cuarto</a><button class="dd-t" type="button" aria-expanded="false" aria-label="Ver opciones de Cavas cuarto"></button><ul class="submenu"><li><a href="/cavas-cuarto/">Fabricación e instalación</a></li><li><a href="/cuarto-de-refrigeracion/">Cuarto de refrigeración (0 a 5 °C)</a></li><li><a href="/cuarto-de-congelacion/">Cuarto de congelación (−18 °C)</a></li><li><a href="/como-elegir-una-cava-cuarto/">Cómo elegir tu cava</a></li></ul></li>
+        <li class="dd"><a href="/cavas-cuarto/">Cavas cuarto</a><button class="dd-t" type="button" aria-expanded="false" aria-label="Ver opciones de Cavas cuarto"></button><ul class="submenu"><li><a href="/cavas-cuarto/">Fabricación e instalación</a></li><li><a href="/cuarto-de-refrigeracion/">Cuarto de refrigeración (0 a 5 °C)</a></li><li><a href="/cuarto-de-congelacion/">Cuarto de congelación (−18 °C)</a></li><li><a href="/como-elegir-una-cava-cuarto/">Cómo elegir tu cava</a></li><li><a href="/precio-cava-cuarto/">Precios de referencia</a></li><li><a href="/mantenimiento-cavas-cuarto/">Mantenimiento</a></li></ul></li>
         <li class="dd"><a href="/sectores/">Para tu negocio</a><button class="dd-t" type="button" aria-expanded="false" aria-label="Ver opciones de Para tu negocio"></button><ul class="submenu"><li><a href="/sectores/">Todos los negocios</a></li><li><a href="/cavas-cuarto-carniceria/">Carnicerías</a></li><li><a href="/cuartos-frios-pescaderia/">Pescaderías</a></li><li><a href="/cava-cuarto-polleria/">Pollerías</a></li><li><a href="/cava-cuarto-restaurante/">Restaurantes</a></li><li><a href="/cava-cuarto-heladeria/">Heladerías</a></li><li><a href="/cava-cuarto-panaderia/">Panaderías</a></li><li><a href="/cava-cuarto-abasto-bodega/">Abastos y bodegas</a></li><li><a href="/cuartos-frios-galpones-distribuidores/">Galpones y distribuidores</a></li></ul></li>
         <li class="dd"><a href="/equipos-y-materiales-para-cavas-cuarto/">Equipos</a><button class="dd-t" type="button" aria-expanded="false" aria-label="Ver opciones de Equipos"></button><ul class="submenu"><li><a href="/equipos-y-materiales-para-cavas-cuarto/">Equipos y materiales</a></li><li><a href="/freezers-comerciales/">Freezers comerciales</a></li></ul></li>
         <li><a href="/proyectos/">Proyectos</a></li>
@@ -478,7 +493,7 @@ footer a:hover{color:var(--cyan)}
     </div>
   </div>
 </section>
-<section style="background:var(--ice)"><div class="wrap"><span class="eyebrow">Antes de cotizar</span><h2>Dudas comunes</h2><div class="faq"><details><summary>¿Cuánto cuesta una cava cuarto?</summary><p>Depende del tamaño, la temperatura y el equipo. Escríbenos por WhatsApp con tus medidas y te cotizamos.</p></details><details><summary>¿Y si no sé las medidas?</summary><p>No hay problema. Cuéntanos qué vas a guardar y el espacio disponible, y te orientamos por WhatsApp.</p></details></div>
+<section style="background:var(--ice)"><div class="wrap"><span class="eyebrow">Antes de cotizar</span><h2>Dudas comunes</h2><div class="faq"><details><summary>¿Cuánto cuesta una cava cuarto?</summary><p>Como referencia, una cava pequeña de 2 × 2 metros sale en unos 6.000 a 6.500 USD. Cada cava se cotiza a la medida: el precio final depende del tamaño, la temperatura, el equipo y la ubicación.</p></details><details><summary>¿Y si no sé las medidas?</summary><p>No hay problema. Cuéntanos qué vas a guardar y el espacio disponible, y te orientamos por WhatsApp.</p></details></div>
 <p class="more"><a href="/como-elegir-una-cava-cuarto/">Guía: cómo elegir tu cava cuarto →</a><a href="/preguntas-frecuentes/">Más preguntas →</a></p></div></section>
 </main>
 <footer>
@@ -486,14 +501,16 @@ footer a:hover{color:var(--cyan)}
     <div class="fgrid">
       <div>
         <a class="logo" href="/"><img src="/img/logo.png" alt="Refrigeración Team Cavas Cuarto" width="98" height="84" loading="lazy"></a>
-        <p>Diseño, fabricación e instalación de cavas cuarto, y venta de equipos y materiales. Atendemos en toda Venezuela.</p>
+        <p>Diseño, fabricación, instalación y mantenimiento de cavas cuarto, y venta de equipos y materiales. Atendemos en toda Venezuela.</p>
+        <p class="nap">Oficina en Barcelona, Anzoátegui<br>Atención a cualquier hora<br>RIF J-50297485-7</p>
         <ul class="fcontact">
           <li><a href="tel:+584121856429">0412 1856429</a></li>
           <li><a data-wa="Hola, quiero información sobre cavas cuarto." href="https://wa.me/584121856429?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20cavas%20cuarto." target="_blank" rel="nofollow noopener">WhatsApp</a></li>
-          <li><a href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener">@cavascuartoteam</a></li>
+          <li><a href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener">Instagram @cavascuartoteam</a></li>
+          <li><a href="https://www.tiktok.com/@cavascuartoteam" target="_blank" rel="noopener">TikTok @cavascuartoteam</a></li>
         </ul>
       </div>
-      <div><p class="fh">Cavas cuarto</p><ul><li><a href="/cavas-cuarto/">Fabricación e instalación</a></li><li><a href="/cuarto-de-refrigeracion/">Cuarto de refrigeración</a></li><li><a href="/cuarto-de-congelacion/">Cuarto de congelación</a></li><li><a href="/como-elegir-una-cava-cuarto/">Cómo elegir tu cava</a></li><li><a href="/equipos-y-materiales-para-cavas-cuarto/">Equipos y materiales</a></li><li><a href="/freezers-comerciales/">Freezers</a></li></ul></div>
+      <div><p class="fh">Cavas cuarto</p><ul><li><a href="/cavas-cuarto/">Fabricación e instalación</a></li><li><a href="/cuarto-de-refrigeracion/">Cuarto de refrigeración</a></li><li><a href="/cuarto-de-congelacion/">Cuarto de congelación</a></li><li><a href="/como-elegir-una-cava-cuarto/">Cómo elegir tu cava</a></li><li><a href="/precio-cava-cuarto/">Precio de una cava cuarto</a></li><li><a href="/mantenimiento-cavas-cuarto/">Mantenimiento</a></li><li><a href="/equipos-y-materiales-para-cavas-cuarto/">Equipos y materiales</a></li><li><a href="/freezers-comerciales/">Freezers</a></li></ul></div>
       <div><p class="fh">Para tu negocio</p><ul><li><a href="/cavas-cuarto-carniceria/">Carnicerías</a></li><li><a href="/cuartos-frios-pescaderia/">Pescaderías</a></li><li><a href="/cava-cuarto-polleria/">Pollerías</a></li><li><a href="/cava-cuarto-restaurante/">Restaurantes</a></li><li><a href="/cava-cuarto-heladeria/">Heladerías</a></li><li><a href="/cava-cuarto-panaderia/">Panaderías</a></li><li><a href="/cava-cuarto-abasto-bodega/">Abastos y bodegas</a></li><li><a href="/cuartos-frios-galpones-distribuidores/">Galpones y distribuidores</a></li></ul></div>
       <div><p class="fh">Empresa</p><ul><li><a href="/proyectos/">Proyectos</a></li><li><a href="/nosotros/">Nosotros</a></li><li><a href="/cobertura/">Cobertura</a></li><li><a href="/preguntas-frecuentes/">Preguntas frecuentes</a></li><li><a href="/contacto/">Contacto</a></li><li><a href="/cotizar/">Cotizar</a></li></ul></div>
     </div>

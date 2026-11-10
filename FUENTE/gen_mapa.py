@@ -14,7 +14,11 @@ def dp(pts, tol):
     return [a, b]
 d = json.load(open('ven_adm1.geojson'))
 paths, nombres = [], []
-tonos = ["#3aa6ec", "#2e94e0", "#2584d3", "#3399e3"]
+tonos = ["#2584d3", "#1f78c8", "#2a8ad9", "#1d70bf"]          # estados donde han trabajado
+claros = ["#bfe0f7", "#b3d9f5", "#c7e5f8", "#b9dcf6"]          # resto del país
+# confirmados por el cliente (publicación de Instagram del 1 ene 2025 y obras publicadas)
+SERVIDOS = {"Bolívar", "Monagas", "Sucre", "Distrito Capital", "Miranda", "Zulia", "Carabobo", "Aragua", "Mérida",
+            "Trujillo", "Lara", "Anzoátegui", "Nueva Esparta", "La Guaira"}
 for n, f in enumerate(d['features']):
     nom = f['properties']['shapeName']
     if nom.startswith('Dependencias'): continue
@@ -27,12 +31,10 @@ for n, f in enumerate(d['features']):
             pts = dp(pts[:m + 1], 0.9)[:-1] + dp(pts[m:], 0.9)
             if len(pts) < 4: continue
             dd += "M" + "L".join(f"{x:.0f},{y:.0f}" for x, y in pts) + "Z"
-    paths.append(f'<path d="{dd}" fill="{tonos[n % 4]}" style="--i:{len(paths)}"><title>{nom}</title></path>')
-CIU = [  # nombre, lon, lat, (dx, dy, lado) : posición de la etiqueta respecto al pin; lado s=empieza a la derecha del punto, e=termina a la izquierda, m=centrada
- ("Caracas", -66.90, 10.49, (8, -52, "s")), ("Maracaibo", -71.64, 10.65, (-14, -40, "e")), ("Valencia", -68.00, 10.16, (0, 12, "m")),
- ("Barquisimeto", -69.32, 10.07, (-8, 14, "e")), ("Barcelona", -64.70, 10.13, (8, -48, "s")), ("Mérida", -71.15, 8.59, (-14, -36, "e")),
- ("Maturín", -63.18, 9.75, (10, -22, "s")), ("San Cristóbal", -72.23, 7.77, (-10, 14, "s")), ("Ciudad Guayana", -62.65, 8.30, (10, -22, "s")),
- ("San Fernando de Apure", -67.47, 7.89, (0, 12, "m")), ("Puerto Ayacucho", -67.62, 5.66, (12, -22, "s")), ("Coro", -69.68, 11.40, (-14, -38, "e")),
+    paths.append(f'<path d="{dd}" fill="{(tonos if nom in SERVIDOS else claros)[n % 4]}" style="--i:{len(paths)}"><title>{nom}</title></path>')
+CIU = [  # obras publicadas y sede; nombre, lon, lat, (dx, dy, lado): s=etiqueta a la derecha, e=a la izquierda, m=centrada
+ ("Caracas y La Guaira", -66.90, 10.52, (-14, -52, "e")), ("Tocuyito", -68.10, 10.10, (0, 12, "m")),
+ ("Barcelona · sede", -64.70, 10.13, (0, 12, "m")), ("Cumaná", -64.18, 10.45, (8, -52, "s")),
 ]
 pins = ""
 CAVA = ('<rect x="0" y="0" width="26" height="20" rx="3" fill="#fff" stroke="#06224d" stroke-width="1.6"/><rect x="15" y="4" width="8" height="16" rx="1.5" fill="#29A9E8"/>'
@@ -46,7 +48,7 @@ for i, (nom, lo, la, (dx, dy, an)) in enumerate(CIU):
              f'<g transform="translate({lx:.0f} {dy})"><g class="lb"><rect width="{w:.0f}" height="34" rx="17" fill="#fff" stroke="#cfe0f3" stroke-width="1.5"/>'
              f'<g transform="translate(10 7)">{CAVA}</g><text x="42" y="22.5">{nom}</text></g></g></g>')
 ancho, alto = int((73.6 - 59.7) * SC + 40), int((12.45 - 0.55) * SC + 40)
-svg = (f'<svg class="vzmap" viewBox="0 0 {ancho} {alto}" role="img" aria-label="Mapa de Venezuela por estados con cavas cuarto instaladas en todo el país">'
+svg = (f'<svg class="vzmap" viewBox="0 0 {ancho} {alto}" role="img" aria-label="Mapa de Venezuela con los estados donde Refrigeración Team ha instalado cavas cuarto">'
        f'<defs><radialGradient id="vzglow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#29A9E8" stop-opacity=".25"/><stop offset="1" stop-color="#29A9E8" stop-opacity="0"/></radialGradient></defs>'
        f'<ellipse cx="{ancho*0.55:.0f}" cy="{alto*0.52:.0f}" rx="{ancho*0.55:.0f}" ry="{alto*0.5:.0f}" fill="url(#vzglow)"/>'
        f'<text class="gl" x="{xy(-69.5,12.3)[0]:.0f}" y="{xy(-69.5,12.3)[1]:.0f}">Mar Caribe</text><text class="gl" x="{xy(-72.9,5.2)[0]:.0f}" y="{xy(-72.9,5.2)[1]:.0f}">Colombia</text>'

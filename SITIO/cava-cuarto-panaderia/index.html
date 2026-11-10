@@ -260,6 +260,7 @@ nav a:hover,nav a[aria-current="page"]{color:var(--navy)}
 .mapa{background:var(--ice);overflow:hidden}
 .mapa-grid{display:grid;grid-template-columns:.75fr 1.25fr;gap:40px;align-items:center}
 .mapa h2{margin:.3em 0 .4em}.mapa .tags{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 22px}
+.estados-t{margin-top:16px;font-weight:700;color:var(--navy);font-size:.92rem}.mapa .tags{margin-top:8px}
 .mapa .tags span{background:#fff;border:1px solid var(--line);color:var(--navy);font-weight:700;font-size:.85rem;border-radius:999px;padding:6px 14px}
 .vzmap{width:100%;height:auto;max-height:700px;display:block;filter:drop-shadow(0 22px 34px rgba(0,64,160,.22))}
 .vz-st path{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.96)}
@@ -333,6 +334,7 @@ footer ul{list-style:none;display:grid;gap:8px}
 footer a{color:#fff;text-decoration:none;font-weight:600}
 footer a:hover{color:var(--cyan)}
 .fcontact{margin-top:14px}
+.nap{margin-top:12px;line-height:1.6;color:#c3d6ee}
 .copy{margin-top:28px;font-size:.82rem;opacity:.7}
 @media(max-width:900px){.fgrid{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.fgrid{grid-template-columns:1fr}}
@@ -386,10 +388,23 @@ footer a:hover{color:var(--cyan)}
 .ccard svg{width:34px;height:34px;color:var(--navy);margin-bottom:6px}.ccard.wa svg{color:var(--wa-dk)}
 .ccard b{font:800 1.25rem/1.2 Sora,sans-serif}.ccard span{font-weight:700;color:var(--navy)}.ccard small{color:var(--muted)}
 @media(max-width:760px){.ccards{grid-template-columns:1fr}}
+.ogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-top:28px}
+.obra{border:1px solid var(--line);border-radius:var(--r);padding:24px;background:#fff;display:flex;flex-direction:column;gap:8px}
+.obra h3{font-size:1.15rem;color:var(--navy)}.obra p{color:var(--muted);font-size:.95rem}
+.o-lugar{font:700 .8rem/1.2 Inter,sans-serif!important;letter-spacing:.08em;text-transform:uppercase;color:var(--sky)!important}
+.o-meta a,.o-links a{color:var(--navy);font-weight:700;text-decoration:none}.o-meta b{color:var(--ink)}
+.o-links{display:flex;flex-direction:column;gap:4px;margin-top:auto;padding-top:6px}
+.pbox{margin-top:22px;border-radius:var(--r);padding:26px 28px;background:linear-gradient(160deg,var(--navy-dk),var(--navy));color:#fff}
+.pbox .big{font:800 clamp(1.7rem,4.5vw,2.4rem)/1.1 Sora,sans-serif;color:var(--cyan);margin:0}.pbox p{color:#d7e6f7}.pbox strong{color:#fff}
+.lista{margin:16px 0 0 20px;color:var(--muted);font-size:1.04rem}.lista li{margin-bottom:6px}
+.napbox{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.napbox div{background:var(--ice);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:2px}
+.napbox b{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sky)}.napbox span{font-weight:700;color:var(--navy)}
+@media(max-width:760px){.napbox{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<div class="topbar">Cotización gratis por WhatsApp · <a href="tel:+584121856429" data-lugar="topbar-llamar">0412 1856429</a></div>
+<div class="topbar">Cotización gratis por WhatsApp · Atención a cualquier hora · <a href="tel:+584121856429" data-lugar="topbar-llamar">0412 1856429</a></div>
 <header>
   <div class="wrap nav">
     <a class="brand" href="/" aria-label="Refrigeración Team, inicio">
@@ -398,7 +413,7 @@ footer a:hover{color:var(--cyan)}
     </a>
     <nav aria-label="Principal">
       <ul id="menu">
-        <li class="dd"><a href="/cavas-cuarto/">Cavas cuarto</a><button class="dd-t" type="button" aria-expanded="false" aria-label="Ver opciones de Cavas cuarto"></button><ul class="submenu"><li><a href="/cavas-cuarto/">Fabricación e instalación</a></li><li><a href="/cuarto-de-refrigeracion/">Cuarto de refrigeración (0 a 5 °C)</a></li><li><a href="/cuarto-de-congelacion/">Cuarto de congelación (−18 °C)</a></li><li><a href="/como-elegir-una-cava-cuarto/">Cómo elegir tu cava</a></li></ul></li>
+        <li class="dd"><a href="/cavas-cuarto/">Cavas cuarto</a><button class="dd-t" type="button" aria-expanded="false" aria-label="Ver opciones de Cavas cuarto"></button><ul class="submenu"><li><a href="/cavas-cuarto/">Fabricación e instalación</a></li><li><a href="/cuarto-de-refrigeracion/">Cuarto de refrigeración (0 a 5 °C)</a></li><li><a href="/cuarto-de-congelacion/">Cuarto de congelación (−18 °C)</a></li><li><a href="/como-elegir-una-cava-cuarto/">Cómo elegir tu cava</a></li><li><a href="/precio-cava-cuarto/">Precios de referencia</a></li><li><a href="/mantenimiento-cavas-cuarto/">Mantenimiento</a></li></ul></li>
         <li class="dd"><a href="/sectores/">Para tu negocio</a><button class="dd-t" type="button" aria-expanded="false" aria-label="Ver opciones de Para tu negocio"></button><ul class="submenu"><li><a href="/sectores/">Todos los negocios</a></li><li><a href="/cavas-cuarto-carniceria/">Carnicerías</a></li><li><a href="/cuartos-frios-pescaderia/">Pescaderías</a></li><li><a href="/cava-cuarto-polleria/">Pollerías</a></li><li><a href="/cava-cuarto-restaurante/">Restaurantes</a></li><li><a href="/cava-cuarto-heladeria/">Heladerías</a></li><li><a href="/cava-cuarto-panaderia/" aria-current="page">Panaderías</a></li><li><a href="/cava-cuarto-abasto-bodega/">Abastos y bodegas</a></li><li><a href="/cuartos-frios-galpones-distribuidores/">Galpones y distribuidores</a></li></ul></li>
         <li class="dd"><a href="/equipos-y-materiales-para-cavas-cuarto/">Equipos</a><button class="dd-t" type="button" aria-expanded="false" aria-label="Ver opciones de Equipos"></button><ul class="submenu"><li><a href="/equipos-y-materiales-para-cavas-cuarto/">Equipos y materiales</a></li><li><a href="/freezers-comerciales/">Freezers comerciales</a></li></ul></li>
         <li><a href="/proyectos/">Proyectos</a></li>
@@ -422,6 +437,7 @@ footer a:hover{color:var(--cyan)}
 <section><div class="wrap"><span class="eyebrow">Por qué una cava cuarto</span>
 <h2>Lo que ganas con tu cava cuarto</h2>
 <div class="bens"><div class="ben rv"><h3>Insumos en buen estado</h3><p>Conserva lácteos, rellenos y cremas a la temperatura adecuada.</p></div><div class="ben rv"><h3>Ordena tu producción</h3><p>Un espacio dedicado para cada insumo y cada preparación.</p></div><div class="ben rv"><h3>Se adapta a tu local</h3><p>Medidas a tu espacio, con puerta y estantes pensados para tu trabajo.</p></div></div></div></section>
+<section style="padding-top:0"><div class="wrap prose"><h2 style="font-size:clamp(1.4rem,3vw,1.9rem);margin-top:34px">Insumos frescos todo el día</h2><p>Una panadería o pastelería guarda lácteos, cremas, rellenos, masas y producto terminado, y cada uno necesita frío para durar. Con una cava cuarto tienes todo en un solo lugar, ordenado y a la temperatura correcta.</p><p>Lo habitual es refrigeración de 0 a 5 °C. Si trabajas con masas o producto congelado, se agrega una zona o una cava a −18 °C.</p><h2 style="font-size:clamp(1.4rem,3vw,1.9rem);margin-top:34px">Pensada para tu producción</h2><p>Distribuimos estantes y espacio según cómo produces: bandejas, cajas o carros. Así la cava ayuda al trabajo diario en lugar de estorbar.</p></div></section>
 
 <section style="padding-top:0"><div class="wrap"><div class="tempbox rv"><h2 style="font-size:1.5rem">Qué temperatura necesitas</h2>
 <p class="lead" style="margin-top:6px">Para lácteos, rellenos y preparaciones, refrigeración (0 a 5 °C). Si almacenas producto congelado, una zona a −18 °C.</p>
@@ -429,7 +445,7 @@ footer a:hover{color:var(--cyan)}
 <section style="background:var(--ice)"><div class="wrap"><span class="eyebrow">Preguntas frecuentes</span><h2>Dudas comunes</h2>
 <div class="faq"><details><summary>¿Sirve una cava para panadería y pastelería a la vez?</summary><p>Sí. Se diseña según los productos que manejas y la temperatura de cada uno.</p></details><details><summary>¿Cuánto espacio necesito?</summary><p>Depende de tu producción. Cuéntanos tus medidas disponibles y te recomendamos un tamaño.</p></details><details><summary>¿Incluye el equipo de frío?</summary><p>Sí, instalamos la cava con su sistema de frío y control de temperatura.</p></details></div></div></section>
 <section><div class="wrap"><div class="band on-dark"><h2>Cuéntanos qué necesitas y te cotizamos</h2>
-<p>Escríbenos por WhatsApp con tus medidas aproximadas y lo que vas a guardar. Si no las sabes, te ayudamos.</p>
+<p>Escríbenos por WhatsApp con tus medidas aproximadas y lo que vas a guardar. Todas nuestras cavas tienen garantía.</p>
 <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center"><a class="btn btn-wa" data-lugar="cierre" data-wa="Hola, tengo una panadería y quiero cotizar una cava cuarto." href="https://wa.me/584121856429?text=Hola%2C%20tengo%20una%20panader%C3%ADa%20y%20quiero%20cotizar%20una%20cava%20cuarto." target="_blank" rel="nofollow noopener"><svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use href="#i-wa"/></svg>Escribir por WhatsApp</a><a class="btn btn-ghost" href="/cotizar/">Llenar el cotizador</a></div></div>
 <h2 style="font-size:1.4rem;margin-top:44px">También te puede interesar</h2>
 <div class="rel"><a href="/cuarto-de-refrigeracion/">Cuarto de refrigeración de 0 a 5 °C<small>Ver más →</small></a><a href="/cava-cuarto-restaurante/">Cava cuarto para restaurante<small>Ver más →</small></a><a href="/cava-cuarto-abasto-bodega/">Cava cuarto para abasto, bodega y bebidas<small>Ver más →</small></a></div></div></section>
@@ -439,14 +455,16 @@ footer a:hover{color:var(--cyan)}
     <div class="fgrid">
       <div>
         <a class="logo" href="/"><img src="/img/logo.png" alt="Refrigeración Team Cavas Cuarto" width="98" height="84" loading="lazy"></a>
-        <p>Diseño, fabricación e instalación de cavas cuarto, y venta de equipos y materiales. Atendemos en toda Venezuela.</p>
+        <p>Diseño, fabricación, instalación y mantenimiento de cavas cuarto, y venta de equipos y materiales. Atendemos en toda Venezuela.</p>
+        <p class="nap">Oficina en Barcelona, Anzoátegui<br>Atención a cualquier hora<br>RIF J-50297485-7</p>
         <ul class="fcontact">
           <li><a href="tel:+584121856429">0412 1856429</a></li>
           <li><a data-wa="Hola, quiero información sobre cavas cuarto." href="https://wa.me/584121856429?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20cavas%20cuarto." target="_blank" rel="nofollow noopener">WhatsApp</a></li>
-          <li><a href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener">@cavascuartoteam</a></li>
+          <li><a href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener">Instagram @cavascuartoteam</a></li>
+          <li><a href="https://www.tiktok.com/@cavascuartoteam" target="_blank" rel="noopener">TikTok @cavascuartoteam</a></li>
         </ul>
       </div>
-      <div><p class="fh">Cavas cuarto</p><ul><li><a href="/cavas-cuarto/">Fabricación e instalación</a></li><li><a href="/cuarto-de-refrigeracion/">Cuarto de refrigeración</a></li><li><a href="/cuarto-de-congelacion/">Cuarto de congelación</a></li><li><a href="/como-elegir-una-cava-cuarto/">Cómo elegir tu cava</a></li><li><a href="/equipos-y-materiales-para-cavas-cuarto/">Equipos y materiales</a></li><li><a href="/freezers-comerciales/">Freezers</a></li></ul></div>
+      <div><p class="fh">Cavas cuarto</p><ul><li><a href="/cavas-cuarto/">Fabricación e instalación</a></li><li><a href="/cuarto-de-refrigeracion/">Cuarto de refrigeración</a></li><li><a href="/cuarto-de-congelacion/">Cuarto de congelación</a></li><li><a href="/como-elegir-una-cava-cuarto/">Cómo elegir tu cava</a></li><li><a href="/precio-cava-cuarto/">Precio de una cava cuarto</a></li><li><a href="/mantenimiento-cavas-cuarto/">Mantenimiento</a></li><li><a href="/equipos-y-materiales-para-cavas-cuarto/">Equipos y materiales</a></li><li><a href="/freezers-comerciales/">Freezers</a></li></ul></div>
       <div><p class="fh">Para tu negocio</p><ul><li><a href="/cavas-cuarto-carniceria/">Carnicerías</a></li><li><a href="/cuartos-frios-pescaderia/">Pescaderías</a></li><li><a href="/cava-cuarto-polleria/">Pollerías</a></li><li><a href="/cava-cuarto-restaurante/">Restaurantes</a></li><li><a href="/cava-cuarto-heladeria/">Heladerías</a></li><li><a href="/cava-cuarto-panaderia/">Panaderías</a></li><li><a href="/cava-cuarto-abasto-bodega/">Abastos y bodegas</a></li><li><a href="/cuartos-frios-galpones-distribuidores/">Galpones y distribuidores</a></li></ul></div>
       <div><p class="fh">Empresa</p><ul><li><a href="/proyectos/">Proyectos</a></li><li><a href="/nosotros/">Nosotros</a></li><li><a href="/cobertura/">Cobertura</a></li><li><a href="/preguntas-frecuentes/">Preguntas frecuentes</a></li><li><a href="/contacto/">Contacto</a></li><li><a href="/cotizar/">Cotizar</a></li></ul></div>
     </div>
