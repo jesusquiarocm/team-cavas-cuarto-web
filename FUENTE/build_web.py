@@ -954,7 +954,7 @@ def build_galeria():
     alt = lambda n: "Cava cuarto instalada por Refrigeración Team, foto %d" % n
     grid = "".join('<button type="button" aria-label="Ampliar foto %d"><img src="/img/gal/%s-mini.jpg" data-full="/img/gal/%s.jpg" alt="%s" loading="%s" decoding="async"></button>'
                    % (k, f["n"], f["n"], alt(k), "eager" if k <= 8 else "lazy") for k, f in enumerate(fotos, 1))
-    body = f'''<section class="gal"><div class="wrap"><span class="eyebrow">Galería</span><h2>{len(fotos)} fotos de cavas cuarto reales</h2>
+    body = f'''<section class="gal"><div class="wrap"><span class="eyebrow">Galería</span><h2>{len(fotos)} fotos de cavas cuarto</h2>
 <p class="lead">Cavas de refrigeración, cuartos de congelación, cavas dobles y cuartos fríos industriales que hemos instalado. Toca una foto para verla en grande y usa las flechas para pasar a la siguiente.</p>
 <div class="ggrid" id="fotos">{grid}</div>
 <p class="more"><a href="/proyectos/">Ver obras por estado →</a> · <a href="https://www.instagram.com/cavascuartoteam/" target="_blank" rel="noopener">Ver videos en Instagram →</a></p></div></section>
