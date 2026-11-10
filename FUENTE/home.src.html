@@ -257,21 +257,21 @@ nav a:hover,nav a[aria-current="page"]{color:var(--navy)}
 .temp ul{list-style:none;margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
 .temp li{font-size:.82rem;font-weight:600;background:rgba(255,255,255,.1);padding:6px 12px;border-radius:99px}
 @media(max-width:760px){.temps{grid-template-columns:1fr}}
-/* temperaturas: el fondo se enfría (claro -> oscuro), los grados cuentan y suben copos */
+/* temperaturas: el fondo se enfría (celeste -> oscuro) mientras cuentan los grados y caen copos desde arriba */
 #temperaturas{position:relative;overflow:hidden;isolation:isolate}
 #temperaturas>.wrap{position:relative;z-index:2}
-#temperaturas::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(160deg,#5cc4f2,#2a8fd6);opacity:0;transition:opacity 1.8s ease-in-out}
+#temperaturas::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(160deg,#8fdcfa,#4fb8ee);opacity:0;transition:opacity 2.8s ease-in-out}
 #temperaturas.t-anim::before{opacity:1}
 #temperaturas.t-anim.frio::before{opacity:0}
 #temperaturas .big{font-variant-numeric:tabular-nums}
 .copos{position:absolute;inset:0;z-index:1;pointer-events:none}
-.copo{position:absolute;bottom:-20px;width:var(--s);height:var(--s);opacity:0;
+.copo{position:absolute;top:-24px;width:var(--s);height:var(--s);opacity:0;
   background:linear-gradient(180deg,#fff,#00E3FF 70%,#29A9E8);
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M9 4l3 3 3-3M9 20l3-3 3 3M4 10.2l4.1-1.1-1.1-4.1M20 13.8l-4.1 1.1 1.1 4.1M4 13.8l4.1 1.1-1.1 4.1M20 10.2l-4.1-1.1 1.1-4.1'/%3E%3C/svg%3E") center/contain no-repeat;
           mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M9 4l3 3 3-3M9 20l3-3 3 3M4 10.2l4.1-1.1-1.1-4.1M20 13.8l-4.1 1.1 1.1 4.1M4 13.8l4.1 1.1-1.1 4.1M20 10.2l-4.1-1.1 1.1-4.1'/%3E%3C/svg%3E") center/contain no-repeat;
   animation:copo var(--d) linear var(--w) infinite}
-@keyframes copo{0%{transform:translate(0,0) rotate(0);opacity:0}12%{opacity:var(--o)}80%{opacity:var(--o)}
-  100%{transform:translate(var(--x),calc(-1 * var(--h))) rotate(220deg);opacity:0}}
+@keyframes copo{0%{transform:translate(0,0) rotate(0);opacity:0}10%{opacity:var(--o)}85%{opacity:var(--o)}
+  100%{transform:translate(var(--x),var(--h)) rotate(220deg);opacity:0}}
 #temperaturas.quieto .copo{animation-play-state:paused}
 
 /* negocios */

@@ -73,7 +73,7 @@ document.querySelectorAll("[data-tutorial]").forEach(function(b){b.addEventListe
 tv.addEventListener("click",function(e){if(e.target===tv||e.target.tagName==="BUTTON")cierra()});
 document.addEventListener("keydown",function(e){if(e.key==="Escape")cierra()})})();
 
-// temperaturas: al aparecer, el fondo pasa de azul claro a oscuro, los grados cuentan y luego suben copos de nieve
+// temperaturas: al aparecer, el fondo pasa de celeste a azul oscuro mientras cuentan los grados y caen copos desde arriba
 (function(){
   const s = document.getElementById("temperaturas");
   if (!s || !("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion:reduce)").matches) return;
@@ -83,7 +83,7 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape")cierra()})})
   }).filter(Boolean);
   const pinta = (n, v) => { n.el.textContent = n.pre + (v ? n.neg : "") + v + n.suf; };
   s.classList.add("t-anim"); nums.forEach(n => pinta(n, 0));
-  const DUR = 1800;
+  const DUR = 2800;
   const nieva = () => {
     const c = document.createElement("div"); c.className = "copos"; c.setAttribute("aria-hidden", "true");
     const h = s.offsetHeight + 40, cant = innerWidth < 700 ? 16 : 30;
@@ -91,7 +91,7 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape")cierra()})})
       const f = document.createElement("span"); f.className = "copo";
       const t = 6 + Math.random() * 10;   // tamaño en px
       f.style.cssText = `left:${Math.random() * 100}%;--s:${t}px;--o:${(.35 + t / 30).toFixed(2)};--h:${h}px;` +
-        `--x:${Math.round(Math.random() * 80 - 40)}px;--d:${(9 + Math.random() * 9).toFixed(1)}s;--w:${(-Math.random() * 4).toFixed(1)}s`;
+        `--x:${Math.round(Math.random() * 80 - 40)}px;--d:${(12 + Math.random() * 10).toFixed(1)}s;--w:${(k / cant * 6 + Math.random() * .6).toFixed(1)}s`;
       c.appendChild(f);
     }
     s.prepend(c);
@@ -100,12 +100,12 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape")cierra()})})
     s.classList.add("frio");
     const t0 = performance.now();
     const paso = t => {
-      const p = Math.min(1, (t - t0) / DUR), e = 1 - Math.pow(1 - p, 3);
+      const p = Math.min(1, (t - t0) / DUR), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;   // mismo ritmo que el fondo
       nums.forEach(n => pinta(n, Math.round(n.fin * e)));
       if (p < 1) requestAnimationFrame(paso);
     };
     requestAnimationFrame(paso);
-    setTimeout(nieva, DUR * .8);
+    nieva();   // los copos empiezan a caer de a poco desde arriba, junto con el frío
   };
   let hecho = false;
   new IntersectionObserver(es => es.forEach(e => {
